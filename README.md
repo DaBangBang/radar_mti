@@ -11,10 +11,41 @@ We implement moving target indication (MTI) filter to detect moving target inclu
 - High pass FIR filter
 - High pass IIR filter
 
-## 1. Background subtraction (with updating background)
+## 1. Background subtraction  
 
 >Human walking (slow)
 - config 300MHz slope, 200 adc samples <br />
 
-  ![](pic/bg_sub_slow_300.png)
+  <img src="pic/bg_sub_slow_300.png" width="50%" height="50%">
 
+## 2. Background subtraction (with updating background)
+
+>Human walking (slow)
+
+- config 300MHz slope, 200 adc samples <br />
+    
+    <img src="pic/bg_update_slow_300.png" width="50%" height="50%">
+
+## 3. Stove technique (First order FIR filter)
+
+>Human walking (slow)
+
+- config 300MHz slope, 200 adc samples <br />
+    
+    <img src="pic/stove_slow_300.png" width="50%" height="50%">
+
+## 3. High pass FIR filter
+
+>Human walking (slow)
+
+- config 300MHz slope, 200 adc samples <br />
+    
+    <img src="pic/FIR_slow_300.png" width="50%" height="50%">
+
+## 3. High pass IIR filter
+
+>Human walking (slow)
+
+- config 300MHz slope, 200 adc samples <br />
+    
+    <img src="pic/IIR_slow_300.png" width="50%" height="50%">
