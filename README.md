@@ -11,7 +11,13 @@ We implement moving target indication (MTI) filter to detect moving target inclu
 - High pass FIR filter
 - High pass IIR filter
 
-**Note** - **config** : 300MHz slope, 200 adc samples (left) 66.626MHz slope, 1000 adc samples (right) 
+The experiment consists of 3 tasks as shown in gif below. First is a human slow walking, Second is a human fast walking, Third is a small ball moving. <br />
+
+
+ <img src="pic/moving_slow.gif" width="40%" height="40%">  <img src="pic/moving_fast.gif" width="40%" height="40%"> 
+
+
+**Note** - **radar-config** : 300MHz slope, 200 adc samples (left) 66.626MHz slope, 1000 adc samples (right) 
 
 
 ## 1. Background subtraction  
@@ -86,5 +92,7 @@ We implement moving target indication (MTI) filter to detect moving target inclu
 - range - time <br />
 
     <img src="pic/IIR_fast_300.png" width="40%" height="40%"> <img src="pic/IIR_fast_66.png" width="40%" height="40%">
+
+   
 
 # Doppler - range image of each experiment
