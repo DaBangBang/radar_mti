@@ -11,7 +11,7 @@ import scipy.signal as signal
 
 frame_number = 600
 chirp = 32
-adcSamples = 200
+adcSamples = 1000
 TxRx = 12
 
 def animate(i):
@@ -75,7 +75,7 @@ def firMTI():
 
     plt.show()
 
-    return np.reshape(signal_out, (600,32,200,12))
+    return np.reshape(signal_out, (frame_number, chirp, adcSamples, TxRx))
 
 def iirMTI():
     M_order = 12
@@ -146,7 +146,7 @@ def main():
     SamplingRate = 18750 * k
     dt = 1. / SamplingRate
 
-    folder_name = glob.glob('D:/SmallTrack/data/data_ppl_walk_slow/pos_config_3*')
+    folder_name = glob.glob('D:/SmallTrack/data/data_ppl_walk_fast/pos_config_6*')
     folder_name = natsort.natsorted(folder_name)
     
     for f_name in folder_name:
@@ -177,7 +177,7 @@ def main():
     # raw_iq = np.reshape(raw_iq,(frame_number*chirp, adcSamples, TxRx))
     # raw_iq = stoveMTI() # pre-processing using fir stove technique
     
-    # FIR M=99 cut-off 20 hz
+    # FIR M=97 cut-off 20 hz
     # raw_iq = np.reshape(raw_iq,(frame_number*chirp, adcSamples, TxRx))
     # raw_iq = firMTI()
 

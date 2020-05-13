@@ -1,6 +1,6 @@
 # Moving Target Indication techniques for Ti FMCW radar
 
-We implement moving target indication (MTI) filter to detect moving target including human and small ball. The mti techniques that we used were referred by Matthew Ash et. al,in the paper named "On Application of Digital Moving Target Indication Techniques to Short-Range FMCW Radar Data.
+We implement moving target indication (MTI) filter to detect moving target including human and small ball. The mti techniques that we used were referred by Matthew Ash et. al,in the paper named "On Application of Digital Moving Target Indication Techniques to Short-Range FMCW Radar Data".
 
 ## Type of MTI
 
@@ -11,41 +11,80 @@ We implement moving target indication (MTI) filter to detect moving target inclu
 - High pass FIR filter
 - High pass IIR filter
 
+**Note** - **config** : 300MHz slope, 200 adc samples (left) 66.626MHz slope, 1000 adc samples (right) 
+
+
 ## 1. Background subtraction  
 
->Human walking (slow)
-- config 300MHz slope, 200 adc samples <br />
+>Human walking (slow) 
 
-  <img src="pic/bg_sub_slow_300.png" width="50%" height="50%">
+- range - time <br />
+  
+    <img src="pic/bg_sub_slow_300.png" width="40%" height="40%"> <img src="pic/bg_sub_slow_66.png" width="40%" height="40%">
+
+>Human walking (fast)
+
+- range - time <br />
+
+    <img src="pic/bg_sub_fast_300.png" width="40%" height="40%"> <img src="pic/bg_sub_fast_66.png" width="40%" height="40%">
+
 
 ## 2. Background subtraction (with updating background)
 
 >Human walking (slow)
 
-- config 300MHz slope, 200 adc samples <br />
+- range - time <br />
     
-    <img src="pic/bg_update_slow_300.png" width="50%" height="50%">
+    <img src="pic/bg_update_slow_300.png" width="40%" height="40%"><img src="pic/bg_update_slow_66.png" width="40%" height="40%">
+
+>Human walking (fast)
+
+- range - time <br />
+
+    <img src="pic/bg_update_fast_300.png" width="40%" height="40%"> <img src="pic/bg_update_fast_66.png" width="40%" height="40%">
+
 
 ## 3. Stove technique (First order FIR filter)
 
 >Human walking (slow)
 
-- config 300MHz slope, 200 adc samples <br />
+- range - time <br />
     
-    <img src="pic/stove_slow_300.png" width="50%" height="50%">
+    <img src="pic/stove_slow_300.png" width="40%" height="40%"><img src="pic/stove_slow_66.png" width="40%" height="40%">
 
-## 3. High pass FIR filter
+>Human walking (fast)
+
+- range - time <br />
+
+    <img src="pic/stove_fast_300.png" width="40%" height="40%"> <img src="pic/stove_fast_66.png" width="40%" height="40%">
+
+## 4. High pass FIR filter
 
 >Human walking (slow)
 
-- config 300MHz slope, 200 adc samples <br />
+- range - time <br />
     
-    <img src="pic/FIR_slow_300.png" width="50%" height="50%">
+    <img src="pic/FIR_slow_300.png" width="40%" height="40%"><img src="pic/FIR_slow_66.png" width="40%" height="40%">
 
-## 3. High pass IIR filter
+>Human walking (fast)
+
+- range - time <br />
+
+    <img src="pic/FIR_fast_300.png" width="40%" height="40%"> <img src="pic/FIR_fast_66.png" width="40%" height="40%">
+
+
+## 5. High pass IIR filter
 
 >Human walking (slow)
 
-- config 300MHz slope, 200 adc samples <br />
+- range - time <br />
     
-    <img src="pic/IIR_slow_300.png" width="50%" height="50%">
+    <img src="pic/IIR_slow_300.png" width="40%" height="40%"><img src="pic/IIR_slow_66.png" width="40%" height="40%">
+
+>Human walking (fast)
+
+- range - time <br />
+
+    <img src="pic/IIR_fast_300.png" width="40%" height="40%"> <img src="pic/IIR_fast_66.png" width="40%" height="40%">
+
+# Doppler - range image of each experiment
