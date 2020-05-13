@@ -16,5 +16,5 @@ We implement moving target indication (MTI) filter to detect moving target inclu
 >Human walking (slow)
 - config 300MHz slope, 200 adc samples <br />
 
-  ![alt text](https://github.com/shikuzen/radar_mti/bg_sub_slow_300.png)
+  ![](pic/bg_sub_slow_300.png)
 
