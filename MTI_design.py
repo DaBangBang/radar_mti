@@ -61,7 +61,7 @@ def stoveMTI():
     return np.reshape(np.array(stove_sub), (frame_number, chirp, adcSamples, TxRx))
 
 def firMTI():
-    M_order = 31
+    M_order = 97
     slowtime_sampling = 25*32
     nyq =  slowtime_sampling / 2
     Fc = 20
@@ -130,7 +130,11 @@ def bgSubtraction_update():
 def plot_range_fft():
     fft_plot = np.reshape(range_fft, (frame_number*chirp, adcSamples, TxRx))
     fft_plot = 20*np.log10(fft_plot/32767)
-    plt.imshow(abs(fft_plot[:,:,0]).T, aspect='auto', cmap='jet')
+    ax = plt.subplot(111)
+    im = ax.imshow(abs(fft_plot[:,:,0]).T, aspect='auto', cmap='jet')
+    plt.colorbar(im)
+    plt.xlabel('frame (time)')
+    plt.ylabel('range (z-axis)')
     plt.show()
 
 
@@ -163,7 +167,7 @@ def main():
 
     #### ---------------- Matthew ash paper - IEEE sensor -------------------
     # static bg subtraction
-    raw_iq = bgSubtraction()
+    # raw_iq = bgSubtraction()
 
     # bg subtraction MTI with updating
     # raw_iq = bgSubtraction_update() # pre-processing using bg subtraction technique
@@ -178,25 +182,25 @@ def main():
     # raw_iq = firMTI()
 
     # IIR M=12 cut-off 20 hz
-    # raw_iq = np.reshape(raw_iq,(frame_number*chirp, adcSamples, TxRx))
-    # raw_iq = iirMTI()
+    raw_iq = np.reshape(raw_iq,(frame_number*chirp, adcSamples, TxRx))
+    raw_iq = iirMTI()
 
     #### --------------------------------------------------------------------
 
     # print(raw_iq.shape)
     range_fft = rangeFFT()
-    # plot_range_fft()
+    plot_range_fft()
     # N = range_fft.shape[2]
     # F_step = SamplingRate / N
     # freq = np.arange(0, N*F_step, F_step)
     # plt.plot(freq, abs(range_fft[0,0,:,0])) 
     # plt.show()
 
-    velocity_fft = dopplerFFT()
+    # velocity_fft = dopplerFFT()
     # print(velocity_fft.shape)
     # print(range_fft.shape, velocity_fft.shape)
 
-    runGraphInitial()
+    # runGraphInitial()
 
 
     
