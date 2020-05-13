@@ -11,8 +11,8 @@ import scipy.signal as signal
 
 frame_number = 600
 chirp = 32
-adcSamples = 1000
-TxRx = 12
+adcSamples = 5200 # for small ball padding to 5200
+TxRx = 2   # for small ball reduce TxRx to 2
 
 def animate(i):
     line1.set_ydata(abs(range_fft[i,0,:,0]))
@@ -29,7 +29,7 @@ def runGraphInitial():
     line1, = ax1.plot(abs(range_fft[0,0,:,0]))
     
     ax2 = fig.add_subplot(122)
-    ax2 = plt.imshow(velocity_fft[0,:,:,0], aspect= 'auto', origin='lower' , cmap='jet', 
+    ax2 = plt.imshow(velocity_fft[0,:,:200,0], aspect= 'auto', origin='lower' , cmap='jet', 
          extent=[0, velocity_fft.shape[2]-1, velocity_fft.shape[1]/2., -velocity_fft.shape[1]/2.], interpolation = 'catrom')
     
     ani = FuncAnimation(fig, animate, frames= frame_number  ,interval = 25)
@@ -146,7 +146,7 @@ def main():
     SamplingRate = 18750 * k
     dt = 1. / SamplingRate
 
-    folder_name = glob.glob('D:/SmallTrack/data/data_ppl_walk_fast/pos_config_6*')
+    folder_name = glob.glob('D:/SmallTrack/data/data_ball_moving/pos_config_3*')
     folder_name = natsort.natsorted(folder_name)
     
     for f_name in folder_name:
@@ -158,7 +158,12 @@ def main():
         print(real_part.shape)
         raw_iq = real_part + 1j*imag_part
         raw_iq = np.complex64(raw_iq)
-    
+        # zero_padding for data ball
+        # n_pad = ((0,0),(0,0),(0,5000),(0,0))
+        # raw_iq = np.pad(raw_iq, pad_width=n_pad, mode='constant', constant_values=0)
+        # raw_iq = raw_iq[:,:,:,:2]
+        # print(raw_iq.shape)
+
     time_scale = np.arange(0, raw_iq.shape[2], 1)
     time_scale = time_scale / SamplingRate
 
