@@ -5,18 +5,19 @@ import matplotlib.pyplot as plt
 import natsort
 from matplotlib.animation import FuncAnimation
 from scipy.signal import find_peaks
+from scipy.fft import fftshift
 import itertools
 from pylab import *
 import scipy.signal as signal
 
-frame_number = 600
+frame_number = 500
 chirp = 32
-adcSamples = 5200 # for small ball padding to 5200
+adcSamples = 6000 # for small ball padding to 5200
 TxRx = 2   # for small ball reduce TxRx to 2
 
 def animate(i):
     line1.set_ydata(abs(range_fft[i,0,:,0]))
-    ax2.set_array(velocity_fft[i,:,:,0])
+    ax2.set_array(velocity_fft[i,:,:200,0])
     print(i)
     return line1, ax2
 
@@ -81,7 +82,7 @@ def iirMTI():
     M_order = 12
     slowtime_sampling = 25*32
     nyq = slowtime_sampling / 2
-    Fc = 20
+    Fc = 50
     hp_filter, a = signal.butter(M_order, Fc/nyq, btype='high', analog=False)
     signal_out = signal.filtfilt(hp_filter, a, raw_iq, axis=0)
     
@@ -129,14 +130,45 @@ def bgSubtraction_update():
 
 def plot_range_fft():
     fft_plot = np.reshape(range_fft, (frame_number*chirp, adcSamples, TxRx))
+    fft_plot = abs(fft_plot[:,:100,0]).T
     fft_plot = 20*np.log10(fft_plot/32767)
     ax = plt.subplot(111)
-    im = ax.imshow(abs(fft_plot[:,:,0]).T, aspect='auto', cmap='jet')
+    im = ax.imshow(fft_plot, aspect='auto', cmap='jet', interpolation= 'hanning')
+    print(fft_plot.shape)
     plt.colorbar(im)
     plt.xlabel('frame (time)')
     plt.ylabel('range (z-axis)')
     plt.show()
 
+def plot_micro_doppler():
+    fft_dop = np.reshape(range_fft, (frame_number*chirp, adcSamples, TxRx))
+    print(fft_dop.shape)
+    fft_dop = fft_dop[:,:100,:]
+    fft_dop = np.mean(fft_dop, axis=1)
+    slowtime_sampling = 25*32
+    f, t, Sxx = signal.spectrogram(fft_dop[:,0], slowtime_sampling, return_onesided=False, noverlap=200, 
+        nperseg=256, window='hann', mode='complex', detrend=False )
+    
+    Sxx = np.fft.fftshift(Sxx, axes=0)
+    Sxx = abs(Sxx)
+    Sxx = 20*np.log10(Sxx/32767)
+    print(Sxx.shape)
+    ax = plt.subplot(111)
+    im = ax.imshow(Sxx, aspect='auto', cmap='jet',  interpolation= 'catrom')
+    plt.colorbar(im)
+    plt.ylabel('Frequency [Hz]')
+    plt.xlabel('Time [sec]')
+    # plt.plot(abs(fft_dop[:,0]))
+    plt.show()
+    print(fft_dop.shape)
+
+def subtraction(signal, bg):
+
+    bg = np.mean(bg, axis=(0,1))
+    print(signal.shape, bg.shape)
+    signal_sub = signal - bg
+
+    return signal_sub
 
 def main():
 
@@ -146,7 +178,7 @@ def main():
     SamplingRate = 18750 * k
     dt = 1. / SamplingRate
 
-    folder_name = glob.glob('D:/SmallTrack/data/data_ball_moving/pos_config_3*')
+    folder_name = glob.glob('D:/SmallTrack/data/data_stage_acrylic_mov/p*')
     folder_name = natsort.natsorted(folder_name)
     
     for f_name in folder_name:
@@ -158,11 +190,27 @@ def main():
         print(real_part.shape)
         raw_iq = real_part + 1j*imag_part
         raw_iq = np.complex64(raw_iq)
-        # zero_padding for data ball
-        # n_pad = ((0,0),(0,0),(0,5000),(0,0))
-        # raw_iq = np.pad(raw_iq, pad_width=n_pad, mode='constant', constant_values=0)
-        # raw_iq = raw_iq[:,:,:,:2]
-        # print(raw_iq.shape)
+    
+        n_pad = ((0,0),(0,0),(0,5000),(0,0))
+        raw_iq = np.pad(raw_iq, pad_width=n_pad, mode='constant', constant_values=0)
+        raw_iq = raw_iq[:,:,:,:2]
+    
+    b_folder_name = glob.glob('D:/SmallTrack/data/data_stage_acrylic_mov/b*')
+    b_folder_name = natsort.natsorted(b_folder_name)
+
+    for b_f_name in b_folder_name:
+        print(b_f_name)
+        real_name = b_f_name + '/raw_bg_real.npy'
+        imag_name = b_f_name + '/raw_bg_imag.npy'
+        real_part = np.load(real_name)
+        imag_part = np.load(imag_name)
+        print(real_part.shape)
+        b_raw_iq = real_part + 1j*imag_part 
+        b_raw_iq = np.complex64(b_raw_iq)
+    
+        n_pad = ((0,0),(0,0),(0,5000),(0,0))
+        b_raw_iq = np.pad(b_raw_iq, pad_width=n_pad, mode='constant', constant_values=0)
+        b_raw_iq = b_raw_iq[:,:,:,:2]
 
     time_scale = np.arange(0, raw_iq.shape[2], 1)
     time_scale = time_scale / SamplingRate
@@ -170,6 +218,11 @@ def main():
     # print(raw_iq.shape)
     # print(1/dt)
 
+    # ------------------- Background subtraction of -------------------------
+    # ------------------- raw_iq - b_raw_iq ---------------------------------
+    # raw_iq = subtraction(raw_iq, b_raw_iq)
+    
+    # -----------------------------------------------------------------------
     #### ---------------- Matthew ash paper - IEEE sensor -------------------
     # static bg subtraction
     # raw_iq = bgSubtraction()
@@ -187,25 +240,26 @@ def main():
     # raw_iq = firMTI()
 
     # IIR M=12 cut-off 20 hz
-    raw_iq = np.reshape(raw_iq,(frame_number*chirp, adcSamples, TxRx))
-    raw_iq = iirMTI()
+    # raw_iq = np.reshape(raw_iq,(frame_number*chirp, adcSamples, TxRx))
+    # raw_iq = iirMTI()
 
     #### --------------------------------------------------------------------
 
     # print(raw_iq.shape)
     range_fft = rangeFFT()
-    plot_range_fft()
+    # plot_range_fft()
+    # plot_micro_doppler()
     # N = range_fft.shape[2]
     # F_step = SamplingRate / N
     # freq = np.arange(0, N*F_step, F_step)
     # plt.plot(freq, abs(range_fft[0,0,:,0])) 
     # plt.show()
 
-    # velocity_fft = dopplerFFT()
+    velocity_fft = dopplerFFT()
     # print(velocity_fft.shape)
     # print(range_fft.shape, velocity_fft.shape)
 
-    # runGraphInitial()
+    runGraphInitial()
 
 
     
