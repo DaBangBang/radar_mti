@@ -10,14 +10,19 @@ import itertools
 from pylab import *
 import scipy.signal as signal
 
-frame_number = 500
+frame_number = 600
 chirp = 32
-adcSamples = 6000 # for small ball padding to 5200
-TxRx = 2   # for small ball reduce TxRx to 2
+adc = 1000
+TxRx = 2 
+padding = 0
+
+## ---------------- no need to adjust ---------------
+adcSamples = padding + adc 
+n_pad = ((0,0),(0,0),(0,padding),(0,0))
 
 def animate(i):
-    line1.set_ydata(abs(range_fft[i,0,:,0]))
-    ax2.set_array(velocity_fft[i,:,:200,0])
+    line1.set_ydata(abs(range_fft[i,0,:100,0]))
+    ax2.set_array(velocity_fft[i,:,:100,0])
     print(i)
     return line1, ax2
 
@@ -27,10 +32,10 @@ def runGraphInitial():
     fig = plt.figure(1)
     ax1 = fig.add_subplot(121)
     ax1.set_ylim([-1,100])
-    line1, = ax1.plot(abs(range_fft[0,0,:,0]))
+    line1, = ax1.plot(abs(range_fft[0,0,:100,0]))
     
     ax2 = fig.add_subplot(122)
-    ax2 = plt.imshow(velocity_fft[0,:,:200,0], aspect= 'auto', origin='lower' , cmap='jet', 
+    ax2 = plt.imshow(velocity_fft[0,:,:100,0], aspect= 'auto', origin='lower' , cmap='jet', 
          extent=[0, velocity_fft.shape[2]-1, velocity_fft.shape[1]/2., -velocity_fft.shape[1]/2.], interpolation = 'catrom')
     
     ani = FuncAnimation(fig, animate, frames= frame_number  ,interval = 25)
@@ -39,6 +44,10 @@ def runGraphInitial():
 def dopplerFFT():
     n = range_fft.shape[1]
     dop_fft = np.fft.fftshift(np.fft.fft(range_fft, axis=1) / n, axes=1)
+
+    #----- save dop in complex ---------
+    # np.save('D:/data_signal_MTI/data_ball_circle/dop_66', dop_fft[:,:,:100,:])
+    
     dop_fft = abs(dop_fft)
     return dop_fft
 
@@ -130,7 +139,7 @@ def bgSubtraction_update():
 
 def plot_range_fft():
     fft_plot = np.reshape(range_fft, (frame_number*chirp, adcSamples, TxRx))
-    fft_plot = abs(fft_plot[:,:100,0]).T
+    fft_plot = abs(fft_plot[:,:500,0]).T
     fft_plot = 20*np.log10(fft_plot/32767)
     ax = plt.subplot(111)
     im = ax.imshow(fft_plot, aspect='auto', cmap='jet', interpolation= 'hanning')
@@ -178,7 +187,7 @@ def main():
     SamplingRate = 18750 * k
     dt = 1. / SamplingRate
 
-    folder_name = glob.glob('D:/SmallTrack/data/data_stage_acrylic_mov/p*')
+    folder_name = glob.glob('D:/data_signal_MTI/data_ball_circle/pos_66*')
     folder_name = natsort.natsorted(folder_name)
     
     for f_name in folder_name:
@@ -191,11 +200,10 @@ def main():
         raw_iq = real_part + 1j*imag_part
         raw_iq = np.complex64(raw_iq)
     
-        n_pad = ((0,0),(0,0),(0,5000),(0,0))
         raw_iq = np.pad(raw_iq, pad_width=n_pad, mode='constant', constant_values=0)
-        raw_iq = raw_iq[:,:,:,:2]
+        raw_iq = raw_iq[:,:,:,:TxRx]
     
-    b_folder_name = glob.glob('D:/SmallTrack/data/data_stage_acrylic_mov/b*')
+    b_folder_name = glob.glob('D:/data_signal_MTI/data_ball_circle/bg_66*')
     b_folder_name = natsort.natsorted(b_folder_name)
 
     for b_f_name in b_folder_name:
@@ -208,9 +216,8 @@ def main():
         b_raw_iq = real_part + 1j*imag_part 
         b_raw_iq = np.complex64(b_raw_iq)
     
-        n_pad = ((0,0),(0,0),(0,5000),(0,0))
         b_raw_iq = np.pad(b_raw_iq, pad_width=n_pad, mode='constant', constant_values=0)
-        b_raw_iq = b_raw_iq[:,:,:,:2]
+        b_raw_iq = b_raw_iq[:,:,:,:TxRx]
 
     time_scale = np.arange(0, raw_iq.shape[2], 1)
     time_scale = time_scale / SamplingRate
@@ -220,7 +227,7 @@ def main():
 
     # ------------------- Background subtraction of -------------------------
     # ------------------- raw_iq - b_raw_iq ---------------------------------
-    # raw_iq = subtraction(raw_iq, b_raw_iq)
+    raw_iq = subtraction(raw_iq, b_raw_iq)
     
     # -----------------------------------------------------------------------
     #### ---------------- Matthew ash paper - IEEE sensor -------------------
@@ -247,8 +254,10 @@ def main():
 
     # print(raw_iq.shape)
     range_fft = rangeFFT()
+    
     # plot_range_fft()
     # plot_micro_doppler()
+    
     # N = range_fft.shape[2]
     # F_step = SamplingRate / N
     # freq = np.arange(0, N*F_step, F_step)
@@ -256,8 +265,10 @@ def main():
     # plt.show()
 
     velocity_fft = dopplerFFT()
-    # print(velocity_fft.shape)
-    # print(range_fft.shape, velocity_fft.shape)
+
+    # velocity_fft = velocity_fft[:,44:84,:,:]
+    print(velocity_fft.shape)
+    # print(range_fft.shape, velocity_fft.shape)mwa
 
     runGraphInitial()
 
