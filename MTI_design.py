@@ -14,7 +14,7 @@ frame_number = 600
 chirp = 32
 adc = 1000
 TxRx = 2 
-padding = 0
+padding = 5000
 
 ## ---------------- no need to adjust ---------------
 adcSamples = padding + adc 
@@ -267,7 +267,7 @@ def main():
     velocity_fft = dopplerFFT()
 
     # velocity_fft = velocity_fft[:,44:84,:,:]
-    print(velocity_fft.shape)
+    # print(velocity_fft.shape)
     # print(range_fft.shape, velocity_fft.shape)mwa
 
     runGraphInitial()
