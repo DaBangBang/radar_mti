@@ -48,9 +48,11 @@ def kernal(velocity_fft):
                                     max(0,j-training_cell_along_range):j+training_cell_along_range+1, :].copy()
             kernal_avg[:, max(0,i-guarding_cell_along_velocity):i+guarding_cell_along_velocity+1, 
                                     max(0,j-guarding_cell_along_range):j+guarding_cell_along_range+1, :] = np.nan
+            
             # CA-CFAR 
             kernal_avg = weight*np.nanmean(kernal_avg)
             # OS-CFAR
+            
             
             tresh_plane[:,i,j,:] = kernal_avg
     
