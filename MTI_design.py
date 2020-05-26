@@ -268,13 +268,13 @@ def main():
     # plt.plot(freq, abs(range_fft[0,0,:,0])) 
     # plt.show()
 
-    # velocity_fft = dopplerFFT()
+    velocity_fft = dopplerFFT()
 
     # velocity_fft = velocity_fft[:,44:84,:,:]
     # print(velocity_fft.shape)
     # print(range_fft.shape, velocity_fft.shape)mwa
 
-    # runGraphInitial()
+    runGraphInitial()
 
 
     
