@@ -31,7 +31,7 @@ def runGraphInitial():
 
     fig = plt.figure(1)
     ax1 = fig.add_subplot(121)
-    ax1.set_ylim([-1,100])
+    ax1.set_ylim([-1,5])
     line1, = ax1.plot(abs(range_fft[0,0,:100,0]))
     
     ax2 = fig.add_subplot(122)
@@ -54,6 +54,10 @@ def dopplerFFT():
 def rangeFFT():
     n = raw_iq.shape[2]
     range_fft = np.fft.fft(raw_iq, axis=2) / n
+
+    #------ save range in complex ------------
+    np.save('D:/data_signal_MTI/data_ball_circle/range_66_iir', range_fft[:,:,:100,:])
+    
     return range_fft
 
 def stoveMTI():
@@ -227,7 +231,7 @@ def main():
 
     # ------------------- Background subtraction of -------------------------
     # ------------------- raw_iq - b_raw_iq ---------------------------------
-    raw_iq = subtraction(raw_iq, b_raw_iq)
+    # raw_iq = subtraction(raw_iq, b_raw_iq)
     
     # -----------------------------------------------------------------------
     #### ---------------- Matthew ash paper - IEEE sensor -------------------
@@ -247,8 +251,8 @@ def main():
     # raw_iq = firMTI()
 
     # IIR M=12 cut-off 20 hz
-    # raw_iq = np.reshape(raw_iq,(frame_number*chirp, adcSamples, TxRx))
-    # raw_iq = iirMTI()
+    raw_iq = np.reshape(raw_iq,(frame_number*chirp, adcSamples, TxRx))
+    raw_iq = iirMTI()
 
     #### --------------------------------------------------------------------
 
@@ -264,13 +268,13 @@ def main():
     # plt.plot(freq, abs(range_fft[0,0,:,0])) 
     # plt.show()
 
-    velocity_fft = dopplerFFT()
+    # velocity_fft = dopplerFFT()
 
     # velocity_fft = velocity_fft[:,44:84,:,:]
     # print(velocity_fft.shape)
     # print(range_fft.shape, velocity_fft.shape)mwa
 
-    runGraphInitial()
+    # runGraphInitial()
 
 
     

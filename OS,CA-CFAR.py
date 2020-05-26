@@ -6,14 +6,14 @@ import itertools
 
 # should be odd number
 
-training_cell_along_range = 37
-training_cell_along_velocity = 7
+training_cell_along_range = 35
+training_cell_along_velocity = 11
 training_cell_along_range = int(training_cell_along_range/2)
 training_cell_along_velocity = int(training_cell_along_velocity/2)
 print(training_cell_along_range, training_cell_along_velocity)
 
-guarding_cell_along_range = 25
-guarding_cell_along_velocity = 3
+guarding_cell_along_range = 21
+guarding_cell_along_velocity = 5
 guarding_cell_along_range = int(guarding_cell_along_range/2)
 guarding_cell_along_velocity = int(guarding_cell_along_velocity/2)
 print(guarding_cell_along_range, guarding_cell_along_velocity )
@@ -39,7 +39,7 @@ def plotFuction(velocity_fft, tresh_plane, doppler_tresh):
 
 def kernel(velocity_fft):
     # select weight
-    weight = 7
+    weight = 5
     
     peak_value = abs(velocity_fft)
     tresh_plane = np.zeros((velocity_fft.shape[0], velocity_fft.shape[1], velocity_fft.shape[2], velocity_fft.shape[3]))
