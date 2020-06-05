@@ -23,7 +23,7 @@ def callBinfile(fname):
     numADCSamples = 200
     numADCbits = 16
     numTx = 3
-    numChirps = 128
+    numChirps = 64
     numLanes = 4
     '''
     --------------------------------------------------------------------------------
@@ -176,7 +176,7 @@ def main():
     global IQall, range_fft, range_doppler_tx1, range_doppler_tx2, range_doppler_tx3, range_doppler
 
     # bg_avg = np.load('D:/Heatmap_code/data')
-    folder_name = glob.glob('D:/data_signal_MTI/data_ball_circle/bg_300_c*')
+    folder_name = glob.glob('D:/data_signal_MTI/signal_test_4/bg*')
     folder_name = natsort.natsorted(folder_name)
     name_count = 0
 

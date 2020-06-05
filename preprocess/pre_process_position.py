@@ -19,11 +19,11 @@ def callBinfile(fname):
     '''
         read data from bin file. Pls see data structure in MMwave radar device
     '''
-    frameNumber = 600
+    frameNumber = 400
     numADCSamples = 200
     numADCbits = 16
     numTx = 3
-    numChirps = 128
+    numChirps = 64
     numLanes = 4
     '''
     --------------------------------------------------------------------------------
@@ -195,7 +195,7 @@ def main():
     global IQall, range_fft, range_doppler, phase
 
     
-    folder_name = glob.glob('D:/data_signal_MTI/data_ball_circle/pos_300_c*')
+    folder_name = glob.glob('D:/data_signal_MTI/signal_test_6/pos*')
     # folder_name.sort(key=lambda f: int(re.sub('\D','',f)))
     folder_name = natsort.natsorted(folder_name)
     # print(folder_name)

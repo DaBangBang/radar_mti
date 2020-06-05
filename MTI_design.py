@@ -10,11 +10,17 @@ import itertools
 from pylab import *
 import scipy.signal as signal
 
-frame_number = 600
-chirp = 32
-adc = 1000
-TxRx = 2 
-padding = 5000
+
+signal_dir = 'D:/data_signal_MTI/signal_test_5/pos*'
+bg_dir = 'D:/data_signal_MTI/signal_test_5/bg*'
+
+save_dir = 'D:/data_signal_MTI/signal_test_5'
+
+frame_number = 400
+chirp = 64
+adc = 200
+TxRx = 12 
+padding = 1000
 
 ## ---------------- no need to adjust ---------------
 adcSamples = padding + adc 
@@ -46,8 +52,8 @@ def dopplerFFT():
     dop_fft = np.fft.fftshift(np.fft.fft(range_fft, axis=1) / n, axes=1)
 
     #----- save dop in complex ---------
-    # np.save('D:/data_signal_MTI/data_ball_circle/dop_66', dop_fft[:,:,:100,:])
-    
+    # np.save(save_dir + '/doppler_fft', dop_fft[:,:,:100,:])
+
     dop_fft = abs(dop_fft)
     return dop_fft
 
@@ -56,7 +62,7 @@ def rangeFFT():
     range_fft = np.fft.fft(raw_iq, axis=2) / n
 
     #------ save range in complex ------------
-    np.save('D:/data_signal_MTI/data_ball_circle/range_66_iir', range_fft[:,:,:100,:])
+    # np.save('D:/data_signal_MTI/data_ball_circle/range_66_iir', range_fft[:,:,:100,:])
     
     return range_fft
 
@@ -191,7 +197,7 @@ def main():
     SamplingRate = 18750 * k
     dt = 1. / SamplingRate
 
-    folder_name = glob.glob('D:/data_signal_MTI/data_ball_circle/pos_66*')
+    folder_name = glob.glob(signal_dir)
     folder_name = natsort.natsorted(folder_name)
     
     for f_name in folder_name:
@@ -207,7 +213,7 @@ def main():
         raw_iq = np.pad(raw_iq, pad_width=n_pad, mode='constant', constant_values=0)
         raw_iq = raw_iq[:,:,:,:TxRx]
     
-    b_folder_name = glob.glob('D:/data_signal_MTI/data_ball_circle/bg_66*')
+    b_folder_name = glob.glob(bg_dir)
     b_folder_name = natsort.natsorted(b_folder_name)
 
     for b_f_name in b_folder_name:
@@ -236,7 +242,7 @@ def main():
     # -----------------------------------------------------------------------
     #### ---------------- Matthew ash paper - IEEE sensor -------------------
     # static bg subtraction
-    # raw_iq = bgSubtraction()
+    raw_iq = bgSubtraction()
 
     # bg subtraction MTI with updating
     # raw_iq = bgSubtraction_update() # pre-processing using bg subtraction technique
@@ -251,8 +257,8 @@ def main():
     # raw_iq = firMTI()
 
     # IIR M=12 cut-off 20 hz
-    raw_iq = np.reshape(raw_iq,(frame_number*chirp, adcSamples, TxRx))
-    raw_iq = iirMTI()
+    # raw_iq = np.reshape(raw_iq,(frame_number*chirp, adcSamples, TxRx))
+    # raw_iq = iirMTI()
 
     #### --------------------------------------------------------------------
 
