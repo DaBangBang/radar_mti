@@ -142,11 +142,11 @@ def Line():
 def cam_config():
     global cap, fps
     # cap = cv2.VideoCapture(0+ cv2.CAP_DSHOW)
-    # cap = cv2.VideoCapture('D:/NestData/3tx-32chirp-jaco-55times_all/3tx-32chirp-jaco-55times_pos9/2020-01-16_21-17-22.mp4')
-    cap = cv2.VideoCapture('C:/Users/nakorn-vision/Videos/Logitech/LogiCapture/2020-06-02_11-27-.mp4')
+    cap = cv2.VideoCapture('D:/data_signal_MTI/data_ball_move_39_pos/moving_ball_39_pos.mp4')
+    # cap = cv2.VideoCapture('C:/Users/nakorn-vision/Videos/Logitech/LogiCapture/2020-06-09_21-25-24.mp4')
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-    # cap.set(cv2.CAP_PROP_FPS, 25)
+    # cap.set(cv2.CAP_PROP_FPS, )
     # cap.set(cv2.CAP_PROP_AUTOFOCUS, 0)
     # cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 1)
   
@@ -418,79 +418,95 @@ def vec_radar_coordinate(rvec_r, tvec_r):
 
 def ballRadPosition(rt, rt_rad_matrix_inv_1, rt_rad_matrix_inv_2, param_x, param_y):
     
-    global frame_radar
+    global pos_label
     # print(rt.shape, rt_rad_matrix_inv_1.shape, rt_rad_matrix_inv_2.shape)
     ball_rad_posi = np.matmul(rt_rad_matrix_inv_1, rt) + rt_rad_matrix_inv_2
-    print(ball_rad_posi.T)
+    # print(ball_rad_posi.T)
     if (param_x == 0.1) and (param_y == 0.1):
-        frame_radar.append(np.array([[0.0, 0.0, 0.0]]))
+        pos_label.append(np.array([[0.0, 0.0, 0.0]]))
         # print(np.array([[0.0, 0.0, 0.0]]))
     else:
-        frame_radar.append(ball_rad_posi.T)
+        pos_label.append(ball_rad_posi.T)
         # print(ball_rad_posi.T)
         
 
-def findObject(avg_frame, image_point):
+def findObject(image_point):
 
     '''
         detect green color and return coordinate (x1+x, y1+y)
     '''
     param_x = 0.2
     param_y = 0.2
+    px = 575
+    py = 365
+    # px = 0
+    # py = 0
     
-    px = 350
-    py = 200
+    crop_frame = frame[py:py+150, px:px+150]
 
-    grey_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    avg_frame.append(grey_frame)    
-    print(grey_frame.shape)
-    if np.array(avg_frame).shape[0] == 10:
-        np_avg_frame = np.array(avg_frame)[:, py:py+400, px:px+600]
-        np_avg_frame = np.median(np_avg_frame, axis=0)
-        sub_frame = grey_frame[py:py+400, px:px+600] - np_avg_frame
-        retval, threshold = cv2.threshold(sub_frame, 30, 255, cv2.THRESH_BINARY)
-        threshold =  threshold.astype(np.uint8)
-        _,contours,_ = cv2.findContours(threshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-        cv2.imshow('avg', sub_frame)
-        cv2.imshow('median', threshold)
-        if contours:
-            c1 = max(contours, key= cv2.contourArea)
-            x1,y1,w1,h1 = cv2.boundingRect(c1)
-            # print(x1,y1)
-            # cv2.circle(frame, (x1,y1), 5, (0,0,255), -1)
-            # cv2.imshow('median', threshold)
-            # cv2.imshow('avg', sub_frame)
-            
-            param_x = x1 + px
-            param_y = y1 + py
-
-        elif not contours:
+    '''
+    check hsv
+    '''
+    # hsv_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    # low_green = np.array([25, 52, 72])
+    # high_green = np.array([102, 255, 255])
+    # green_mask = cv2.inRange(hsv_frame, low_green, high_green)
+    # (im2, contours, hierarchy) = cv2.findContours(green_mask, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+    # # cv2.imshow("Green", green_mask)
+    # if contours:
+    #     c1 = max(contours, key= cv2.contourArea)
+    #     x1,y1,w1,h1 = cv2.boundingRect(c1)
         
-            param_x = 0.1
-            param_y = 0.1    
+    #     param_x = int((2*x1 + 2*px+ 10)/2)
+    #     param_y = int((2*y1 + 2*py + 10)/2)
+
+    # elif not contours:
     
+    #     param_x = 0.1
+    #     param_y = 0.1    
     
+    '''
+        for moving object tracking
+    '''
+
+    fgmask = fgbg.apply(crop_frame)
+    (im2, contours, hierarchy) = cv2.findContours(fgmask.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+
+    if contours:
+        c1 = max(contours, key= cv2.contourArea)
+        x1,y1,w1,h1 = cv2.boundingRect(c1)
+        
+        param_x = int((2*x1 + 2*px+ 10)/2)
+        param_y = int((2*y1 + 2*py + 10)/2)
+
+    elif not contours:
     
+        param_x = 0.1
+        param_y = 0.1    
     
-    # avg_frame.append(grey_frame)
+    cv2.imshow('mov', crop_frame)
+    cv2.imshow('foreground and background', fgmask)
+
+    '''
+    '''
 
     return param_x, param_y
 
 def frameTrigger():
 
-    frame_green = frame[700, 25, 1]
+    frame_green = frame[710, 260, 1]
     # print(frame_green)
     frame_green = frame_green > 128
-  
+    cv2.imshow('green', frame[710:800, 250:280, :])
     return frame_green
     
-def solvePnP_function(w_coor_camera, uv_coor_camera, w_coor_radar, uv_coor_radar, frame_count):
+def solvePnP_function(w_coor_camera, uv_coor_camera, w_coor_radar, uv_coor_radar):
     
     # print(uv_coor_camera.shape)
     uv_coor_camera_mode.append(uv_coor_camera)
     uv_coor_radar_mode.append(uv_coor_radar)
 
-    if frame_count == 25:
+    if frame_count > 24:
 
         uv_coor_camera_mode_, _ = stats.mode(uv_coor_camera_mode, axis=0)
         uv_coor_radar_mode_, _ = stats.mode(uv_coor_radar_mode, axis=0)
@@ -512,19 +528,18 @@ def solvePnP_function(w_coor_camera, uv_coor_camera, w_coor_radar, uv_coor_radar
     # return rvec_mode_, tvec_mode_, rvec_r_mode_, tvec_r_mode_, stage_flag
     return rvec, tvec, rvec_r, tvec_r, stage_flag
 
-
 def cam_run():
 
     
-    global frame, frame_count, frame_radar, uv_coor_camera_mode, uv_coor_radar_mode
+    global frame, frame_count, pos_label, uv_coor_camera_mode, uv_coor_radar_mode, fgbg
 
    
     '''
         save stat
     '''
-    # text_file = open('D:/NestData/3tx-32chirp-jaco-55times_all/3tx-32chirp-jaco-55times_pos9/pos_process_label_2/frame_number.txt', 'w')
-    # rt_text_file = open('D:/NestData/3tx-32chirp-jaco-55times_all/3tx-32chirp-jaco-55times_pos9/pos_process_label_2/rt_matrix.txt', 'w')
-    # all_frame_detect = open('D:/NestData/3tx-32chirp-jaco-55times_all/3tx-32chirp-jaco-55times_pos9/pos_process_label_2/all_frame.txt', 'w')
+    text_file = open('D:/data_signal_MTI/data_ball_move_39_label/frame_number.txt', 'w')
+    rt_text_file = open('D:/data_signal_MTI/data_ball_move_39_label/rt_matrix.txt', 'w')
+    all_frame_detect = open('D:/data_signal_MTI/data_ball_move_39_label/all_frame.txt', 'w')
     '''
         pygame and opengl function
     '''
@@ -537,16 +552,16 @@ def cam_run():
     ret, frame = cap.read()
     stage_flag = True
     frame_count = 0
-    frame_limit = 0
-    frame_radar = []
-    avg_frame = collections.deque(maxlen=10) 
+    number_of_label = 0
+    pos_label = []
+    fgbg = cv2.createBackgroundSubtractorKNN()
 
     uv_coor_camera_mode = []
     uv_coor_radar_mode = []
 
     while ret == True:
         
-        start_time = time.time() 
+        # start_time = time.time() 
         '''
             opengl event draw cube and face 
         '''
@@ -579,8 +594,8 @@ def cam_run():
             green frame trigger
         '''
       
-        # frame_trigger = frameTrigger()
-        frame_trigger = True
+        frame_trigger = frameTrigger()
+        # frame_trigger = True
         
         # if frame_trigger:
 
@@ -623,11 +638,11 @@ def cam_run():
                 uv_coor_radar = np.swapaxes(corners[point_compare[0,4]], 0,1)
                 
                 if stage_flag:
-                    rvec, tvec, rvec_r, tvec_r, stage_flag = solvePnP_function(w_coor_camera, uv_coor_camera, w_coor_radar, uv_coor_radar, frame_count)
+                    rvec, tvec, rvec_r, tvec_r, stage_flag = solvePnP_function(w_coor_camera, uv_coor_camera, w_coor_radar, uv_coor_radar)
                 
                 else:
                     
-                    param_x, param_y = findObject(avg_frame, image_point[2])
+                    param_x, param_y = findObject(image_point[2])
 
                     vec_1_pixel, vec_2_pixel, vec_3_pixel, vec_4_pixel, vec_21_mov_pixel, rt_pixel, rt_matrix_inv_1, rt_matrix_inv_2, \
                         vec_0_pixel, r_matrix, t_matrix, rt = vec_camera_coordinate(rvec, tvec, w_coor_camera, param_x, param_y)
@@ -635,11 +650,12 @@ def cam_run():
                     vec_rad_1_pixel, vec_rad_2_pixel, vec_rad_0_pixel, \
                         r_rad_matrix, t_rad_matrix, rt_rad_matrix_inv_1, rt_rad_matrix_inv_2 = vec_radar_coordinate(rvec_r, tvec_r)
                     
+                    ballRadPosition(rt, rt_rad_matrix_inv_1, rt_rad_matrix_inv_2, param_x, param_y)
+                    
                     draw_function(vec_1_pixel, vec_2_pixel, vec_3_pixel, vec_4_pixel, vec_21_mov_pixel, 
                         vec_rad_1_pixel, vec_rad_2_pixel, rt_pixel, vec_rad_0_pixel, vec_0_pixel)
                     
-                    frame_limit += 1
-            
+                    # print(frame_count)
                     '''
                         draw frustum
                     '''
@@ -665,28 +681,35 @@ def cam_run():
                 enable this function if you want to read from video
             '''
             ########################################################
-            # if frame_count > 0 :
-                # print(frame_count)
-                # text_file.write(str(frame_count) + '\n')
-                # all_frame_detect.write(str(frame_limit) + '\n')
-                # rt_text_file.write(str(r_rad_matrix))
-                # rt_text_file.write(str(t_rad_matrix) + '\n')
-                # np.save("D:/NestData/3tx-32chirp-jaco-55times_all/3tx-32chirp-jaco-55times_pos9/pos_process_label_2/radar_pos_label",np.array(frame_radar))
-                # print('wake text')
-                # print(np.array(frame_radar).shape)
+            if frame_count > 0 :
+                number_of_label += 1
+                print(frame_count)
+                text_file.write(str(frame_count) + '\n')
+                all_frame_detect.write(str(np.array(pos_label).shape[0]) + '\n')
+                rt_text_file.write(str(r_rad_matrix))
+                rt_text_file.write(str(t_rad_matrix) + '\n')
+                np.save("D:/data_signal_MTI/data_ball_move_39_label/radar_pos_label_" + str(number_of_label) ,np.array(pos_label))
+                print('wake text')
+                print(np.array(pos_label).shape)
 
             ########################################################  
            
             frame_count = 0
-            frame_limit = 0
+            stage_flag = True
+            uv_coor_camera_mode = []
+            uv_coor_radar_mode = []
+            pos_label = []
            
 
         ret, frame = cap.read()
+        # cv2.imshow('org', frame)
+
+
         pygame.display.flip()
-        print("FPS: ", 1.0 / (time.time() - start_time))
-    # text_file.close()
-    # rt_text_file.close()
-    # all_frame_detect.close()
+        
+    text_file.close()
+    rt_text_file.close()
+    all_frame_detect.close()
 
 def main():
 
