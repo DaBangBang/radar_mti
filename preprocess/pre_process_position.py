@@ -19,11 +19,11 @@ def callBinfile(fname):
     '''
         read data from bin file. Pls see data structure in MMwave radar device
     '''
-    frameNumber = 400
+    frameNumber = 251
     numADCSamples = 200
     numADCbits = 16
     numTx = 3
-    numChirps = 64
+    numChirps = 32
     numLanes = 4
     '''
     --------------------------------------------------------------------------------
@@ -195,9 +195,9 @@ def main():
     global IQall, range_fft, range_doppler, phase
 
     
-    folder_name = glob.glob('D:/data_signal_MTI/signal_test_6/pos*')
+    folder_name = glob.glob('D:/data_signal_MTI/data_ball_move_39_pos')
     # folder_name.sort(key=lambda f: int(re.sub('\D','',f)))
-    folder_name = natsort.natsorted(folder_name)
+    # folder_name = natsort.natsorted(folder_name)
     # print(folder_name)
     # data_bg = np.load('D:/SmallTrack/data_config_2_moving/data_bg_mov_4/data_bg.npy')
     # data_bg = abs(data_bg)
@@ -209,6 +209,7 @@ def main():
         print(sub_f)
         bin_insub = sub_f + '/*.bin'
         sub_bin = glob.glob(bin_insub)
+        sub_bin = natsort.natsorted(sub_bin)
         # sub_bin.sort(key=lambda f: int(re.sub('\D','',f)))
         range_fft_mean_real = []
         range_fft_mean_imag = []
@@ -222,6 +223,7 @@ def main():
     
             # IQall = np.float32(IQall)
             print(IQall.shape, IQall[0,0,0,0], IQreal[0,0,0,0], IQimag[0,0,0,0])
+        
             # range_fft = fft_range_function()
             # range_fft_sub = abs(range_fft) - abs(data_bg)
             # print("range_after_sub", range_fft_sub.shape)
@@ -230,21 +232,22 @@ def main():
             # range_fft_sub = np.float32(range_fft_sub)
             # range_fft_mean_all.extend(range_fft_sub)
             # IQall = IQall[:,0,:,0]
-            range_fft_mean_real.extend(IQreal)
-            range_fft_mean_imag.extend(IQimag)
+            # range_fft_mean_real.extend(IQreal)
+            # range_fft_mean_imag.extend(IQimag)
             # runGraphInitial()
-            # save_name = 'D:/SmallTrack/data_pos_test_4/signal_all_'+ str(name_count)
-            # np.save(save_name, range_fft)
-        
-        range_fft_mean_real = np.array(range_fft_mean_real)
-        range_fft_mean_imag = np.array(range_fft_mean_imag)
-        save_name_real = sub_f + '/raw_signal_real'
-        save_name_imag = sub_f + '/raw_signal_imag'
+            save_real = 'D:/data_signal_MTI/data_ball_move_39_real_imag/raw_signal_real_' + str(name_count)
+            save_imag = 'D:/data_signal_MTI/data_ball_move_39_real_imag/raw_signal_imag_' + str(name_count)
+            np.save(save_real, IQreal)
+            np.save(save_imag, IQimag)
+        # range_fft_mean_real = np.array(range_fft_mean_real)
+        # range_fft_mean_imag = np.array(range_fft_mean_imag)
+        # save_name_real = sub_f + '/raw_signal_real_'
+        # save_name_imag = sub_f + '/raw_signal_imag_'
 
-        print("path save =", save_name_real, "shape", range_fft_mean_real.shape, "check", range_fft_mean_real[0,0,0,0])
-        print("path save =", save_name_imag, "shape", range_fft_mean_imag.shape, "check", range_fft_mean_imag[0,0,0,0])
-        np.save(save_name_real, range_fft_mean_real)
-        np.save(save_name_imag, range_fft_mean_imag)
+        # print("path save =", save_name_real, "shape", range_fft_mean_real.shape, "check", range_fft_mean_real[0,0,0,0])
+        # print("path save =", save_name_imag, "shape", range_fft_mean_imag.shape, "check", range_fft_mean_imag[0,0,0,0])
+        # np.save(save_name_real + str(name_count), range_fft_mean_real)
+        # np.save(save_name_imag + str(name_count), range_fft_mean_imag)
 
 
     # range_fft_mean_all = np.array(range_fft_mean_all)
