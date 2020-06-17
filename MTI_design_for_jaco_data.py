@@ -49,7 +49,7 @@ def rangeFFT(f_name):
     range_fft = np.fft.fft(raw_iq, axis=2) / n
 
     #------ save range in complex ------------
-    np.save(f_name + '/range_fft_zero_pad_1000_iir', range_fft[:,:,:100,:])
+    np.save(f_name + '/range_fft_zero_pad_0_iir', range_fft[:,:,:100,:])
     
     return range_fft
 
@@ -209,7 +209,7 @@ def main():
         chirp = raw_iq.shape[1]
         adc = raw_iq.shape[2]
         TxRx = raw_iq.shape[3] 
-        padding = 1000
+        padding = 0
 
         ## ---------------- no need to adjust ---------------
         adcSamples = padding + adc 

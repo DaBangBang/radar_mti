@@ -42,10 +42,3 @@ for f_name in folder_name[:]:
                 
                 
 
-#     label = np.load(f_name)
-#     print(label.shape[0])
-#     all_label.extend(label[:100]) 
-    
-# all_label = np.array(all_label)
-# fig = go.Figure(data = [go.Scatter3d(x=all_label[:,0,0], y=all_label[:,0,1], z=all_label[:,0,2], mode='markers')])
-# fig.show()
