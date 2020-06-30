@@ -1,0 +1,117 @@
+train_function torch.Size([226, 12, 25]) torch.Size([226])
+train_function torch.Size([451, 12, 25]) torch.Size([451])
+train_function torch.Size([677, 12, 25]) torch.Size([677])
+test_function torch.Size([225, 12, 25]) torch.Size([225])
+train_function torch.Size([902, 12, 25]) torch.Size([902])
+train_function torch.Size([1128, 12, 25]) torch.Size([1128])
+train_function torch.Size([1354, 12, 25]) torch.Size([1354])
+test_function torch.Size([450, 12, 25]) torch.Size([450])
+train_function torch.Size([1579, 12, 25]) torch.Size([1579])
+train_function torch.Size([1805, 12, 25]) torch.Size([1805])
+train_function torch.Size([2030, 12, 25]) torch.Size([2030])
+test_function torch.Size([676, 12, 25]) torch.Size([676])
+train_function torch.Size([2255, 12, 25]) torch.Size([2255])
+train_function torch.Size([2480, 12, 25]) torch.Size([2480])
+train_function torch.Size([2705, 12, 25]) torch.Size([2705])
+test_function torch.Size([902, 12, 25]) torch.Size([902])
+train_function torch.Size([2931, 12, 25]) torch.Size([2931])
+train_function torch.Size([3157, 12, 25]) torch.Size([3157])
+train_function torch.Size([3383, 12, 25]) torch.Size([3383])
+test_function torch.Size([1128, 12, 25]) torch.Size([1128])
+train_function torch.Size([3609, 12, 25]) torch.Size([3609])
+train_function torch.Size([3835, 12, 25]) torch.Size([3835])
+train_function torch.Size([4061, 12, 25]) torch.Size([4061])
+test_function torch.Size([1354, 12, 25]) torch.Size([1354])
+train_function torch.Size([4286, 12, 25]) torch.Size([4286])
+train_function torch.Size([4512, 12, 25]) torch.Size([4512])
+train_function torch.Size([4738, 12, 25]) torch.Size([4738])
+test_function torch.Size([1580, 12, 25]) torch.Size([1580])
+train_function torch.Size([4963, 12, 25]) torch.Size([4963])
+train_function torch.Size([5189, 12, 25]) torch.Size([5189])
+train_function torch.Size([5415, 12, 25]) torch.Size([5415])
+test_function torch.Size([1806, 12, 25]) torch.Size([1806])
+train_function torch.Size([5640, 12, 25]) torch.Size([5640])
+train_function torch.Size([5866, 12, 25]) torch.Size([5866])
+train_function torch.Size([6091, 12, 25]) torch.Size([6091])
+test_function torch.Size([2032, 12, 25]) torch.Size([2032])
+train_function torch.Size([6317, 12, 25]) torch.Size([6317])
+train_function torch.Size([6543, 12, 25]) torch.Size([6543])
+>>>>>> test_loss <<<<<< epoch 0 2027.9168701171875
+>>>>>> test_loss <<<<<< epoch 10 1959.7698974609375
+>>>>>> test_loss <<<<<< epoch 20 2434.419189453125
+>>>>>> test_loss <<<<<< epoch 30 3129.39013671875
+>>>>>> test_loss <<<<<< epoch 40 3245.5537109375
+>>>>>> test_loss <<<<<< epoch 50 3588.65234375
+>>>>>> test_loss <<<<<< epoch 60 3729.586669921875
+>>>>>> test_loss <<<<<< epoch 70 3883.249267578125
+>>>>>> test_loss <<<<<< epoch 80 3911.663818359375
+>>>>>> test_loss <<<<<< epoch 90 4005.178466796875
+>>>>>> test_loss <<<<<< epoch 100 4153.09130859375
+>>>>>> test_loss <<<<<< epoch 110 4230.65087890625
+>>>>>> test_loss <<<<<< epoch 120 4268.06884765625
+>>>>>> test_loss <<<<<< epoch 130 4515.22021484375
+>>>>>> test_loss <<<<<< epoch 140 4424.0146484375
+>>>>>> test_loss <<<<<< epoch 150 4526.10546875
+>>>>>> test_loss <<<<<< epoch 160 4590.5947265625
+>>>>>> test_loss <<<<<< epoch 170 4688.70751953125
+>>>>>> test_loss <<<<<< epoch 180 4914.18115234375
+>>>>>> test_loss <<<<<< epoch 190 5045.6201171875
+>>>>>> test_loss <<<<<< epoch 200 5279.32275390625
+>>>>>> test_loss <<<<<< epoch 210 5411.60009765625
+>>>>>> test_loss <<<<<< epoch 220 5487.87353515625
+>>>>>> test_loss <<<<<< epoch 230 5821.84521484375
+>>>>>> test_loss <<<<<< epoch 240 5697.3857421875
+>>>>>> test_loss <<<<<< epoch 250 5934.24951171875
+>>>>>> test_loss <<<<<< epoch 260 5970.46630859375
+>>>>>> test_loss <<<<<< epoch 270 5709.2314453125
+>>>>>> test_loss <<<<<< epoch 280 5839.20849609375
+>>>>>> test_loss <<<<<< epoch 290 6098.71484375
+>>>>>> test_loss <<<<<< epoch 300 6449.78466796875
+>>>>>> test_loss <<<<<< epoch 310 6426.51708984375
+>>>>>> test_loss <<<<<< epoch 320 6181.17138671875
+>>>>>> test_loss <<<<<< epoch 330 6625.80029296875
+>>>>>> test_loss <<<<<< epoch 340 6905.45166015625
+>>>>>> test_loss <<<<<< epoch 350 6600.46044921875
+>>>>>> test_loss <<<<<< epoch 360 6305.4560546875
+>>>>>> test_loss <<<<<< epoch 370 6707.34130859375
+>>>>>> test_loss <<<<<< epoch 380 6285.7275390625
+>>>>>> test_loss <<<<<< epoch 390 6777.29052734375
+>>>>>> test_loss <<<<<< epoch 400 6680.7587890625
+>>>>>> test_loss <<<<<< epoch 410 6649.484375
+>>>>>> test_loss <<<<<< epoch 420 6917.82861328125
+>>>>>> test_loss <<<<<< epoch 430 6480.17041015625
+>>>>>> test_loss <<<<<< epoch 440 6716.9912109375
+>>>>>> test_loss <<<<<< epoch 450 6731.81884765625
+>>>>>> test_loss <<<<<< epoch 460 6325.95458984375
+>>>>>> test_loss <<<<<< epoch 470 6707.208984375
+>>>>>> test_loss <<<<<< epoch 480 6297.85546875
+>>>>>> test_loss <<<<<< epoch 490 6611.1044921875
+>>>>>> test_loss <<<<<< epoch 500 6462.79541015625
+>>>>>> test_loss <<<<<< epoch 510 6810.6474609375
+>>>>>> test_loss <<<<<< epoch 520 6941.2548828125
+>>>>>> test_loss <<<<<< epoch 530 6570.044921875
+>>>>>> test_loss <<<<<< epoch 540 6600.61572265625
+>>>>>> test_loss <<<<<< epoch 550 6567.84765625
+>>>>>> test_loss <<<<<< epoch 560 6827.0126953125
+>>>>>> test_loss <<<<<< epoch 570 6908.53759765625
+>>>>>> test_loss <<<<<< epoch 580 6282.7333984375
+>>>>>> test_loss <<<<<< epoch 590 6636.31494140625
+>>>>>> test_loss <<<<<< epoch 600 6675.619140625
+>>>>>> test_loss <<<<<< epoch 610 6535.9970703125
+>>>>>> test_loss <<<<<< epoch 620 6691.64501953125
+Traceback (most recent call last):
+  File ".\model_r_abs_pad_0.py", line 223, in <module>
+    train_loss = train_function(train_loader)
+  File ".\model_r_abs_pad_0.py", line 170, in train_function
+    for i, (train_data, train_labels) in enumerate(train_loader, 0):
+  File "C:\Users\nakorn-vision\Anaconda3\envs\ice\lib\site-packages\torch\utils\data\dataloader.py", line 345, in __next__
+    data = self._next_data()
+  File "C:\Users\nakorn-vision\Anaconda3\envs\ice\lib\site-packages\torch\utils\data\dataloader.py", line 385, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "C:\Users\nakorn-vision\Anaconda3\envs\ice\lib\site-packages\torch\utils\data\_utils\fetch.py", line 44, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "C:\Users\nakorn-vision\Anaconda3\envs\ice\lib\site-packages\torch\utils\data\_utils\fetch.py", line 44, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File ".\model_r_abs_pad_0.py", line 131, in __getitem__
+    return self.train_data[idx], self.train_label[idx]
+KeyboardInterrupt

@@ -1,0 +1,26 @@
+{
+    "root": "D:/signal_MTI",
+    "program": ".\\model_r_fir_pad_1000.py",
+    "git": {
+        "remote": "https://github.com/shikuzen/radar_mti.git",
+        "commit": "6f7e4eaef812475c9792f239de68533b8e1f475d"
+    },
+    "email": "nakorn.vistec@gmail.com",
+    "codePath": "training_model\\model_r_fir_pad_1000.py",
+    "startedAt": "2020-06-24T22:57:33.293483",
+    "host": "DESKTOP-D437ST7",
+    "username": "nakorn-vision",
+    "executable": "C:\\Users\\nakorn-vision\\Anaconda3\\envs\\ice\\python.exe",
+    "os": "Windows-10-10.0.18362-SP0",
+    "python": "3.6.10",
+    "gpu": "GeForce GTX 1080 Ti",
+    "gpu_count": 1,
+    "cpu_count": 12,
+    "args": [],
+    "state": "finished",
+    "jobType": null,
+    "mode": "run",
+    "project": "model_r_fir_pad_",
+    "heartbeatAt": "2020-06-24T23:49:45.481341",
+    "exitcode": 0
+}

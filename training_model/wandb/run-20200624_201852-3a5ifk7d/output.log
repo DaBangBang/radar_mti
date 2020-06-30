@@ -1,0 +1,104 @@
+train_function torch.Size([226, 12, 25]) torch.Size([226])
+train_function torch.Size([451, 12, 25]) torch.Size([451])
+train_function torch.Size([677, 12, 25]) torch.Size([677])
+test_function torch.Size([225, 12, 25]) torch.Size([225])
+train_function torch.Size([902, 12, 25]) torch.Size([902])
+train_function torch.Size([1128, 12, 25]) torch.Size([1128])
+train_function torch.Size([1354, 12, 25]) torch.Size([1354])
+test_function torch.Size([450, 12, 25]) torch.Size([450])
+train_function torch.Size([1579, 12, 25]) torch.Size([1579])
+train_function torch.Size([1805, 12, 25]) torch.Size([1805])
+train_function torch.Size([2030, 12, 25]) torch.Size([2030])
+test_function torch.Size([676, 12, 25]) torch.Size([676])
+train_function torch.Size([2255, 12, 25]) torch.Size([2255])
+train_function torch.Size([2480, 12, 25]) torch.Size([2480])
+train_function torch.Size([2705, 12, 25]) torch.Size([2705])
+test_function torch.Size([902, 12, 25]) torch.Size([902])
+train_function torch.Size([2931, 12, 25]) torch.Size([2931])
+train_function torch.Size([3157, 12, 25]) torch.Size([3157])
+train_function torch.Size([3383, 12, 25]) torch.Size([3383])
+test_function torch.Size([1128, 12, 25]) torch.Size([1128])
+train_function torch.Size([3609, 12, 25]) torch.Size([3609])
+train_function torch.Size([3835, 12, 25]) torch.Size([3835])
+train_function torch.Size([4061, 12, 25]) torch.Size([4061])
+test_function torch.Size([1354, 12, 25]) torch.Size([1354])
+train_function torch.Size([4286, 12, 25]) torch.Size([4286])
+train_function torch.Size([4512, 12, 25]) torch.Size([4512])
+train_function torch.Size([4738, 12, 25]) torch.Size([4738])
+test_function torch.Size([1580, 12, 25]) torch.Size([1580])
+train_function torch.Size([4963, 12, 25]) torch.Size([4963])
+train_function torch.Size([5189, 12, 25]) torch.Size([5189])
+train_function torch.Size([5415, 12, 25]) torch.Size([5415])
+test_function torch.Size([1806, 12, 25]) torch.Size([1806])
+train_function torch.Size([5640, 12, 25]) torch.Size([5640])
+train_function torch.Size([5866, 12, 25]) torch.Size([5866])
+train_function torch.Size([6091, 12, 25]) torch.Size([6091])
+test_function torch.Size([2032, 12, 25]) torch.Size([2032])
+train_function torch.Size([6317, 12, 25]) torch.Size([6317])
+train_function torch.Size([6543, 12, 25]) torch.Size([6543])
+>>>>>> test_loss <<<<<< epoch 0 9152.9189453125
+C:\Users\nakorn-vision\Anaconda3\envs\ice\lib\site-packages\plotly\matplotlylib\mpltools.py:368: MatplotlibDeprecationWarning:
+
+
+The is_frame_like function was deprecated in Matplotlib 3.1 and will be removed in 3.3.
+
+>>>>>> test_loss <<<<<< epoch 10 2689.602294921875
+C:\Users\nakorn-vision\Anaconda3\envs\ice\lib\site-packages\plotly\matplotlylib\mpltools.py:368: MatplotlibDeprecationWarning:
+
+
+The is_frame_like function was deprecated in Matplotlib 3.1 and will be removed in 3.3.
+
+>>>>>> test_loss <<<<<< epoch 20 2374.17822265625
+C:\Users\nakorn-vision\Anaconda3\envs\ice\lib\site-packages\plotly\matplotlylib\mpltools.py:368: MatplotlibDeprecationWarning:
+
+
+The is_frame_like function was deprecated in Matplotlib 3.1 and will be removed in 3.3.
+
+>>>>>> test_loss <<<<<< epoch 30 2503.22802734375
+C:\Users\nakorn-vision\Anaconda3\envs\ice\lib\site-packages\plotly\matplotlylib\mpltools.py:368: MatplotlibDeprecationWarning:
+
+
+The is_frame_like function was deprecated in Matplotlib 3.1 and will be removed in 3.3.
+
+>>>>>> test_loss <<<<<< epoch 40 2609.78271484375
+C:\Users\nakorn-vision\Anaconda3\envs\ice\lib\site-packages\plotly\matplotlylib\mpltools.py:368: MatplotlibDeprecationWarning:
+
+
+The is_frame_like function was deprecated in Matplotlib 3.1 and will be removed in 3.3.
+
+>>>>>> test_loss <<<<<< epoch 50 2828.051025390625
+C:\Users\nakorn-vision\Anaconda3\envs\ice\lib\site-packages\plotly\matplotlylib\mpltools.py:368: MatplotlibDeprecationWarning:
+
+
+The is_frame_like function was deprecated in Matplotlib 3.1 and will be removed in 3.3.
+
+>>>>>> test_loss <<<<<< epoch 60 2942.69677734375
+C:\Users\nakorn-vision\Anaconda3\envs\ice\lib\site-packages\plotly\matplotlylib\mpltools.py:368: MatplotlibDeprecationWarning:
+
+
+The is_frame_like function was deprecated in Matplotlib 3.1 and will be removed in 3.3.
+
+>>>>>> test_loss <<<<<< epoch 70 2971.202880859375
+C:\Users\nakorn-vision\Anaconda3\envs\ice\lib\site-packages\plotly\matplotlylib\mpltools.py:368: MatplotlibDeprecationWarning:
+
+
+The is_frame_like function was deprecated in Matplotlib 3.1 and will be removed in 3.3.
+
+>>>>>> test_loss <<<<<< epoch 80 3211.330810546875
+C:\Users\nakorn-vision\Anaconda3\envs\ice\lib\site-packages\plotly\matplotlylib\mpltools.py:368: MatplotlibDeprecationWarning:
+
+
+The is_frame_like function was deprecated in Matplotlib 3.1 and will be removed in 3.3.
+
+Traceback (most recent call last):
+  File ".\model_r_abs_pad_0.py", line 222, in <module>
+    wandb.log({'Train_loss': train_loss})
+  File "C:\Users\nakorn-vision\Anaconda3\envs\ice\lib\site-packages\wandb\__init__.py", line 744, in log
+    run.log(row, commit, step, sync, *args, **kwargs)
+  File "C:\Users\nakorn-vision\Anaconda3\envs\ice\lib\site-packages\wandb\wandb_run.py", line 648, in log
+    self.history.add(row, *args, step=step, commit=commit, **kwargs)
+  File "C:\Users\nakorn-vision\Anaconda3\envs\ice\lib\site-packages\wandb\history.py", line 139, in add
+    self._write()
+  File "C:\Users\nakorn-vision\Anaconda3\envs\ice\lib\site-packages\wandb\history.py", line 246, in _write
+    os.fsync(self._file.fileno())
+KeyboardInterrupt

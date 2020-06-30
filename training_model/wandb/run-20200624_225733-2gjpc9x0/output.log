@@ -1,0 +1,68 @@
+train_function torch.Size([226, 12, 100]) torch.Size([226])
+train_function torch.Size([451, 12, 100]) torch.Size([451])
+train_function torch.Size([677, 12, 100]) torch.Size([677])
+test_function torch.Size([225, 12, 100]) torch.Size([225])
+train_function torch.Size([902, 12, 100]) torch.Size([902])
+train_function torch.Size([1128, 12, 100]) torch.Size([1128])
+train_function torch.Size([1354, 12, 100]) torch.Size([1354])
+test_function torch.Size([450, 12, 100]) torch.Size([450])
+train_function torch.Size([1579, 12, 100]) torch.Size([1579])
+train_function torch.Size([1805, 12, 100]) torch.Size([1805])
+train_function torch.Size([2030, 12, 100]) torch.Size([2030])
+test_function torch.Size([676, 12, 100]) torch.Size([676])
+train_function torch.Size([2255, 12, 100]) torch.Size([2255])
+train_function torch.Size([2480, 12, 100]) torch.Size([2480])
+train_function torch.Size([2705, 12, 100]) torch.Size([2705])
+test_function torch.Size([902, 12, 100]) torch.Size([902])
+train_function torch.Size([2931, 12, 100]) torch.Size([2931])
+train_function torch.Size([3157, 12, 100]) torch.Size([3157])
+train_function torch.Size([3383, 12, 100]) torch.Size([3383])
+test_function torch.Size([1128, 12, 100]) torch.Size([1128])
+train_function torch.Size([3609, 12, 100]) torch.Size([3609])
+train_function torch.Size([3835, 12, 100]) torch.Size([3835])
+train_function torch.Size([4061, 12, 100]) torch.Size([4061])
+test_function torch.Size([1354, 12, 100]) torch.Size([1354])
+train_function torch.Size([4286, 12, 100]) torch.Size([4286])
+train_function torch.Size([4512, 12, 100]) torch.Size([4512])
+train_function torch.Size([4738, 12, 100]) torch.Size([4738])
+test_function torch.Size([1580, 12, 100]) torch.Size([1580])
+train_function torch.Size([4963, 12, 100]) torch.Size([4963])
+train_function torch.Size([5189, 12, 100]) torch.Size([5189])
+train_function torch.Size([5415, 12, 100]) torch.Size([5415])
+test_function torch.Size([1806, 12, 100]) torch.Size([1806])
+train_function torch.Size([5640, 12, 100]) torch.Size([5640])
+train_function torch.Size([5866, 12, 100]) torch.Size([5866])
+train_function torch.Size([6091, 12, 100]) torch.Size([6091])
+test_function torch.Size([2032, 12, 100]) torch.Size([2032])
+train_function torch.Size([6317, 12, 100]) torch.Size([6317])
+train_function torch.Size([6543, 12, 100]) torch.Size([6543])
+>>>>>> test_loss <<<<<< epoch 0 9633.552734375
+>>>>>> test_loss <<<<<< epoch 100 211.55662536621094
+>>>>>> test_loss <<<<<< epoch 200 216.021484375
+>>>>>> test_loss <<<<<< epoch 300 223.76934814453125
+>>>>>> test_loss <<<<<< epoch 400 202.69512939453125
+>>>>>> test_loss <<<<<< epoch 500 225.63198852539062
+>>>>>> test_loss <<<<<< epoch 600 209.89404296875
+>>>>>> test_loss <<<<<< epoch 700 223.94541931152344
+>>>>>> test_loss <<<<<< epoch 800 220.22280883789062
+>>>>>> test_loss <<<<<< epoch 900 214.32806396484375
+>>>>>> test_loss <<<<<< epoch 1000 222.08370971679688
+>>>>>> test_loss <<<<<< epoch 1100 225.9693603515625
+>>>>>> test_loss <<<<<< epoch 1200 218.0303955078125
+>>>>>> test_loss <<<<<< epoch 1300 222.15000915527344
+>>>>>> test_loss <<<<<< epoch 1400 209.26510620117188
+>>>>>> test_loss <<<<<< epoch 1500 192.80206298828125
+>>>>>> test_loss <<<<<< epoch 1600 196.56004333496094
+>>>>>> test_loss <<<<<< epoch 1700 199.22032165527344
+>>>>>> test_loss <<<<<< epoch 1800 192.57699584960938
+>>>>>> test_loss <<<<<< epoch 1900 204.59161376953125
+>>>>>> test_loss <<<<<< epoch 2000 216.05992126464844
+>>>>>> test_loss <<<<<< epoch 2100 223.5218963623047
+>>>>>> test_loss <<<<<< epoch 2200 215.11839294433594
+>>>>>> test_loss <<<<<< epoch 2300 220.2384490966797
+>>>>>> test_loss <<<<<< epoch 2400 219.4520263671875
+>>>>>> test_loss <<<<<< epoch 2500 228.17105102539062
+>>>>>> test_loss <<<<<< epoch 2600 227.46826171875
+>>>>>> test_loss <<<<<< epoch 2700 232.6480712890625
+>>>>>> test_loss <<<<<< epoch 2800 245.4011688232422
+>>>>>> test_loss <<<<<< epoch 2900 235.85386657714844

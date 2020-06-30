@@ -1,0 +1,314 @@
+diff --git a/preprocess/chirp_simulate.py b/preprocess/chirp_simulate.py
+index d6e15d8..84bac5f 100644
+--- a/preprocess/chirp_simulate.py
++++ b/preprocess/chirp_simulate.py
+@@ -51,49 +51,53 @@ def read_label():
+       r = np.sqrt(dis[0,0]**2 + (dis[0,1] - y_offset)**2 + dis[0,2]**2)
+       # r = dis[0,2]
+       r = r*mm
++      print("range r", r)
+       simulate(r, sim_chirp, peak_position)
+     sim_chirp = np.array(sim_chirp)
+     peak_position = np.array(peak_position)
+-    print(sim_chirp.shape, sim_chirp[0])
++    # print(sim_chirp.shape, sim_chirp[0])
+     print(peak_position.shape, peak_position[0])
+-    # np.save(save_folder + str(n_label[1]) +'/simulate_radar_1chirp_500pad', sim_chirp[:,:,:100])
+-    # np.save(save_folder + str(n_label[1]) +'/peak_position_1chirp_500pad', peak_position)
++    # np.save(save_folder + str(n_label[1]) +'/simulate_radar_1chirp_0pad', sim_chirp)
++    # np.save(save_folder + str(n_label[1]) +'/peak_position_1chirp_0pad', peak_position)
+ 
+ def simulate(dis, sim_chirp, peak_position):
+ 
+   
+-  # print("Real Bandwidth\n", RealBandwidth / GHz, "GHz")
+-  # print("Wavelength\n", WaveLength / mm, "mm")
+-  # print("Range Resolution\n", RangeResolution / cm, "cm")
+-  # print("Complete Phase Distance\n", CompletePhaseDistance / mm, "mm")
+-  # print("Complete Cycles per Range Resolution\n", RangeResolution / CompletePhaseDistance)
+-  # print("ADC Sampling Time\n", ADCSamplingTime / us, "us")
+-  # print("Max Range\n", MaxRange, "m")
+-  # print("Number of cycles at 10cm\n", fbeat(0.1) * ADCSamplingTime)
+-  # print("Max Measurable Velocity (phase diff < pi) \n", Vmax, "mm/s")
++  print("Real Bandwidth\n", RealBandwidth / GHz, "GHz")
++  print("Wavelength\n", WaveLength / mm, "mm")
++  print("Range Resolution\n", RangeResolution / cm, "cm")
++  print("Complete Phase Distance\n", CompletePhaseDistance / mm, "mm")
++  print("Complete Cycles per Range Resolution\n", RangeResolution / CompletePhaseDistance)
++  print("ADC Sampling Time\n", ADCSamplingTime / us, "us")
++  print("Max Range\n", MaxRange, "m")
++  print("Number of cycles at 10cm\n", fbeat(0.1) * ADCSamplingTime)
++  print("Max Measurable Velocity (phase diff < pi) \n", Vmax, "mm/s")
+ 
+   ls = []
+   fft_all = []
+-  # print(dis)
++  print("distance ", dis)
+   obj_distance = dis
+   # print("Plot of IF if object is at", obj_distance, "m")
+   for i in range(ADCSamples):
+     t = i / ADCSamples * ADCSamplingTime
+     ls.append(np.exp(2 * np.pi * t * 1j * fbeat(obj_distance)))
+ 
+-  n_pad = ((0,500))
++  n_pad = ((0,200))
+   ls = np.pad(ls, pad_width=n_pad, mode='constant', constant_values=0)
+   
+-
+-  for j in [1,5,10,15,20]:
+-    fft = np.fft.fft(ls) / ADCSamples
+-    fft = j*fft
+-    fft_all.append(fft)
++  random_multiply_peak = np.random.randint(low=1, high=20, size=10)
++  # print(random_multiply_peak)
++  for j in random_multiply_peak:
++    # print(j)
++    fft = np.fft.fft(ls)
++    fft_modulus = j*abs(fft / ADCSamples)
++    fft_all.append(fft_modulus)
+   
+   fft_all = np.array(fft_all)
+-  fft_modulus = abs(fft_all[4])
++  # print(fft_all.shape)
+   pos_peak = np.where(fft_modulus == np.max(fft_modulus))
+   pos_peak = int(np.array(pos_peak[0]))
++  # print(pos_peak)
+   # print(pos_peak-2)
+   mean_clutter_F = np.mean(fft_modulus[:pos_peak-2])
+   mean_clutter_R = np.mean(fft_modulus[pos_peak+2:])
+@@ -102,14 +106,19 @@ def simulate(dis, sim_chirp, peak_position):
+   # print(mean_clutter.shape)
+   sim_chirp.append(fft_all)
+   peak_position.append(pos_peak)
+-  # plt.rcParams['figure.figsize'] = [20, 8]
+-  # plt.subplot(1, 2, 1)
+-  # plt.plot(np.real(ls))
+-  # plt.subplot(1, 2, 2)
+-  # plt.plot(fft_modulus[:100])
++  
++  print('pos =', pos_peak)
++  plt.rcParams['figure.figsize'] = [20, 8]
++  plt.subplot(1, 2, 1)
++  plt.plot(np.real(ls))
++  plt.subplot(1, 2, 2)
++  plt.plot(fft_all[0,:])
++  # plt.plot(fft_all[1,:])
++  # plt.plot(fft_all[2,:])
++  # plt.plot(fft_all[3,:])
++  # plt.plot(fft_all[4,:])
+   # plt.plot(mean_clutter)
+-  # plt.show()
+-
++  plt.show()
+   # np.save(save_folder + str(n_label))
+ 
+ read_label()
+diff --git a/signal_SCR_for_jaco_data.py b/signal_SCR_for_jaco_data.py
+index 55f68f6..6280d08 100644
+--- a/signal_SCR_for_jaco_data.py
++++ b/signal_SCR_for_jaco_data.py
+@@ -18,39 +18,61 @@ label_name = natsort.natsorted(label_name)
+ 
+ def cal_snr(range_fft_move_filter_all, peak_position_all, pos_all):
+ 
++    # ---
++    model_result = np.load('D:/data_signal_MTI/data_ball_move_39_graph/result_pad_0.npy')
++    complex_result = model_result[:,0,:] + 1j*model_result[:,1,:]
++    complex_fft = np.fft.fft(complex_result, axis=1) / complex_result.shape[1]
++    complex_modulus = abs(complex_fft)
++    plt.figure(1)
++    plt.plot(complex_modulus[500,:])
++    plt.plot(complex_modulus[200,:])
++    plt.show()
++
++
+     s_t = pos_all.argsort()
+     range_fft_move_filter_all = range_fft_move_filter_all[s_t]
++    complex_modulus = complex_modulus[s_t]
+     peak_position_all =  peak_position_all[s_t]
+ 
+     snr_all = []
++    snr_result = []
+     for i in range(0,range_fft_move_filter_all.shape[0]):
+-        a = range_fft_move_filter_all[i,0, peak_position_all[i]+3, 0]
++        a = range_fft_move_filter_all[i,0, peak_position_all[i]+1, 0]
+         mean_clutter_F = np.mean(range_fft_move_filter_all[i, 0, :peak_position_all[i]-2, 0])
+         mean_clutter_R = np.mean(range_fft_move_filter_all[i, 0, peak_position_all[i]+2:, 0])
+         mean_clutter = (mean_clutter_F+mean_clutter_R)/2
+         
++        b = complex_modulus[i, 0]
++        # mean_clutter_F_r = np.mean(complex_modulus[i, :peak_position_all[i]-2])
++        mean_clutter_R_r = np.mean(complex_modulus[i, peak_position_all[i]+2:])
++        # mean_clutter_r = (mean_clutter_F_r+mean_clutter_R_r)/2
++
++
+         snr = a / mean_clutter
++        snr_r = b / mean_clutter_R_r
+         snr_all.append(snr)
++        snr_result.append(snr_r)
+         # y.append(scr)
+     snr_all = np.array(snr_all)
+-    
++    snr_result = np.array(snr_result)
+     # print(snr_all.shape)
+     # print(peak_position_all[6000])
+     # print(peak_position_all[425])
+-    # plt.figure(1)
+-    # plt.plot(snr_all)
+-    # plt.figure(2)
++    plt.figure(1)
++    plt.plot(snr_all)
++    plt.plot(snr_result)
++    plt.figure(2)
+     # plt.plot(range_fft_move_filter_all[6000,0,:,0])
+-    # plt.plot(range_fft_move_filter_all[425,0,:,0])
+-    # plt.plot(range_fft_move_filter_all[30,0,:,0])
+-    # plt.show()
++    plt.plot(range_fft_move_filter_all[425,0,:,0])
++    plt.plot(range_fft_move_filter_all[30,0,:,0])
++    plt.show()
+ 
+-    return snr_all
++    return snr_all, snr_result
+ 
+ def plot_snr(snr_all, pos_all):
+     s_t = pos_all.argsort()
+     pos_all = pos_all[s_t]
+-    pos_all = pos_all[5:pos_all.shape[0]+3: 20]
++    # pos_all = pos_all[5:pos_all.shape[0]+3: 20]
+     print("pos_all_shape", pos_all.shape)
+     snr_stove_1000 = np.load('D:/data_signal_MTI/data_ball_move_39_graph/snr_1000pad_stove.npy')
+     snr_moving_1000 = np.load('D:/data_signal_MTI/data_ball_move_39_graph/snr_1000pad_moving_filter.npy')
+@@ -67,6 +89,7 @@ def plot_snr(snr_all, pos_all):
+     snr_fir_100 = np.load('D:/data_signal_MTI/data_ball_move_39_graph/snr_100pad_fir.npy')
+     snr_iir_100 = np.load('D:/data_signal_MTI/data_ball_move_39_graph/snr_100pad_iir.npy')
+ 
++    snr_result_0 = np.load('D:/data_signal_MTI/data_ball_move_39_graph/snr_0pad_result.npy')
+     snr_stove_0 = np.load('D:/data_signal_MTI/data_ball_move_39_graph/snr_0pad_stove.npy')
+     snr_moving_0 = np.load('D:/data_signal_MTI/data_ball_move_39_graph/snr_0pad_moving_filter.npy')
+     snr_fir_0 = np.load('D:/data_signal_MTI/data_ball_move_39_graph/snr_0pad_fir.npy')
+@@ -90,10 +113,10 @@ def plot_snr(snr_all, pos_all):
+     snr_iir_100 = snr_iir_100[5:snr_iir_100.shape[0]-1: 20] 
+ 
+         
+-    snr_stove_0 = snr_stove_0[5:snr_stove_0.shape[0]-1: 20]
+-    snr_moving_0 = snr_moving_0[5:snr_moving_0.shape[0]-1: 20]
+-    snr_fir_0 = snr_fir_0[5:snr_fir_0.shape[0]-1: 20]
+-    snr_iir_0 = snr_iir_0[5:snr_iir_0.shape[0]-1: 20] 
++    # snr_stove_0 = snr_stove_0[5:snr_stove_0.shape[0]-1: 20]
++    # snr_moving_0 = snr_moving_0[5:snr_moving_0.shape[0]-1: 20]
++    # snr_fir_0 = snr_fir_0[5:snr_fir_0.shape[0]-1: 20]
++    # snr_iir_0 = snr_iir_0[5:snr_iir_0.shape[0]-1: 20] 
+ 
+     # x = np.linspace(0,1,snr_moving_1000.shape[0])
+     fig = make_subplots(rows=4, cols=1)
+@@ -155,19 +178,40 @@ def plot_snr(snr_all, pos_all):
+                 name='iir'),  row = 3, col = 1)
+ 
+     
+-    fig.add_trace(go.Scatter(x=pos_all, y=signal.savgol_filter(snr_moving_0,59,3),
++    fig.add_trace(go.Scatter(x=pos_all, y=snr_moving_0,
+                     mode='lines+markers',
+                     name='moving'), row = 4, col = 1)
+-    fig.add_trace(go.Scatter(x=pos_all, y=signal.savgol_filter(snr_stove_0,59,3),
++    fig.add_trace(go.Scatter(x=pos_all, y=snr_stove_0,
+                 mode='lines+markers',
+                 name='stove'),  row = 4, col = 1)
+-    fig.add_trace(go.Scatter(x=pos_all, y=signal.savgol_filter(snr_fir_0,59,3),
++    fig.add_trace(go.Scatter(x=pos_all, y=snr_fir_0,
+                     mode='lines+markers',
+                     name='fir'),  row = 4, col = 1)
+-    fig.add_trace(go.Scatter(x=pos_all, y=signal.savgol_filter(snr_iir_0,59,3),
++    fig.add_trace(go.Scatter(x=pos_all, y=snr_iir_0,
++                mode='lines+markers',
++                name='iir'),  row = 4, col = 1)
++    fig.add_trace(go.Scatter(x=pos_all, y=snr_result_0,
+                 mode='lines+markers',
+                 name='iir'),  row = 4, col = 1)
+ 
++    
++    fig.add_trace(go.Scatter(x=pos_all, y=snr_moving_0,
++                    mode='lines+markers',
++                    name='moving'), row = 4, col = 1)
++    fig.add_trace(go.Scatter(x=pos_all, y=snr_stove_0,
++                mode='lines+markers',
++                name='stove'),  row = 4, col = 1)
++    fig.add_trace(go.Scatter(x=pos_all, y=snr_fir_0,
++                    mode='lines+markers',
++                    name='fir'),  row = 4, col = 1)
++    fig.add_trace(go.Scatter(x=pos_all, y=snr_iir_0,
++                mode='lines+markers',
++                name='iir'),  row = 4, col = 1)
++    fig.add_trace(go.Scatter(x=pos_all, y=snr_result_0,
++                mode='lines+markers',
++                name='iir'),  row = 4, col = 1)
++
++
+ 
+    
+     fig['layout'].update(height=1920, width=1920)
+@@ -183,14 +227,21 @@ def main():
+ 
+     mm = 1e-3
+     pos_all = []
++    count = 0
+     for label in label_name:
++        count += 1
+         f_label = np.load(label)
+-        for dis in f_label:
+-            y_offset = 110
+-            r = np.sqrt(dis[0,0]**2 + (dis[0,1] - y_offset)**2 + dis[0,2]**2)
+-            # r = dis[0,2]
+-            r = r*mm
+-            pos_all.append(r)
++        
++        if count%4 == 0:
++            for dis in f_label:
++                y_offset = 110
++                r = np.sqrt(dis[0,0]**2 + (dis[0,1] - y_offset)**2 + dis[0,2]**2)
++                # r = dis[0,2]
++                r = r*mm
++                pos_all.append(r)
++        else:
++            print("training_set : pass")
++
+     pos_all = np.array(pos_all)
+     print(np.array(pos_all).shape)
+ 
+@@ -198,19 +249,26 @@ def main():
+     folder_name = natsort.natsorted(folder_name)
+     range_fft_move_filter_all = []
+     peak_position_all = []
++    count = 0
++
+     for f_name in folder_name:
+-        move_filter = f_name + '/range_fft_zero_pad_500_moving_filter.npy'
+-        peak_pos = f_name + '/peak_position_1chirp_500pad.npy'
+-        range_fft_move_filter = np.load(move_filter)
+-        peak_position = np.load(peak_pos)
+-        range_fft_move_filter_all.extend(abs(range_fft_move_filter))
+-        peak_position_all.extend(peak_position)
++        count += 1
++        if count%4 == 0:
++            move_filter = f_name + '/range_fft_zero_pad_0_iir.npy'
++            peak_pos = f_name + '/peak_position_1chirp_0pad.npy'
++            range_fft_move_filter = np.load(move_filter)
++            peak_position = np.load(peak_pos)
++            range_fft_move_filter_all.extend(abs(range_fft_move_filter))
++            peak_position_all.extend(peak_position)
++        else:
++            print("training_data : pass")
+ 
+     print(np.array(range_fft_move_filter_all).shape, np.array(peak_position_all).shape)
+-    snr_all = cal_snr(np.array(range_fft_move_filter_all), np.array(peak_position_all), pos_all)
+-    # np.save('D:/data_signal_MTI/data_ball_move_39_graph/snr_500pad_moving_filter', snr_all)
+-    snr_all = 0 
+-    plot_snr(snr_all, pos_all)       
++    snr_all, snr_result = cal_snr(np.array(range_fft_move_filter_all), np.array(peak_position_all), pos_all)
++    # np.save('D:/data_signal_MTI/data_ball_move_39_graph/snr_0pad_iir', snr_all)
++    # np.save('D:/data_signal_MTI/data_ball_move_39_graph/snr_0pad_result', snr_result)
++    # snr_all = 0 
++    # plot_snr(snr_all, pos_all)       
+ 
+ if __name__ == '__main__':
+     main()
