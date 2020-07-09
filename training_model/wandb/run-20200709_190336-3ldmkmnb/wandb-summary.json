@@ -1,0 +1,1 @@
+{"distance": {"_type": "plotly-file", "path": "media/plotly/distance_990_0e477723.plotly.json", "sha256": "0e477723672a4431bf84fdb3ad881df9043e286ce9e280ee575cc7c2c6fd7332", "size": 34630}, "_timestamp": 1594321687.980723, "_runtime": 272.35068106651306, "Test_loss": 154.8429718017578, "Train_loss": 85.35540390014648, "_step": 999}

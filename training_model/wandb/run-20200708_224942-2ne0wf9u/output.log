@@ -1,0 +1,238 @@
+train_function torch.Size([221, 12, 25]) torch.Size([221])
+train_function torch.Size([441, 12, 25]) torch.Size([441])
+train_function torch.Size([662, 12, 25]) torch.Size([662])
+test_function torch.Size([220, 12, 25]) torch.Size([220])
+train_function torch.Size([882, 12, 25]) torch.Size([882])
+train_function torch.Size([1103, 12, 25]) torch.Size([1103])
+train_function torch.Size([1324, 12, 25]) torch.Size([1324])
+test_function torch.Size([440, 12, 25]) torch.Size([440])
+train_function torch.Size([1544, 12, 25]) torch.Size([1544])
+train_function torch.Size([1765, 12, 25]) torch.Size([1765])
+train_function torch.Size([1985, 12, 25]) torch.Size([1985])
+test_function torch.Size([661, 12, 25]) torch.Size([661])
+train_function torch.Size([2205, 12, 25]) torch.Size([2205])
+train_function torch.Size([2425, 12, 25]) torch.Size([2425])
+train_function torch.Size([2645, 12, 25]) torch.Size([2645])
+test_function torch.Size([882, 12, 25]) torch.Size([882])
+train_function torch.Size([2866, 12, 25]) torch.Size([2866])
+train_function torch.Size([3087, 12, 25]) torch.Size([3087])
+train_function torch.Size([3308, 12, 25]) torch.Size([3308])
+test_function torch.Size([1103, 12, 25]) torch.Size([1103])
+train_function torch.Size([3529, 12, 25]) torch.Size([3529])
+train_function torch.Size([3750, 12, 25]) torch.Size([3750])
+train_function torch.Size([3971, 12, 25]) torch.Size([3971])
+test_function torch.Size([1324, 12, 25]) torch.Size([1324])
+train_function torch.Size([4191, 12, 25]) torch.Size([4191])
+train_function torch.Size([4412, 12, 25]) torch.Size([4412])
+train_function torch.Size([4633, 12, 25]) torch.Size([4633])
+test_function torch.Size([1545, 12, 25]) torch.Size([1545])
+train_function torch.Size([4853, 12, 25]) torch.Size([4853])
+train_function torch.Size([5074, 12, 25]) torch.Size([5074])
+train_function torch.Size([5295, 12, 25]) torch.Size([5295])
+test_function torch.Size([1766, 12, 25]) torch.Size([1766])
+train_function torch.Size([5515, 12, 25]) torch.Size([5515])
+train_function torch.Size([5736, 12, 25]) torch.Size([5736])
+train_function torch.Size([5956, 12, 25]) torch.Size([5956])
+test_function torch.Size([1987, 12, 25]) torch.Size([1987])
+train_function torch.Size([6177, 12, 25]) torch.Size([6177])
+train_function torch.Size([6398, 12, 25]) torch.Size([6398])
+>>>>>> test_loss <<<<<< epoch 0 74345.0625
+>>>>>> test_loss <<<<<< epoch 10 2454.28759765625
+>>>>>> test_loss <<<<<< epoch 20 1136.9608154296875
+>>>>>> test_loss <<<<<< epoch 30 1195.5631103515625
+>>>>>> test_loss <<<<<< epoch 40 423.679443359375
+>>>>>> test_loss <<<<<< epoch 50 329.27935791015625
+>>>>>> test_loss <<<<<< epoch 60 268.5814514160156
+>>>>>> test_loss <<<<<< epoch 70 258.9099426269531
+>>>>>> test_loss <<<<<< epoch 80 255.55914306640625
+>>>>>> test_loss <<<<<< epoch 90 241.60101318359375
+>>>>>> test_loss <<<<<< epoch 100 231.49203491210938
+>>>>>> test_loss <<<<<< epoch 110 241.85806274414062
+>>>>>> test_loss <<<<<< epoch 120 230.5254364013672
+>>>>>> test_loss <<<<<< epoch 130 227.95736694335938
+>>>>>> test_loss <<<<<< epoch 140 219.4305419921875
+>>>>>> test_loss <<<<<< epoch 150 218.6305389404297
+>>>>>> test_loss <<<<<< epoch 160 220.8534698486328
+>>>>>> test_loss <<<<<< epoch 170 222.29202270507812
+>>>>>> test_loss <<<<<< epoch 180 216.06924438476562
+>>>>>> test_loss <<<<<< epoch 190 212.2401123046875
+>>>>>> test_loss <<<<<< epoch 200 212.75238037109375
+>>>>>> test_loss <<<<<< epoch 210 210.91665649414062
+>>>>>> test_loss <<<<<< epoch 220 211.29884338378906
+>>>>>> test_loss <<<<<< epoch 230 209.1630096435547
+>>>>>> test_loss <<<<<< epoch 240 212.93878173828125
+>>>>>> test_loss <<<<<< epoch 250 210.2118682861328
+>>>>>> test_loss <<<<<< epoch 260 207.0982208251953
+>>>>>> test_loss <<<<<< epoch 270 214.24639892578125
+>>>>>> test_loss <<<<<< epoch 280 207.72740173339844
+>>>>>> test_loss <<<<<< epoch 290 214.21994018554688
+>>>>>> test_loss <<<<<< epoch 300 208.7670440673828
+>>>>>> test_loss <<<<<< epoch 310 211.26194763183594
+>>>>>> test_loss <<<<<< epoch 320 207.28506469726562
+>>>>>> test_loss <<<<<< epoch 330 210.06138610839844
+>>>>>> test_loss <<<<<< epoch 340 207.3004150390625
+>>>>>> test_loss <<<<<< epoch 350 208.8849639892578
+>>>>>> test_loss <<<<<< epoch 360 211.28329467773438
+>>>>>> test_loss <<<<<< epoch 370 204.12637329101562
+>>>>>> test_loss <<<<<< epoch 380 202.72474670410156
+>>>>>> test_loss <<<<<< epoch 390 215.09237670898438
+>>>>>> test_loss <<<<<< epoch 400 212.33969116210938
+>>>>>> test_loss <<<<<< epoch 410 204.38633728027344
+>>>>>> test_loss <<<<<< epoch 420 203.55091857910156
+>>>>>> test_loss <<<<<< epoch 430 212.23074340820312
+>>>>>> test_loss <<<<<< epoch 440 208.9008026123047
+>>>>>> test_loss <<<<<< epoch 450 207.29307556152344
+>>>>>> test_loss <<<<<< epoch 460 206.6112060546875
+>>>>>> test_loss <<<<<< epoch 470 208.4748992919922
+>>>>>> test_loss <<<<<< epoch 480 204.38442993164062
+>>>>>> test_loss <<<<<< epoch 490 207.66978454589844
+>>>>>> test_loss <<<<<< epoch 500 208.15586853027344
+>>>>>> test_loss <<<<<< epoch 510 204.51950073242188
+>>>>>> test_loss <<<<<< epoch 520 204.5391845703125
+>>>>>> test_loss <<<<<< epoch 530 201.79510498046875
+>>>>>> test_loss <<<<<< epoch 540 204.59548950195312
+>>>>>> test_loss <<<<<< epoch 550 200.6226348876953
+>>>>>> test_loss <<<<<< epoch 560 211.49278259277344
+>>>>>> test_loss <<<<<< epoch 570 208.94076538085938
+>>>>>> test_loss <<<<<< epoch 580 204.57196044921875
+>>>>>> test_loss <<<<<< epoch 590 204.13363647460938
+>>>>>> test_loss <<<<<< epoch 600 201.4123077392578
+>>>>>> test_loss <<<<<< epoch 610 203.23098754882812
+>>>>>> test_loss <<<<<< epoch 620 210.4473114013672
+>>>>>> test_loss <<<<<< epoch 630 200.4835662841797
+>>>>>> test_loss <<<<<< epoch 640 200.78933715820312
+>>>>>> test_loss <<<<<< epoch 650 200.69544982910156
+>>>>>> test_loss <<<<<< epoch 660 214.34774780273438
+>>>>>> test_loss <<<<<< epoch 670 201.38099670410156
+>>>>>> test_loss <<<<<< epoch 680 202.65689086914062
+>>>>>> test_loss <<<<<< epoch 690 196.52442932128906
+>>>>>> test_loss <<<<<< epoch 700 206.81871032714844
+>>>>>> test_loss <<<<<< epoch 710 201.7981414794922
+>>>>>> test_loss <<<<<< epoch 720 208.48777770996094
+>>>>>> test_loss <<<<<< epoch 730 197.34881591796875
+>>>>>> test_loss <<<<<< epoch 740 198.4407958984375
+>>>>>> test_loss <<<<<< epoch 750 197.15426635742188
+>>>>>> test_loss <<<<<< epoch 760 206.88499450683594
+>>>>>> test_loss <<<<<< epoch 770 195.5124969482422
+>>>>>> test_loss <<<<<< epoch 780 200.1640625
+>>>>>> test_loss <<<<<< epoch 790 199.8607940673828
+>>>>>> test_loss <<<<<< epoch 800 199.27755737304688
+>>>>>> test_loss <<<<<< epoch 810 194.07904052734375
+>>>>>> test_loss <<<<<< epoch 820 194.33273315429688
+>>>>>> test_loss <<<<<< epoch 830 198.0956268310547
+>>>>>> test_loss <<<<<< epoch 840 192.35910034179688
+>>>>>> test_loss <<<<<< epoch 850 197.00039672851562
+>>>>>> test_loss <<<<<< epoch 860 196.30809020996094
+>>>>>> test_loss <<<<<< epoch 870 193.8330535888672
+>>>>>> test_loss <<<<<< epoch 880 192.3685760498047
+>>>>>> test_loss <<<<<< epoch 890 197.55833435058594
+>>>>>> test_loss <<<<<< epoch 900 194.81739807128906
+>>>>>> test_loss <<<<<< epoch 910 198.16326904296875
+>>>>>> test_loss <<<<<< epoch 920 191.5186767578125
+>>>>>> test_loss <<<<<< epoch 930 185.85693359375
+>>>>>> test_loss <<<<<< epoch 940 193.63165283203125
+>>>>>> test_loss <<<<<< epoch 950 194.63768005371094
+>>>>>> test_loss <<<<<< epoch 960 193.89817810058594
+>>>>>> test_loss <<<<<< epoch 970 194.60926818847656
+>>>>>> test_loss <<<<<< epoch 980 192.57273864746094
+>>>>>> test_loss <<<<<< epoch 990 193.29156494140625
+>>>>>> test_loss <<<<<< epoch 1000 189.05967712402344
+>>>>>> test_loss <<<<<< epoch 1010 187.6920928955078
+>>>>>> test_loss <<<<<< epoch 1020 201.6671600341797
+>>>>>> test_loss <<<<<< epoch 1030 191.44361877441406
+>>>>>> test_loss <<<<<< epoch 1040 188.1001434326172
+>>>>>> test_loss <<<<<< epoch 1050 185.75225830078125
+>>>>>> test_loss <<<<<< epoch 1060 189.67640686035156
+>>>>>> test_loss <<<<<< epoch 1070 195.93666076660156
+>>>>>> test_loss <<<<<< epoch 1080 183.1337127685547
+>>>>>> test_loss <<<<<< epoch 1090 199.630615234375
+>>>>>> test_loss <<<<<< epoch 1100 190.09046936035156
+>>>>>> test_loss <<<<<< epoch 1110 185.0511474609375
+>>>>>> test_loss <<<<<< epoch 1120 185.0389404296875
+>>>>>> test_loss <<<<<< epoch 1130 191.36273193359375
+>>>>>> test_loss <<<<<< epoch 1140 181.33547973632812
+>>>>>> test_loss <<<<<< epoch 1150 191.10328674316406
+>>>>>> test_loss <<<<<< epoch 1160 192.48365783691406
+>>>>>> test_loss <<<<<< epoch 1170 187.8242645263672
+>>>>>> test_loss <<<<<< epoch 1180 186.50926208496094
+>>>>>> test_loss <<<<<< epoch 1190 189.42620849609375
+>>>>>> test_loss <<<<<< epoch 1200 190.94752502441406
+>>>>>> test_loss <<<<<< epoch 1210 184.91510009765625
+>>>>>> test_loss <<<<<< epoch 1220 187.6611328125
+>>>>>> test_loss <<<<<< epoch 1230 192.35499572753906
+>>>>>> test_loss <<<<<< epoch 1240 180.69046020507812
+>>>>>> test_loss <<<<<< epoch 1250 185.66006469726562
+>>>>>> test_loss <<<<<< epoch 1260 191.9298095703125
+>>>>>> test_loss <<<<<< epoch 1270 200.1360321044922
+>>>>>> test_loss <<<<<< epoch 1280 186.0645294189453
+>>>>>> test_loss <<<<<< epoch 1290 181.6222381591797
+>>>>>> test_loss <<<<<< epoch 1300 185.6250457763672
+>>>>>> test_loss <<<<<< epoch 1310 186.4038848876953
+>>>>>> test_loss <<<<<< epoch 1320 182.46441650390625
+>>>>>> test_loss <<<<<< epoch 1330 186.68638610839844
+>>>>>> test_loss <<<<<< epoch 1340 187.61338806152344
+>>>>>> test_loss <<<<<< epoch 1350 187.9800567626953
+>>>>>> test_loss <<<<<< epoch 1360 191.0731201171875
+>>>>>> test_loss <<<<<< epoch 1370 186.23423767089844
+>>>>>> test_loss <<<<<< epoch 1380 181.25025939941406
+>>>>>> test_loss <<<<<< epoch 1390 188.12820434570312
+>>>>>> test_loss <<<<<< epoch 1400 179.91590881347656
+>>>>>> test_loss <<<<<< epoch 1410 193.2877655029297
+>>>>>> test_loss <<<<<< epoch 1420 197.6740264892578
+>>>>>> test_loss <<<<<< epoch 1430 186.40933227539062
+>>>>>> test_loss <<<<<< epoch 1440 185.11700439453125
+>>>>>> test_loss <<<<<< epoch 1450 189.9976043701172
+>>>>>> test_loss <<<<<< epoch 1460 180.57186889648438
+>>>>>> test_loss <<<<<< epoch 1470 189.90045166015625
+>>>>>> test_loss <<<<<< epoch 1480 180.12620544433594
+>>>>>> test_loss <<<<<< epoch 1490 185.49256896972656
+>>>>>> test_loss <<<<<< epoch 1500 192.8510284423828
+>>>>>> test_loss <<<<<< epoch 1510 184.4628143310547
+>>>>>> test_loss <<<<<< epoch 1520 183.91961669921875
+>>>>>> test_loss <<<<<< epoch 1530 192.2489013671875
+>>>>>> test_loss <<<<<< epoch 1540 183.9768524169922
+>>>>>> test_loss <<<<<< epoch 1550 186.17138671875
+>>>>>> test_loss <<<<<< epoch 1560 185.58580017089844
+>>>>>> test_loss <<<<<< epoch 1570 185.8138427734375
+>>>>>> test_loss <<<<<< epoch 1580 183.4012451171875
+>>>>>> test_loss <<<<<< epoch 1590 181.2236328125
+>>>>>> test_loss <<<<<< epoch 1600 186.15966796875
+>>>>>> test_loss <<<<<< epoch 1610 186.72589111328125
+>>>>>> test_loss <<<<<< epoch 1620 177.99832153320312
+>>>>>> test_loss <<<<<< epoch 1630 183.73965454101562
+>>>>>> test_loss <<<<<< epoch 1640 181.47096252441406
+>>>>>> test_loss <<<<<< epoch 1650 183.5601043701172
+>>>>>> test_loss <<<<<< epoch 1660 180.13064575195312
+>>>>>> test_loss <<<<<< epoch 1670 187.27206420898438
+>>>>>> test_loss <<<<<< epoch 1680 191.91259765625
+>>>>>> test_loss <<<<<< epoch 1690 186.07252502441406
+>>>>>> test_loss <<<<<< epoch 1700 183.9259490966797
+>>>>>> test_loss <<<<<< epoch 1710 192.0009002685547
+>>>>>> test_loss <<<<<< epoch 1720 184.15245056152344
+>>>>>> test_loss <<<<<< epoch 1730 183.03521728515625
+>>>>>> test_loss <<<<<< epoch 1740 178.9587860107422
+>>>>>> test_loss <<<<<< epoch 1750 193.94102478027344
+>>>>>> test_loss <<<<<< epoch 1760 176.62469482421875
+>>>>>> test_loss <<<<<< epoch 1770 182.61325073242188
+>>>>>> test_loss <<<<<< epoch 1780 183.92654418945312
+>>>>>> test_loss <<<<<< epoch 1790 196.70709228515625
+>>>>>> test_loss <<<<<< epoch 1800 184.02745056152344
+>>>>>> test_loss <<<<<< epoch 1810 179.95387268066406
+>>>>>> test_loss <<<<<< epoch 1820 182.30056762695312
+>>>>>> test_loss <<<<<< epoch 1830 179.26376342773438
+>>>>>> test_loss <<<<<< epoch 1840 177.2420654296875
+>>>>>> test_loss <<<<<< epoch 1850 186.59564208984375
+>>>>>> test_loss <<<<<< epoch 1860 176.6945343017578
+>>>>>> test_loss <<<<<< epoch 1870 181.56849670410156
+>>>>>> test_loss <<<<<< epoch 1880 181.60275268554688
+>>>>>> test_loss <<<<<< epoch 1890 179.45506286621094
+>>>>>> test_loss <<<<<< epoch 1900 184.7180633544922
+>>>>>> test_loss <<<<<< epoch 1910 183.59376525878906
+>>>>>> test_loss <<<<<< epoch 1920 184.5917510986328
+>>>>>> test_loss <<<<<< epoch 1930 184.40692138671875
+>>>>>> test_loss <<<<<< epoch 1940 187.0166015625
+>>>>>> test_loss <<<<<< epoch 1950 181.4904022216797
+>>>>>> test_loss <<<<<< epoch 1960 195.81805419921875
+>>>>>> test_loss <<<<<< epoch 1970 187.6629180908203
+>>>>>> test_loss <<<<<< epoch 1980 184.10247802734375
+>>>>>> test_loss <<<<<< epoch 1990 194.119140625

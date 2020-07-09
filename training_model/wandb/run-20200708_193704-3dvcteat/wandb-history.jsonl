@@ -1,0 +1,300 @@
+{"Train_loss": 0.17033103853464127, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_0_25180eb1.plotly.json", "sha256": "25180eb16d14387abc917f80674e21409044bcf472549baf0f21f67a90e7bd41", "size": 37479}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_0_4d086852.plotly.json", "sha256": "4d086852349b632870ce8a677d88bc77486e5a5439b099c6ca98a76510ee4663", "size": 36859}, "Test_loss": 0.13835112750530243, "_runtime": 54.09388589859009, "_timestamp": 1594237077.5020614, "_step": 0}
+{"Train_loss": 0.16665276139974594, "_runtime": 57.43122124671936, "_timestamp": 1594237080.8393967, "_step": 1}
+{"Train_loss": 0.16489463672041893, "_runtime": 58.368813276290894, "_timestamp": 1594237081.7769887, "_step": 2}
+{"Train_loss": 0.16443544998764992, "_runtime": 59.267982721328735, "_timestamp": 1594237082.6761582, "_step": 3}
+{"Train_loss": 0.1643882915377617, "_runtime": 60.19177222251892, "_timestamp": 1594237083.5999477, "_step": 4}
+{"Train_loss": 0.16453799977898598, "_runtime": 61.107831954956055, "_timestamp": 1594237084.5160074, "_step": 5}
+{"Train_loss": 0.16339979693293571, "_runtime": 62.0665979385376, "_timestamp": 1594237085.4747734, "_step": 6}
+{"Train_loss": 0.15992476046085358, "_runtime": 63.018726110458374, "_timestamp": 1594237086.4269016, "_step": 7}
+{"Train_loss": 0.15751783177256584, "_runtime": 64.00573992729187, "_timestamp": 1594237087.4139154, "_step": 8}
+{"Train_loss": 0.1524689979851246, "_runtime": 64.92859840393066, "_timestamp": 1594237088.3367739, "_step": 9}
+{"Train_loss": 0.1471676230430603, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_10_7f26b761.plotly.json", "sha256": "7f26b7619420c8ad5b2b9d063dbecea1dc27496c46554c182fddaa7098ce180d", "size": 37532}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_10_07a84071.plotly.json", "sha256": "07a840715d523aa4e89b0f195783d6ec105b13df4e7488fb1e781e2d57564226", "size": 36925}, "Test_loss": 0.13517139852046967, "_runtime": 66.41166591644287, "_timestamp": 1594237089.8198414, "_step": 10}
+{"Train_loss": 0.14069123193621635, "_runtime": 68.1649239063263, "_timestamp": 1594237091.5730994, "_step": 11}
+{"Train_loss": 0.131575595587492, "_runtime": 69.3415060043335, "_timestamp": 1594237092.7496815, "_step": 12}
+{"Train_loss": 0.12400796264410019, "_runtime": 70.25833511352539, "_timestamp": 1594237093.6665106, "_step": 13}
+{"Train_loss": 0.11479808762669563, "_runtime": 71.16711044311523, "_timestamp": 1594237094.575286, "_step": 14}
+{"Train_loss": 0.1054727453738451, "_runtime": 72.15285897254944, "_timestamp": 1594237095.5610344, "_step": 15}
+{"Train_loss": 0.09705326333642006, "_runtime": 73.08016991615295, "_timestamp": 1594237096.4883454, "_step": 16}
+{"Train_loss": 0.08893118612468243, "_runtime": 74.02686023712158, "_timestamp": 1594237097.4350357, "_step": 17}
+{"Train_loss": 0.08365551941096783, "_runtime": 74.94093346595764, "_timestamp": 1594237098.349109, "_step": 18}
+{"Train_loss": 0.07984445057809353, "_runtime": 75.85052013397217, "_timestamp": 1594237099.2586956, "_step": 19}
+{"Train_loss": 0.0779899712651968, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_20_0f534145.plotly.json", "sha256": "0f534145052f5c51a064878e631fcc2d58b7b1177f48c01a9235474e06320a3e", "size": 37528}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_20_30f971c7.plotly.json", "sha256": "30f971c7f47435808772b7e3d6108c694346c1355aaf1836fa037b314de0b8db", "size": 36821}, "Test_loss": 0.07628601789474487, "_runtime": 77.02226853370667, "_timestamp": 1594237100.430444, "_step": 20}
+{"Train_loss": 0.0746480654925108, "_runtime": 78.56385612487793, "_timestamp": 1594237101.9720316, "_step": 21}
+{"Train_loss": 0.07484183833003044, "_runtime": 79.45771789550781, "_timestamp": 1594237102.8658934, "_step": 22}
+{"Train_loss": 0.07443678192794323, "_runtime": 80.3437888622284, "_timestamp": 1594237103.7519643, "_step": 23}
+{"Train_loss": 0.07324111647903919, "_runtime": 81.25475859642029, "_timestamp": 1594237104.662934, "_step": 24}
+{"Train_loss": 0.07047611847519875, "_runtime": 82.39654636383057, "_timestamp": 1594237105.8047218, "_step": 25}
+{"Train_loss": 0.06981839425861835, "_runtime": 83.30401468276978, "_timestamp": 1594237106.7121902, "_step": 26}
+{"Train_loss": 0.06966507434844971, "_runtime": 84.31257629394531, "_timestamp": 1594237107.7207518, "_step": 27}
+{"Train_loss": 0.0697576068341732, "_runtime": 85.26253628730774, "_timestamp": 1594237108.6707118, "_step": 28}
+{"Train_loss": 0.0684079248458147, "_runtime": 86.2267997264862, "_timestamp": 1594237109.6349752, "_step": 29}
+{"Train_loss": 0.06777792237699032, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_30_46c86042.plotly.json", "sha256": "46c8604257a26291acd4773aac2faf15e60c48dc6694686922e3c67f0d1ea4e8", "size": 37511}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_30_5b8a38e6.plotly.json", "sha256": "5b8a38e69276ba8cd56dd05f08d506ce69b17c6310d8530ec9c89db108d87448", "size": 36812}, "Test_loss": 0.07468614727258682, "_runtime": 87.47494006156921, "_timestamp": 1594237110.8831155, "_step": 30}
+{"Train_loss": 0.06655587069690228, "_runtime": 89.06141257286072, "_timestamp": 1594237112.469588, "_step": 31}
+{"Train_loss": 0.06680660508573055, "_runtime": 89.96379590034485, "_timestamp": 1594237113.3719714, "_step": 32}
+{"Train_loss": 0.06562870740890503, "_runtime": 91.08290505409241, "_timestamp": 1594237114.4910805, "_step": 33}
+{"Train_loss": 0.06600229814648628, "_runtime": 91.9756851196289, "_timestamp": 1594237115.3838606, "_step": 34}
+{"Train_loss": 0.06524200364947319, "_runtime": 92.87659764289856, "_timestamp": 1594237116.284773, "_step": 35}
+{"Train_loss": 0.06497777439653873, "_runtime": 93.76627373695374, "_timestamp": 1594237117.1744492, "_step": 36}
+{"Train_loss": 0.0650001373142004, "_runtime": 94.67773604393005, "_timestamp": 1594237118.0859115, "_step": 37}
+{"Train_loss": 0.06470394507050514, "_runtime": 95.5617904663086, "_timestamp": 1594237118.969966, "_step": 38}
+{"Train_loss": 0.06452277675271034, "_runtime": 96.43710851669312, "_timestamp": 1594237119.845284, "_step": 39}
+{"Train_loss": 0.06392281129956245, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_40_cc933740.plotly.json", "sha256": "cc9337403d152734d1d7f238bcaa0f0e5f3826dd97e51b123b350339d97d0679", "size": 37513}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_40_32a87232.plotly.json", "sha256": "32a872325157dedcfb4eee754e676fda02b9562552b984f663dbbdba306dff45", "size": 36826}, "Test_loss": 0.07116223871707916, "_runtime": 97.67529439926147, "_timestamp": 1594237121.0834699, "_step": 40}
+{"Train_loss": 0.06341656669974327, "_runtime": 99.21064257621765, "_timestamp": 1594237122.618818, "_step": 41}
+{"Train_loss": 0.06292136292904615, "_runtime": 100.12077379226685, "_timestamp": 1594237123.5289493, "_step": 42}
+{"Train_loss": 0.06347061973065138, "_runtime": 101.02263832092285, "_timestamp": 1594237124.4308138, "_step": 43}
+{"Train_loss": 0.06295045278966427, "_runtime": 101.94372177124023, "_timestamp": 1594237125.3518972, "_step": 44}
+{"Train_loss": 0.06202180776745081, "_runtime": 102.81554436683655, "_timestamp": 1594237126.2237198, "_step": 45}
+{"Train_loss": 0.06240818277001381, "_runtime": 103.73239254951477, "_timestamp": 1594237127.140568, "_step": 46}
+{"Train_loss": 0.06237539183348417, "_runtime": 104.63453769683838, "_timestamp": 1594237128.0427132, "_step": 47}
+{"Train_loss": 0.06235231272876263, "_runtime": 105.57681560516357, "_timestamp": 1594237128.984991, "_step": 48}
+{"Train_loss": 0.06206963025033474, "_runtime": 106.4538152217865, "_timestamp": 1594237129.8619907, "_step": 49}
+{"Train_loss": 0.0615951856598258, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_50_5c416685.plotly.json", "sha256": "5c41668539386bb797342ab81389fe9d0abeb8f2fb6d2d236e9baa8adcdc3b32", "size": 37521}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_50_a8103126.plotly.json", "sha256": "a81031260c7c0c846177372265fe11c709b9576e4b6f4381bfbf72393fbce683", "size": 36778}, "Test_loss": 0.06912507116794586, "_runtime": 107.60262131690979, "_timestamp": 1594237131.0107968, "_step": 50}
+{"Train_loss": 0.06141612492501736, "_runtime": 109.15465426445007, "_timestamp": 1594237132.5628297, "_step": 51}
+{"Train_loss": 0.06098758988082409, "_runtime": 110.05009150505066, "_timestamp": 1594237133.458267, "_step": 52}
+{"Train_loss": 0.061343761160969734, "_runtime": 110.92149448394775, "_timestamp": 1594237134.32967, "_step": 53}
+{"Train_loss": 0.06056964956223965, "_runtime": 111.83081316947937, "_timestamp": 1594237135.2389886, "_step": 54}
+{"Train_loss": 0.061026982963085175, "_runtime": 112.79258632659912, "_timestamp": 1594237136.2007618, "_step": 55}
+{"Train_loss": 0.059647923335433006, "_runtime": 113.7619161605835, "_timestamp": 1594237137.1700916, "_step": 56}
+{"Train_loss": 0.059552098624408245, "_runtime": 114.66589546203613, "_timestamp": 1594237138.074071, "_step": 57}
+{"Train_loss": 0.05967171024531126, "_runtime": 115.56248092651367, "_timestamp": 1594237138.9706564, "_step": 58}
+{"Train_loss": 0.05833836831152439, "_runtime": 116.45573425292969, "_timestamp": 1594237139.8639097, "_step": 59}
+{"Train_loss": 0.05910667963325977, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_60_65fd8a26.plotly.json", "sha256": "65fd8a26a39a7a9fb76ddf3312f69bd59d7223024a8e76f5f44dda3e59d87c48", "size": 37533}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_60_a91fd2b2.plotly.json", "sha256": "a91fd2b201dffa0d05f92346104027652459e9c8f202b3245862da2d0b841608", "size": 36801}, "Test_loss": 0.06998919695615768, "_runtime": 117.61828446388245, "_timestamp": 1594237141.02646, "_step": 60}
+{"Train_loss": 0.058334410190582275, "_runtime": 119.16479778289795, "_timestamp": 1594237142.5729733, "_step": 61}
+{"Train_loss": 0.057727111503481865, "_runtime": 120.06369233131409, "_timestamp": 1594237143.4718678, "_step": 62}
+{"Train_loss": 0.05815760884433985, "_runtime": 120.94250202178955, "_timestamp": 1594237144.3506775, "_step": 63}
+{"Train_loss": 0.05746067687869072, "_runtime": 121.82404088973999, "_timestamp": 1594237145.2322164, "_step": 64}
+{"Train_loss": 0.0581182986497879, "_runtime": 122.79390907287598, "_timestamp": 1594237146.2020845, "_step": 65}
+{"Train_loss": 0.05760043952614069, "_runtime": 123.68603849411011, "_timestamp": 1594237147.094214, "_step": 66}
+{"Train_loss": 0.057208254002034664, "_runtime": 124.56483173370361, "_timestamp": 1594237147.9730072, "_step": 67}
+{"Train_loss": 0.05652022548019886, "_runtime": 125.4367082118988, "_timestamp": 1594237148.8448837, "_step": 68}
+{"Train_loss": 0.05707967560738325, "_runtime": 126.42862963676453, "_timestamp": 1594237149.836805, "_step": 69}
+{"Train_loss": 0.056696624495089054, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_70_738887d8.plotly.json", "sha256": "738887d858e3eb9de4c06c5d3497d153bb601a7953bef77fdcc067ef53592d92", "size": 37519}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_70_b94d81d6.plotly.json", "sha256": "b94d81d6634756b1fca3c621814ed9335eab8e46eda95f6689688ddc2c4df2de", "size": 36796}, "Test_loss": 0.0715339332818985, "_runtime": 127.60275983810425, "_timestamp": 1594237151.0109353, "_step": 70}
+{"Train_loss": 0.056257608346641064, "_runtime": 129.15778231620789, "_timestamp": 1594237152.5659578, "_step": 71}
+{"Train_loss": 0.0568403284996748, "_runtime": 130.03890681266785, "_timestamp": 1594237153.4470823, "_step": 72}
+{"Train_loss": 0.05659581907093525, "_runtime": 131.04466605186462, "_timestamp": 1594237154.4528415, "_step": 73}
+{"Train_loss": 0.056084771640598774, "_runtime": 131.93957948684692, "_timestamp": 1594237155.347755, "_step": 74}
+{"Train_loss": 0.0556764118373394, "_runtime": 132.82467341423035, "_timestamp": 1594237156.232849, "_step": 75}
+{"Train_loss": 0.05526340194046497, "_runtime": 133.72980904579163, "_timestamp": 1594237157.1379845, "_step": 76}
+{"Train_loss": 0.055421171709895134, "_runtime": 134.62565183639526, "_timestamp": 1594237158.0338273, "_step": 77}
+{"Train_loss": 0.05520722363144159, "_runtime": 135.50026941299438, "_timestamp": 1594237158.908445, "_step": 78}
+{"Train_loss": 0.05553955677896738, "_runtime": 136.3790135383606, "_timestamp": 1594237159.787189, "_step": 79}
+{"Train_loss": 0.05497443862259388, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_80_84768187.plotly.json", "sha256": "84768187251a39741e075e8a1081212a73e2ff841fc8425978ae3364eb35cd01", "size": 37514}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_80_bd7a3d17.plotly.json", "sha256": "bd7a3d1796b6cb33378751d21fea2e5b9b81e7d3698032b71e8c13c4a0687e74", "size": 36818}, "Test_loss": 0.07025344669818878, "_runtime": 137.6225929260254, "_timestamp": 1594237161.0307684, "_step": 80}
+{"Train_loss": 0.05489577632397413, "_runtime": 139.16326093673706, "_timestamp": 1594237162.5714364, "_step": 81}
+{"Train_loss": 0.05537455901503563, "_runtime": 140.03540134429932, "_timestamp": 1594237163.4435768, "_step": 82}
+{"Train_loss": 0.05548030976206064, "_runtime": 140.9285969734192, "_timestamp": 1594237164.3367724, "_step": 83}
+{"Train_loss": 0.055423809215426445, "_runtime": 141.84852647781372, "_timestamp": 1594237165.256702, "_step": 84}
+{"Train_loss": 0.05451315641403198, "_runtime": 142.83706879615784, "_timestamp": 1594237166.2452443, "_step": 85}
+{"Train_loss": 0.05408903583884239, "_runtime": 143.71872687339783, "_timestamp": 1594237167.1269023, "_step": 86}
+{"Train_loss": 0.05419314280152321, "_runtime": 144.601571559906, "_timestamp": 1594237168.009747, "_step": 87}
+{"Train_loss": 0.053575905971229076, "_runtime": 145.54557514190674, "_timestamp": 1594237168.9537506, "_step": 88}
+{"Train_loss": 0.05346245039254427, "_runtime": 146.44455814361572, "_timestamp": 1594237169.8527336, "_step": 89}
+{"Train_loss": 0.053483217023313046, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_90_496eb0d7.plotly.json", "sha256": "496eb0d73851cbfc7af793988662c532d9164282e67ef67c9e2da27b682d765f", "size": 37505}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_90_83b38a51.plotly.json", "sha256": "83b38a5143dee4c18e644d1d70ba65cc01bd490ed53e9231efa2867a329ddf59", "size": 36795}, "Test_loss": 0.06839529424905777, "_runtime": 147.5988073348999, "_timestamp": 1594237171.0069828, "_step": 90}
+{"Train_loss": 0.05385749414563179, "_runtime": 149.10552978515625, "_timestamp": 1594237172.5137053, "_step": 91}
+{"Train_loss": 0.053746964782476425, "_runtime": 149.9827687740326, "_timestamp": 1594237173.3909442, "_step": 92}
+{"Train_loss": 0.05374309793114662, "_runtime": 150.96101689338684, "_timestamp": 1594237174.3691924, "_step": 93}
+{"Train_loss": 0.05364168807864189, "_runtime": 151.84790921211243, "_timestamp": 1594237175.2560847, "_step": 94}
+{"Train_loss": 0.05280266422778368, "_runtime": 152.72911548614502, "_timestamp": 1594237176.137291, "_step": 95}
+{"Train_loss": 0.05331526044756174, "_runtime": 153.74168252944946, "_timestamp": 1594237177.149858, "_step": 96}
+{"Train_loss": 0.053450084291398525, "_runtime": 154.6194441318512, "_timestamp": 1594237178.0276196, "_step": 97}
+{"Train_loss": 0.053095053881406784, "_runtime": 155.5026571750641, "_timestamp": 1594237178.9108326, "_step": 98}
+{"Train_loss": 0.052717430517077446, "_runtime": 156.373521566391, "_timestamp": 1594237179.781697, "_step": 99}
+{"Train_loss": 0.05215381272137165, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_100_0bc64528.plotly.json", "sha256": "0bc645281b1edf59b27a435fb7e2dbf1e34f4d17f0c720b82d1aed0877776716", "size": 37521}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_100_465d629e.plotly.json", "sha256": "465d629e5a15c7000e241627b36162ae277a5e84e53f54beae4608b4266dc030", "size": 36777}, "Test_loss": 0.06765968352556229, "_runtime": 157.5448338985443, "_timestamp": 1594237180.9530094, "_step": 100}
+{"Train_loss": 0.05242958106100559, "_runtime": 159.12967443466187, "_timestamp": 1594237182.53785, "_step": 101}
+{"Train_loss": 0.051673587411642075, "_runtime": 160.02091193199158, "_timestamp": 1594237183.4290874, "_step": 102}
+{"Train_loss": 0.05202666483819485, "_runtime": 160.94902729988098, "_timestamp": 1594237184.3572028, "_step": 103}
+{"Train_loss": 0.05244376603513956, "_runtime": 161.85930800437927, "_timestamp": 1594237185.2674835, "_step": 104}
+{"Train_loss": 0.05214028060436249, "_runtime": 162.81481790542603, "_timestamp": 1594237186.2229934, "_step": 105}
+{"Train_loss": 0.052560918033123016, "_runtime": 163.69565963745117, "_timestamp": 1594237187.103835, "_step": 106}
+{"Train_loss": 0.052055561915040016, "_runtime": 164.60541319847107, "_timestamp": 1594237188.0135887, "_step": 107}
+{"Train_loss": 0.052132196724414825, "_runtime": 165.48650360107422, "_timestamp": 1594237188.894679, "_step": 108}
+{"Train_loss": 0.05175614170730114, "_runtime": 166.3819386959076, "_timestamp": 1594237189.7901142, "_step": 109}
+{"Train_loss": 0.051532444544136524, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_110_f384ddb0.plotly.json", "sha256": "f384ddb0988568fce02055ab47849717afe751d73255090925c48b48f52d005f", "size": 37485}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_110_19ece224.plotly.json", "sha256": "19ece2245cbc6e44dfde91730a2bd2fb9df7c3779a3b1268ec3cb0c0269b2d74", "size": 36813}, "Test_loss": 0.07066410034894943, "_runtime": 167.5793137550354, "_timestamp": 1594237190.9874892, "_step": 110}
+{"Train_loss": 0.05219808220863342, "_runtime": 169.12794947624207, "_timestamp": 1594237192.536125, "_step": 111}
+{"Train_loss": 0.05200477596372366, "_runtime": 170.05725193023682, "_timestamp": 1594237193.4654274, "_step": 112}
+{"Train_loss": 0.05135870445519686, "_runtime": 171.02780866622925, "_timestamp": 1594237194.4359841, "_step": 113}
+{"Train_loss": 0.05125252529978752, "_runtime": 171.932555437088, "_timestamp": 1594237195.340731, "_step": 114}
+{"Train_loss": 0.051224442198872566, "_runtime": 172.83853793144226, "_timestamp": 1594237196.2467134, "_step": 115}
+{"Train_loss": 0.050895399414002895, "_runtime": 173.72267651557922, "_timestamp": 1594237197.130852, "_step": 116}
+{"Train_loss": 0.05076182633638382, "_runtime": 174.60660004615784, "_timestamp": 1594237198.0147755, "_step": 117}
+{"Train_loss": 0.05108352191746235, "_runtime": 175.52811670303345, "_timestamp": 1594237198.9362922, "_step": 118}
+{"Train_loss": 0.0508159501478076, "_runtime": 176.41303968429565, "_timestamp": 1594237199.8212152, "_step": 119}
+{"Train_loss": 0.050681786611676216, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_120_f7db5a42.plotly.json", "sha256": "f7db5a42f06cbd132129a123d892cf29988897fe2a770cb8404901666de40919", "size": 37501}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_120_b935d8d0.plotly.json", "sha256": "b935d8d0c3cdcb8a025b5538ecbd83a0025038d7433a5391e3578adcac824801", "size": 36750}, "Test_loss": 0.067305788397789, "_runtime": 177.6471245288849, "_timestamp": 1594237201.0553, "_step": 120}
+{"Train_loss": 0.05051753390580416, "_runtime": 179.17525625228882, "_timestamp": 1594237202.5834317, "_step": 121}
+{"Train_loss": 0.050400033593177795, "_runtime": 180.08068203926086, "_timestamp": 1594237203.4888575, "_step": 122}
+{"Train_loss": 0.050349900498986244, "_runtime": 180.96705985069275, "_timestamp": 1594237204.3752353, "_step": 123}
+{"Train_loss": 0.051453699357807636, "_runtime": 181.8602843284607, "_timestamp": 1594237205.2684598, "_step": 124}
+{"Train_loss": 0.050596218556165695, "_runtime": 182.74261498451233, "_timestamp": 1594237206.1507905, "_step": 125}
+{"Train_loss": 0.050326752476394176, "_runtime": 183.67640590667725, "_timestamp": 1594237207.0845814, "_step": 126}
+{"Train_loss": 0.05006909277290106, "_runtime": 184.57280611991882, "_timestamp": 1594237207.9809816, "_step": 127}
+{"Train_loss": 0.04997227992862463, "_runtime": 185.53992795944214, "_timestamp": 1594237208.9481034, "_step": 128}
+{"Train_loss": 0.049533612094819546, "_runtime": 186.44179010391235, "_timestamp": 1594237209.8499656, "_step": 129}
+{"Train_loss": 0.050173357129096985, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_130_10261d14.plotly.json", "sha256": "10261d14ed4c0219ab95d8cda568a2fe72e7fb2044eab9eb1f70ed4b80a1b371", "size": 37496}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_130_75c22e0f.plotly.json", "sha256": "75c22e0f8ab9fd3125ac7eeb4094a96a6a050fce2220535806c806998f0c8135", "size": 36767}, "Test_loss": 0.06727857142686844, "_runtime": 187.62756156921387, "_timestamp": 1594237211.035737, "_step": 130}
+{"Train_loss": 0.04982218239456415, "_runtime": 189.15784692764282, "_timestamp": 1594237212.5660224, "_step": 131}
+{"Train_loss": 0.0498114051297307, "_runtime": 190.0615508556366, "_timestamp": 1594237213.4697263, "_step": 132}
+{"Train_loss": 0.04953111428767443, "_runtime": 190.9470248222351, "_timestamp": 1594237214.3552003, "_step": 133}
+{"Train_loss": 0.0497016878798604, "_runtime": 191.88986778259277, "_timestamp": 1594237215.2980433, "_step": 134}
+{"Train_loss": 0.05056794546544552, "_runtime": 192.79509949684143, "_timestamp": 1594237216.203275, "_step": 135}
+{"Train_loss": 0.04976122546941042, "_runtime": 193.74867987632751, "_timestamp": 1594237217.1568553, "_step": 136}
+{"Train_loss": 0.049267184920609, "_runtime": 194.627765417099, "_timestamp": 1594237218.035941, "_step": 137}
+{"Train_loss": 0.04905423987656832, "_runtime": 195.50464630126953, "_timestamp": 1594237218.9128218, "_step": 138}
+{"Train_loss": 0.04929104633629322, "_runtime": 196.37666296958923, "_timestamp": 1594237219.7848384, "_step": 139}
+{"Train_loss": 0.049122544936835766, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_140_8cdceb54.plotly.json", "sha256": "8cdceb54f192fb59ff2898f0d3653888390ecaa7006b7842403e9ab1f51e6225", "size": 37508}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_140_49753d9c.plotly.json", "sha256": "49753d9c6e2d9b0d96222c2a00e116c4e056d50215578565c10c49a2c2665d07", "size": 36784}, "Test_loss": 0.06795880198478699, "_runtime": 197.6567783355713, "_timestamp": 1594237221.0649538, "_step": 140}
+{"Train_loss": 0.04883248172700405, "_runtime": 199.16447615623474, "_timestamp": 1594237222.5726516, "_step": 141}
+{"Train_loss": 0.04843993205577135, "_runtime": 200.04153490066528, "_timestamp": 1594237223.4497104, "_step": 142}
+{"Train_loss": 0.048239956609904766, "_runtime": 200.9866189956665, "_timestamp": 1594237224.3947945, "_step": 143}
+{"Train_loss": 0.04862825479358435, "_runtime": 201.88051915168762, "_timestamp": 1594237225.2886946, "_step": 144}
+{"Train_loss": 0.048425907269120216, "_runtime": 202.83967971801758, "_timestamp": 1594237226.2478552, "_step": 145}
+{"Train_loss": 0.048286816105246544, "_runtime": 203.73064613342285, "_timestamp": 1594237227.1388216, "_step": 146}
+{"Train_loss": 0.04819438699632883, "_runtime": 204.62371468544006, "_timestamp": 1594237228.0318902, "_step": 147}
+{"Train_loss": 0.04772672988474369, "_runtime": 205.5365891456604, "_timestamp": 1594237228.9447646, "_step": 148}
+{"Train_loss": 0.04766698833554983, "_runtime": 206.42690110206604, "_timestamp": 1594237229.8350766, "_step": 149}
+{"Train_loss": 0.04813461098819971, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_150_37a4629b.plotly.json", "sha256": "37a4629b8f4290e6cc57c73ae5a30e495dc52c532408690f3fbbec1aca1e424d", "size": 37502}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_150_adbdfe03.plotly.json", "sha256": "adbdfe031b6748d8b8dea638bec9e56dfb0e72862e2ce615fe86f02753107e44", "size": 36791}, "Test_loss": 0.07058382034301758, "_runtime": 207.68964290618896, "_timestamp": 1594237231.0978184, "_step": 150}
+{"Train_loss": 0.04769603628665209, "_runtime": 209.1973738670349, "_timestamp": 1594237232.6055493, "_step": 151}
+{"Train_loss": 0.04743250459432602, "_runtime": 210.1003155708313, "_timestamp": 1594237233.508491, "_step": 152}
+{"Train_loss": 0.047561547718942165, "_runtime": 211.06011176109314, "_timestamp": 1594237234.4682872, "_step": 153}
+{"Train_loss": 0.04722416400909424, "_runtime": 211.95554447174072, "_timestamp": 1594237235.36372, "_step": 154}
+{"Train_loss": 0.046866316348314285, "_runtime": 212.86209988594055, "_timestamp": 1594237236.2702754, "_step": 155}
+{"Train_loss": 0.04790941160172224, "_runtime": 213.7434778213501, "_timestamp": 1594237237.1516533, "_step": 156}
+{"Train_loss": 0.04786079842597246, "_runtime": 214.6308286190033, "_timestamp": 1594237238.039004, "_step": 157}
+{"Train_loss": 0.04794178903102875, "_runtime": 215.5377061367035, "_timestamp": 1594237238.9458816, "_step": 158}
+{"Train_loss": 0.046994869597256184, "_runtime": 216.41272640228271, "_timestamp": 1594237239.8209019, "_step": 159}
+{"Train_loss": 0.04688738193362951, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_160_7128b88b.plotly.json", "sha256": "7128b88be78f376789100c8b0253644a87a4ccc20fcd8ae7ba169e6f91f19742", "size": 37519}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_160_76da8f00.plotly.json", "sha256": "76da8f00b7bcfff61b1be3fc40792c684456c503255f031ef6ff3589500c91c1", "size": 36788}, "Test_loss": 0.06925687938928604, "_runtime": 217.6555700302124, "_timestamp": 1594237241.0637455, "_step": 160}
+{"Train_loss": 0.04694314580410719, "_runtime": 219.2069582939148, "_timestamp": 1594237242.6151338, "_step": 161}
+{"Train_loss": 0.046622077003121376, "_runtime": 220.09182858467102, "_timestamp": 1594237243.500004, "_step": 162}
+{"Train_loss": 0.0471976101398468, "_runtime": 220.9987723827362, "_timestamp": 1594237244.4069479, "_step": 163}
+{"Train_loss": 0.04667615331709385, "_runtime": 221.91863322257996, "_timestamp": 1594237245.3268087, "_step": 164}
+{"Train_loss": 0.04702359437942505, "_runtime": 222.79087948799133, "_timestamp": 1594237246.199055, "_step": 165}
+{"Train_loss": 0.047014339827001095, "_runtime": 223.68969988822937, "_timestamp": 1594237247.0978754, "_step": 166}
+{"Train_loss": 0.046543258242309093, "_runtime": 224.59538793563843, "_timestamp": 1594237248.0035634, "_step": 167}
+{"Train_loss": 0.04708544630557299, "_runtime": 225.54262948036194, "_timestamp": 1594237248.950805, "_step": 168}
+{"Train_loss": 0.04635942820459604, "_runtime": 226.42279052734375, "_timestamp": 1594237249.830966, "_step": 169}
+{"Train_loss": 0.04657614603638649, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_170_5de623f3.plotly.json", "sha256": "5de623f3bb5c69acba96af0ce25da04d118490df0defb54ca7ff250d08b43ea4", "size": 37506}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_170_47b200c5.plotly.json", "sha256": "47b200c5a9907a359637c8968f9ccf0ffc2cd074b3adf8bc8a8ee51a05c7c095", "size": 36764}, "Test_loss": 0.0681677758693695, "_runtime": 227.57777309417725, "_timestamp": 1594237250.9859486, "_step": 170}
+{"Train_loss": 0.04679517913609743, "_runtime": 229.13241386413574, "_timestamp": 1594237252.5405893, "_step": 171}
+{"Train_loss": 0.046522149816155434, "_runtime": 230.0444655418396, "_timestamp": 1594237253.452641, "_step": 172}
+{"Train_loss": 0.046565646305680275, "_runtime": 230.9468834400177, "_timestamp": 1594237254.355059, "_step": 173}
+{"Train_loss": 0.04614240303635597, "_runtime": 231.88175654411316, "_timestamp": 1594237255.289932, "_step": 174}
+{"Train_loss": 0.04547356069087982, "_runtime": 232.76081824302673, "_timestamp": 1594237256.1689937, "_step": 175}
+{"Train_loss": 0.04576867539435625, "_runtime": 233.71104502677917, "_timestamp": 1594237257.1192205, "_step": 176}
+{"Train_loss": 0.046086338348686695, "_runtime": 234.5939633846283, "_timestamp": 1594237258.0021389, "_step": 177}
+{"Train_loss": 0.046252586878836155, "_runtime": 235.47865629196167, "_timestamp": 1594237258.8868318, "_step": 178}
+{"Train_loss": 0.045603448525071144, "_runtime": 236.36763739585876, "_timestamp": 1594237259.7758129, "_step": 179}
+{"Train_loss": 0.045303065329790115, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_180_73baeedf.plotly.json", "sha256": "73baeedfb4fe62a29c60afd5db37708825c06d4bd023f5bf41104d6992c64bb2", "size": 37515}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_180_0e6920ad.plotly.json", "sha256": "0e6920ad443f93a69ce0ef2ee85a38874e378e3c9e4223efe414aa93323b1402", "size": 36787}, "Test_loss": 0.06686745584011078, "_runtime": 237.53198647499084, "_timestamp": 1594237260.940162, "_step": 180}
+{"Train_loss": 0.04532006848603487, "_runtime": 239.06780433654785, "_timestamp": 1594237262.4759798, "_step": 181}
+{"Train_loss": 0.045293644070625305, "_runtime": 239.94984817504883, "_timestamp": 1594237263.3580236, "_step": 182}
+{"Train_loss": 0.045199088752269745, "_runtime": 240.82553720474243, "_timestamp": 1594237264.2337127, "_step": 183}
+{"Train_loss": 0.04483477212488651, "_runtime": 241.74956130981445, "_timestamp": 1594237265.1577368, "_step": 184}
+{"Train_loss": 0.04495029989629984, "_runtime": 242.70155715942383, "_timestamp": 1594237266.1097326, "_step": 185}
+{"Train_loss": 0.045348179526627064, "_runtime": 243.66869163513184, "_timestamp": 1594237267.076867, "_step": 186}
+{"Train_loss": 0.04495417606085539, "_runtime": 244.55406427383423, "_timestamp": 1594237267.9622397, "_step": 187}
+{"Train_loss": 0.044844324700534344, "_runtime": 245.46264815330505, "_timestamp": 1594237268.8708236, "_step": 188}
+{"Train_loss": 0.044972154311835766, "_runtime": 246.38863849639893, "_timestamp": 1594237269.796814, "_step": 189}
+{"Train_loss": 0.04487925209105015, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_190_d6d18ef8.plotly.json", "sha256": "d6d18ef8ec3f294ac1d7cc337437ea2840b65236638dc78a93a7301bb9531ea7", "size": 37511}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_190_5b475526.plotly.json", "sha256": "5b475526d12fe92e7151f9e14eb4bb79dcd50308c5ad6b31607a9045e82aba88", "size": 36794}, "Test_loss": 0.06875304132699966, "_runtime": 247.54510617256165, "_timestamp": 1594237270.9532816, "_step": 190}
+{"Train_loss": 0.04489760287106037, "_runtime": 249.08496713638306, "_timestamp": 1594237272.4931426, "_step": 191}
+{"Train_loss": 0.04453251324594021, "_runtime": 250.0212914943695, "_timestamp": 1594237273.429467, "_step": 192}
+{"Train_loss": 0.04441119451075792, "_runtime": 250.99758982658386, "_timestamp": 1594237274.4057653, "_step": 193}
+{"Train_loss": 0.04468214698135853, "_runtime": 251.91351294517517, "_timestamp": 1594237275.3216884, "_step": 194}
+{"Train_loss": 0.04491827357560396, "_runtime": 252.8116409778595, "_timestamp": 1594237276.2198164, "_step": 195}
+{"Train_loss": 0.044980613514781, "_runtime": 253.71458673477173, "_timestamp": 1594237277.1227622, "_step": 196}
+{"Train_loss": 0.04485701955854893, "_runtime": 254.6271505355835, "_timestamp": 1594237278.035326, "_step": 197}
+{"Train_loss": 0.045217933133244514, "_runtime": 255.5139136314392, "_timestamp": 1594237278.922089, "_step": 198}
+{"Train_loss": 0.045292021706700325, "_runtime": 256.38853335380554, "_timestamp": 1594237279.7967088, "_step": 199}
+{"Train_loss": 0.044791243970394135, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_200_3de0c613.plotly.json", "sha256": "3de0c6135f28104850c20da45201e3e4f81876a94d93a0d890000f84209c17b0", "size": 37561}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_200_a76f4bfd.plotly.json", "sha256": "a76f4bfd1cf8a8e800e571b3915d848093190d535bddcb9b66385d04fd5bac15", "size": 36748}, "Test_loss": 0.06949383020401001, "_runtime": 257.6015114784241, "_timestamp": 1594237281.009687, "_step": 200}
+{"Train_loss": 0.04461775440722704, "_runtime": 259.1921851634979, "_timestamp": 1594237282.6003606, "_step": 201}
+{"Train_loss": 0.04491916112601757, "_runtime": 260.1007833480835, "_timestamp": 1594237283.5089588, "_step": 202}
+{"Train_loss": 0.045001073740422726, "_runtime": 260.99157667160034, "_timestamp": 1594237284.3997521, "_step": 203}
+{"Train_loss": 0.044100739993155, "_runtime": 261.9030203819275, "_timestamp": 1594237285.3111959, "_step": 204}
+{"Train_loss": 0.04407633654773235, "_runtime": 262.77867603302, "_timestamp": 1594237286.1868515, "_step": 205}
+{"Train_loss": 0.04390604328364134, "_runtime": 263.66177773475647, "_timestamp": 1594237287.0699532, "_step": 206}
+{"Train_loss": 0.04394309222698212, "_runtime": 264.56519961357117, "_timestamp": 1594237287.973375, "_step": 207}
+{"Train_loss": 0.04343562666326761, "_runtime": 265.4955430030823, "_timestamp": 1594237288.9037185, "_step": 208}
+{"Train_loss": 0.04386375844478607, "_runtime": 266.38520646095276, "_timestamp": 1594237289.793382, "_step": 209}
+{"Train_loss": 0.044022850692272186, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_210_caec693e.plotly.json", "sha256": "caec693eb26c53f843a21058357cf6965060edcb3633ef9ba5a6a78b27404524", "size": 37514}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_210_650f281f.plotly.json", "sha256": "650f281f208fd900823ad23dd593a735fb91ebc76d911ec106c90a1d64dabcc3", "size": 36779}, "Test_loss": 0.0682726576924324, "_runtime": 267.54890418052673, "_timestamp": 1594237290.9570796, "_step": 210}
+{"Train_loss": 0.04336171690374613, "_runtime": 269.07578015327454, "_timestamp": 1594237292.4839556, "_step": 211}
+{"Train_loss": 0.04308417998254299, "_runtime": 270.01673316955566, "_timestamp": 1594237293.4249086, "_step": 212}
+{"Train_loss": 0.04346964228898287, "_runtime": 270.917441368103, "_timestamp": 1594237294.3256168, "_step": 213}
+{"Train_loss": 0.043509528040885925, "_runtime": 271.81027579307556, "_timestamp": 1594237295.2184513, "_step": 214}
+{"Train_loss": 0.04348025284707546, "_runtime": 272.6977298259735, "_timestamp": 1594237296.1059053, "_step": 215}
+{"Train_loss": 0.04315399844199419, "_runtime": 273.66692447662354, "_timestamp": 1594237297.0751, "_step": 216}
+{"Train_loss": 0.04345692973583937, "_runtime": 274.5910325050354, "_timestamp": 1594237297.999208, "_step": 217}
+{"Train_loss": 0.044253707863390446, "_runtime": 275.4836473464966, "_timestamp": 1594237298.8918228, "_step": 218}
+{"Train_loss": 0.04391432832926512, "_runtime": 276.3764750957489, "_timestamp": 1594237299.7846506, "_step": 219}
+{"Train_loss": 0.04286342766135931, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_220_5c36ef38.plotly.json", "sha256": "5c36ef388ed6b3693d10b186f4e74d982a33622fd66a36fc40b6af130d6fc06d", "size": 37523}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_220_0e016af0.plotly.json", "sha256": "0e016af0a10570b46eafb7955d370281c07c4f313ae730303d47bebc2049b7ac", "size": 36776}, "Test_loss": 0.06927624344825745, "_runtime": 277.5426604747772, "_timestamp": 1594237300.950836, "_step": 220}
+{"Train_loss": 0.0426083542406559, "_runtime": 279.1401345729828, "_timestamp": 1594237302.54831, "_step": 221}
+{"Train_loss": 0.04260580614209175, "_runtime": 280.0315716266632, "_timestamp": 1594237303.439747, "_step": 222}
+{"Train_loss": 0.04229423403739929, "_runtime": 280.921138048172, "_timestamp": 1594237304.3293135, "_step": 223}
+{"Train_loss": 0.042791763320565224, "_runtime": 281.8060476779938, "_timestamp": 1594237305.2142231, "_step": 224}
+{"Train_loss": 0.042371622286736965, "_runtime": 282.75076150894165, "_timestamp": 1594237306.158937, "_step": 225}
+{"Train_loss": 0.04274677112698555, "_runtime": 283.63816595077515, "_timestamp": 1594237307.0463414, "_step": 226}
+{"Train_loss": 0.042336391285061836, "_runtime": 284.54759883880615, "_timestamp": 1594237307.9557743, "_step": 227}
+{"Train_loss": 0.04206256289035082, "_runtime": 285.43850111961365, "_timestamp": 1594237308.8466766, "_step": 228}
+{"Train_loss": 0.042886482551693916, "_runtime": 286.3138659000397, "_timestamp": 1594237309.7220414, "_step": 229}
+{"Train_loss": 0.042185038328170776, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_230_6ca2fb66.plotly.json", "sha256": "6ca2fb66ef748448a8cdc3370befb5080bde1afae87219495b61e06a4d738c3b", "size": 37484}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_230_4486f7a4.plotly.json", "sha256": "4486f7a44356db2a6fb609450ccbf32516bc3a239c946c959aa3d2972723bf10", "size": 36797}, "Test_loss": 0.06970389187335968, "_runtime": 287.56013679504395, "_timestamp": 1594237310.9683123, "_step": 230}
+{"Train_loss": 0.04268035013228655, "_runtime": 289.09620809555054, "_timestamp": 1594237312.5043836, "_step": 231}
+{"Train_loss": 0.04208959639072418, "_runtime": 290.0094368457794, "_timestamp": 1594237313.4176123, "_step": 232}
+{"Train_loss": 0.04216848500072956, "_runtime": 290.982764005661, "_timestamp": 1594237314.3909395, "_step": 233}
+{"Train_loss": 0.04239800292998552, "_runtime": 291.88560128211975, "_timestamp": 1594237315.2937768, "_step": 234}
+{"Train_loss": 0.04209151864051819, "_runtime": 292.79041028022766, "_timestamp": 1594237316.1985857, "_step": 235}
+{"Train_loss": 0.041959851048886776, "_runtime": 293.68466687202454, "_timestamp": 1594237317.0928423, "_step": 236}
+{"Train_loss": 0.04283053707331419, "_runtime": 294.59183621406555, "_timestamp": 1594237318.0000117, "_step": 237}
+{"Train_loss": 0.042198835872113705, "_runtime": 295.47560834884644, "_timestamp": 1594237318.8837838, "_step": 238}
+{"Train_loss": 0.04232120793312788, "_runtime": 296.3719654083252, "_timestamp": 1594237319.7801409, "_step": 239}
+{"Train_loss": 0.04199870675802231, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_240_01dab60d.plotly.json", "sha256": "01dab60d70e9510d3e73053756d4fcef73532c776df3e749393017b529c2d9c5", "size": 37511}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_240_7818eb5f.plotly.json", "sha256": "7818eb5f362616dda57a4b54206a5282dfdfffc7617981ff90e851fed655d916", "size": 36791}, "Test_loss": 0.0700240284204483, "_runtime": 297.59983134269714, "_timestamp": 1594237321.0080068, "_step": 240}
+{"Train_loss": 0.04205658286809921, "_runtime": 299.1253414154053, "_timestamp": 1594237322.533517, "_step": 241}
+{"Train_loss": 0.04226863943040371, "_runtime": 300.04404187202454, "_timestamp": 1594237323.4522173, "_step": 242}
+{"Train_loss": 0.04166489094495773, "_runtime": 300.9426031112671, "_timestamp": 1594237324.3507786, "_step": 243}
+{"Train_loss": 0.041805002838373184, "_runtime": 301.8652517795563, "_timestamp": 1594237325.2734272, "_step": 244}
+{"Train_loss": 0.04206918925046921, "_runtime": 302.7707405090332, "_timestamp": 1594237326.178916, "_step": 245}
+{"Train_loss": 0.041831398382782936, "_runtime": 303.65034079551697, "_timestamp": 1594237327.0585163, "_step": 246}
+{"Train_loss": 0.04173315595835447, "_runtime": 304.52216053009033, "_timestamp": 1594237327.930336, "_step": 247}
+{"Train_loss": 0.04269407223910093, "_runtime": 305.45667910575867, "_timestamp": 1594237328.8648546, "_step": 248}
+{"Train_loss": 0.041528452187776566, "_runtime": 306.34324073791504, "_timestamp": 1594237329.7514162, "_step": 249}
+{"Train_loss": 0.04150523152202368, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_250_df23dad3.plotly.json", "sha256": "df23dad3445448dfeb51b2c7b783a0dab343c7b0634bbfa435d5ca48c467fdab", "size": 37536}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_250_dddb93ae.plotly.json", "sha256": "dddb93aeaaa3a1a592915691145197a4fe0985b168b08eade5d3eb28da99f6ee", "size": 36765}, "Test_loss": 0.07132191210985184, "_runtime": 307.512451171875, "_timestamp": 1594237330.9206266, "_step": 250}
+{"Train_loss": 0.04147138353437185, "_runtime": 309.0777487754822, "_timestamp": 1594237332.4859242, "_step": 251}
+{"Train_loss": 0.04182225652039051, "_runtime": 309.99359679222107, "_timestamp": 1594237333.4017723, "_step": 252}
+{"Train_loss": 0.04105494637042284, "_runtime": 310.87049078941345, "_timestamp": 1594237334.2786663, "_step": 253}
+{"Train_loss": 0.04121970199048519, "_runtime": 311.797429561615, "_timestamp": 1594237335.205605, "_step": 254}
+{"Train_loss": 0.04092763736844063, "_runtime": 312.7175896167755, "_timestamp": 1594237336.125765, "_step": 255}
+{"Train_loss": 0.04115438461303711, "_runtime": 313.6890118122101, "_timestamp": 1594237337.0971873, "_step": 256}
+{"Train_loss": 0.04108011722564697, "_runtime": 314.60315203666687, "_timestamp": 1594237338.0113275, "_step": 257}
+{"Train_loss": 0.0420880950987339, "_runtime": 315.53453969955444, "_timestamp": 1594237338.9427152, "_step": 258}
+{"Train_loss": 0.04182550683617592, "_runtime": 316.42671847343445, "_timestamp": 1594237339.834894, "_step": 259}
+{"Train_loss": 0.04050028044730425, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_260_f436393b.plotly.json", "sha256": "f436393b6978987c537cd98d6e23e1635149a56d8e416c1ea0d446a76ee1d268", "size": 37517}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_260_8e886bc4.plotly.json", "sha256": "8e886bc49d166c981c995b68daa9e55e418425f84cb14d7fd8a8ec1ab1143fee", "size": 36784}, "Test_loss": 0.07057035714387894, "_runtime": 317.61598086357117, "_timestamp": 1594237341.0241563, "_step": 260}
+{"Train_loss": 0.040493386797606945, "_runtime": 319.16179370880127, "_timestamp": 1594237342.5699692, "_step": 261}
+{"Train_loss": 0.040676167234778404, "_runtime": 320.15554118156433, "_timestamp": 1594237343.5637167, "_step": 262}
+{"Train_loss": 0.040695611387491226, "_runtime": 321.0699372291565, "_timestamp": 1594237344.4781127, "_step": 263}
+{"Train_loss": 0.04045477695763111, "_runtime": 321.96336936950684, "_timestamp": 1594237345.3715448, "_step": 264}
+{"Train_loss": 0.03978343494236469, "_runtime": 322.91525983810425, "_timestamp": 1594237346.3234353, "_step": 265}
+{"Train_loss": 0.040114603005349636, "_runtime": 323.8230285644531, "_timestamp": 1594237347.231204, "_step": 266}
+{"Train_loss": 0.03980908542871475, "_runtime": 324.70765447616577, "_timestamp": 1594237348.11583, "_step": 267}
+{"Train_loss": 0.04086679220199585, "_runtime": 325.59707283973694, "_timestamp": 1594237349.0052483, "_step": 268}
+{"Train_loss": 0.04061823897063732, "_runtime": 326.5534727573395, "_timestamp": 1594237349.9616482, "_step": 269}
+{"Train_loss": 0.04032887704670429, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_270_173076f6.plotly.json", "sha256": "173076f62d3dfe737030ecbc101ef22fc809a8db9c1a7f43ca33c328925b786e", "size": 37542}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_270_ccbd5395.plotly.json", "sha256": "ccbd5395f3eecad484bcd819e553d690bcd9cb3ad14a23106e6b332391ee65ea", "size": 36784}, "Test_loss": 0.06874854117631912, "_runtime": 327.74796652793884, "_timestamp": 1594237351.156142, "_step": 270}
+{"Train_loss": 0.04015218000859022, "_runtime": 329.3066511154175, "_timestamp": 1594237352.7148266, "_step": 271}
+{"Train_loss": 0.04043694492429495, "_runtime": 330.19979643821716, "_timestamp": 1594237353.607972, "_step": 272}
+{"Train_loss": 0.039784193970263004, "_runtime": 331.1635959148407, "_timestamp": 1594237354.5717714, "_step": 273}
+{"Train_loss": 0.040127855725586414, "_runtime": 332.0358850955963, "_timestamp": 1594237355.4440606, "_step": 274}
+{"Train_loss": 0.040415821596980095, "_runtime": 332.9146635532379, "_timestamp": 1594237356.322839, "_step": 275}
+{"Train_loss": 0.03957744501531124, "_runtime": 333.89766097068787, "_timestamp": 1594237357.3058364, "_step": 276}
+{"Train_loss": 0.039706964045763016, "_runtime": 334.78346705436707, "_timestamp": 1594237358.1916425, "_step": 277}
+{"Train_loss": 0.039583297446370125, "_runtime": 335.6885437965393, "_timestamp": 1594237359.0967193, "_step": 278}
+{"Train_loss": 0.03993623983114958, "_runtime": 336.58860325813293, "_timestamp": 1594237359.9967787, "_step": 279}
+{"Train_loss": 0.040281553752720356, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_280_bd145158.plotly.json", "sha256": "bd145158bd7782598bb2a90500c1b2738a64d3a97812acaa169c9f0110326dd0", "size": 37536}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_280_dec1ada1.plotly.json", "sha256": "dec1ada1ab1bc8113e777808814497d590963efd931420ac141501755bcfe227", "size": 36786}, "Test_loss": 0.07166074216365814, "_runtime": 337.81729006767273, "_timestamp": 1594237361.2254655, "_step": 280}
+{"Train_loss": 0.0405942564830184, "_runtime": 339.3524751663208, "_timestamp": 1594237362.7606506, "_step": 281}
+{"Train_loss": 0.040284398943185806, "_runtime": 340.25562477111816, "_timestamp": 1594237363.6638002, "_step": 282}
+{"Train_loss": 0.03937653452157974, "_runtime": 341.18728280067444, "_timestamp": 1594237364.5954583, "_step": 283}
+{"Train_loss": 0.03998868353664875, "_runtime": 342.1127188205719, "_timestamp": 1594237365.5208943, "_step": 284}
+{"Train_loss": 0.040148332715034485, "_runtime": 343.027765750885, "_timestamp": 1594237366.4359412, "_step": 285}
+{"Train_loss": 0.03938188962638378, "_runtime": 343.9593725204468, "_timestamp": 1594237367.367548, "_step": 286}
+{"Train_loss": 0.03935881983488798, "_runtime": 344.84389185905457, "_timestamp": 1594237368.2520673, "_step": 287}
+{"Train_loss": 0.03942805156111717, "_runtime": 345.8092348575592, "_timestamp": 1594237369.2174103, "_step": 288}
+{"Train_loss": 0.03964601643383503, "_runtime": 346.70324063301086, "_timestamp": 1594237370.111416, "_step": 289}
+{"Train_loss": 0.03965080622583628, "distance_z": {"_type": "plotly-file", "path": "media/plotly/distance_z_290_d3ad6199.plotly.json", "sha256": "d3ad61996abb1da8237620cdabe7fb6433166755d56821cc5c5e67085234d8f6", "size": 37482}, "distance_phi": {"_type": "plotly-file", "path": "media/plotly/distance_phi_290_6ae85d98.plotly.json", "sha256": "6ae85d980d6b79bd46acfb566e4a5a522f7b3a2dbf75e35b591d431188f423ce", "size": 36797}, "Test_loss": 0.06934359669685364, "_runtime": 347.8486797809601, "_timestamp": 1594237371.2568552, "_step": 290}
+{"Train_loss": 0.03872186318039894, "_runtime": 349.42631459236145, "_timestamp": 1594237372.83449, "_step": 291}
+{"Train_loss": 0.038880908861756325, "_runtime": 350.3248128890991, "_timestamp": 1594237373.7329884, "_step": 292}
+{"Train_loss": 0.038848645985126495, "_runtime": 351.3293309211731, "_timestamp": 1594237374.7375064, "_step": 293}
+{"Train_loss": 0.03978508710861206, "_runtime": 352.2382094860077, "_timestamp": 1594237375.646385, "_step": 294}
+{"Train_loss": 0.038960822857916355, "_runtime": 353.13514852523804, "_timestamp": 1594237376.543324, "_step": 295}
+{"Train_loss": 0.03913822118192911, "_runtime": 354.15280199050903, "_timestamp": 1594237377.5609775, "_step": 296}
+{"Train_loss": 0.038735988549888134, "_runtime": 355.069851398468, "_timestamp": 1594237378.4780269, "_step": 297}
+{"Train_loss": 0.03887784481048584, "_runtime": 355.9778645038605, "_timestamp": 1594237379.38604, "_step": 298}
+{"Train_loss": 0.038794699124991894, "_runtime": 355.9778645038605, "_timestamp": 1594237379.38604, "_step": 299}

@@ -39,7 +39,7 @@ def dopplerFFT(f_name):
     dop_fft = np.fft.fftshift(np.fft.fft(range_fft, axis=1) / n, axes=1)
 
     #----- save dop in complex ---------
-    # np.save(save_dir + '/doppler_fft', dop_fft[:,:,:100,:])
+    np.save(f_name + '/doppler_fft_zero_pad_0_fir', dop_fft[:,:,:100,:])
 
     dop_fft = abs(dop_fft)
     return dop_fft
@@ -49,7 +49,7 @@ def rangeFFT(f_name):
     range_fft = np.fft.fft(raw_iq, axis=2) / n
 
     #------ save range in complex ------------
-    np.save(f_name + '/range_fft_zero_pad_0_iir', range_fft[:,:,:100,:])
+    # np.save(f_name + '/range_fft_zero_pad_0_iir', range_fft[:,:,:100,:])
     
     return range_fft
 
@@ -233,12 +233,12 @@ def main():
         # raw_iq = stoveMTI() # pre-processing using fir stove technique
         
         # FIR M=97 cut-off 20 hz
-        # raw_iq = np.reshape(raw_iq,(frame_number*chirp, adcSamples, TxRx))
-        # raw_iq = firMTI()
+        raw_iq = np.reshape(raw_iq,(frame_number*chirp, adcSamples, TxRx))
+        raw_iq = firMTI()
 
         # IIR M=12 cut-off 20 hz
-        raw_iq = np.reshape(raw_iq,(frame_number*chirp, adcSamples, TxRx))
-        raw_iq = iirMTI()
+        # raw_iq = np.reshape(raw_iq,(frame_number*chirp, adcSamples, TxRx))
+        # raw_iq = iirMTI()
 
         #### --------------------------------------------------------------------
 
@@ -254,7 +254,7 @@ def main():
         # plt.plot(freq, abs(range_fft[0,0,:,0])) 
         # plt.show()
 
-        # velocity_fft = dopplerFFT(f_name)
+        velocity_fft = dopplerFFT(f_name)
 
         # velocity_fft = velocity_fft[:,44:84,:,:]
         # print(velocity_fft.shape)

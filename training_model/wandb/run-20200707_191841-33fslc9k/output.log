@@ -1,0 +1,158 @@
+train_function torch.Size([226, 50, 32, 12]) torch.Size([226, 3])
+train_function torch.Size([451, 50, 32, 12]) torch.Size([451, 3])
+train_function torch.Size([677, 50, 32, 12]) torch.Size([677, 3])
+test_function torch.Size([225, 50, 32, 12]) torch.Size([225, 3])
+train_function torch.Size([902, 50, 32, 12]) torch.Size([902, 3])
+train_function torch.Size([1128, 50, 32, 12]) torch.Size([1128, 3])
+train_function torch.Size([1354, 50, 32, 12]) torch.Size([1354, 3])
+test_function torch.Size([450, 50, 32, 12]) torch.Size([450, 3])
+train_function torch.Size([1579, 50, 32, 12]) torch.Size([1579, 3])
+train_function torch.Size([1805, 50, 32, 12]) torch.Size([1805, 3])
+train_function torch.Size([2030, 50, 32, 12]) torch.Size([2030, 3])
+test_function torch.Size([676, 50, 32, 12]) torch.Size([676, 3])
+train_function torch.Size([2255, 50, 32, 12]) torch.Size([2255, 3])
+train_function torch.Size([2480, 50, 32, 12]) torch.Size([2480, 3])
+train_function torch.Size([2705, 50, 32, 12]) torch.Size([2705, 3])
+test_function torch.Size([902, 50, 32, 12]) torch.Size([902, 3])
+train_function torch.Size([2931, 50, 32, 12]) torch.Size([2931, 3])
+train_function torch.Size([3157, 50, 32, 12]) torch.Size([3157, 3])
+train_function torch.Size([3383, 50, 32, 12]) torch.Size([3383, 3])
+test_function torch.Size([1128, 50, 32, 12]) torch.Size([1128, 3])
+train_function torch.Size([3609, 50, 32, 12]) torch.Size([3609, 3])
+train_function torch.Size([3835, 50, 32, 12]) torch.Size([3835, 3])
+train_function torch.Size([4061, 50, 32, 12]) torch.Size([4061, 3])
+test_function torch.Size([1354, 50, 32, 12]) torch.Size([1354, 3])
+train_function torch.Size([4286, 50, 32, 12]) torch.Size([4286, 3])
+train_function torch.Size([4512, 50, 32, 12]) torch.Size([4512, 3])
+train_function torch.Size([4738, 50, 32, 12]) torch.Size([4738, 3])
+test_function torch.Size([1580, 50, 32, 12]) torch.Size([1580, 3])
+train_function torch.Size([4963, 50, 32, 12]) torch.Size([4963, 3])
+train_function torch.Size([5189, 50, 32, 12]) torch.Size([5189, 3])
+train_function torch.Size([5415, 50, 32, 12]) torch.Size([5415, 3])
+test_function torch.Size([1806, 50, 32, 12]) torch.Size([1806, 3])
+train_function torch.Size([5640, 50, 32, 12]) torch.Size([5640, 3])
+train_function torch.Size([5866, 50, 32, 12]) torch.Size([5866, 3])
+train_function torch.Size([6091, 50, 32, 12]) torch.Size([6091, 3])
+test_function torch.Size([2032, 50, 32, 12]) torch.Size([2032, 3])
+train_function torch.Size([6317, 50, 32, 12]) torch.Size([6317, 3])
+train_function torch.Size([6543, 50, 32, 12]) torch.Size([6543, 3])
+>>> test_loss, epoch   <<<<< 0 2.2403757572174072
+>>> label_z, label_phi <<<<< 2.1785476 0.061828148
+>>> [label_z, test_z]  <<<<< 1.9194211 0.12385771
+>>> [label_phi, test_phi] << 0.19216642 0.13772908
+>>> test_loss, epoch   <<<<< 10 2.062952995300293
+>>> label_z, label_phi <<<<< 2.0118127 0.051140223
+>>> [label_z, test_z]  <<<<< 1.9194211 -0.1260846
+>>> [label_phi, test_phi] << 0.19216642 0.14264867
+>>> test_loss, epoch   <<<<< 20 1.3908820152282715
+>>> label_z, label_phi <<<<< 1.3477985 0.04308352
+>>> [label_z, test_z]  <<<<< 1.9194211 1.1169035
+>>> [label_phi, test_phi] << 0.19216642 0.13643275
+>>> test_loss, epoch   <<<<< 30 1.3152365684509277
+>>> label_z, label_phi <<<<< 1.2744716 0.04076496
+>>> [label_z, test_z]  <<<<< 1.9194211 1.0671413
+>>> [label_phi, test_phi] << 0.19216642 0.12712409
+>>> test_loss, epoch   <<<<< 40 1.3675111532211304
+>>> label_z, label_phi <<<<< 1.3275967 0.039914474
+>>> [label_z, test_z]  <<<<< 1.9194211 1.4819889
+>>> [label_phi, test_phi] << 0.19216642 0.14471439
+>>> test_loss, epoch   <<<<< 50 1.3500168323516846
+>>> label_z, label_phi <<<<< 1.3104526 0.0395642
+>>> [label_z, test_z]  <<<<< 1.9194211 1.3487127
+>>> [label_phi, test_phi] << 0.19216642 0.13784891
+>>> test_loss, epoch   <<<<< 60 1.3213376998901367
+>>> label_z, label_phi <<<<< 1.280436 0.040901665
+>>> [label_z, test_z]  <<<<< 1.9194211 0.1814036
+>>> [label_phi, test_phi] << 0.19216642 0.10289405
+>>> test_loss, epoch   <<<<< 70 1.342939019203186
+>>> label_z, label_phi <<<<< 1.3032742 0.039664887
+>>> [label_z, test_z]  <<<<< 1.9194211 0.3247689
+>>> [label_phi, test_phi] << 0.19216642 0.10663516
+>>> test_loss, epoch   <<<<< 80 1.3443362712860107
+>>> label_z, label_phi <<<<< 1.3050348 0.039301503
+>>> [label_z, test_z]  <<<<< 1.9194211 1.0217981
+>>> [label_phi, test_phi] << 0.19216642 0.11273349
+>>> test_loss, epoch   <<<<< 90 1.3512613773345947
+>>> label_z, label_phi <<<<< 1.3104088 0.040852554
+>>> [label_z, test_z]  <<<<< 1.9194211 1.0772772
+>>> [label_phi, test_phi] << 0.19216642 0.0897193
+>>> test_loss, epoch   <<<<< 100 1.3811802864074707
+>>> label_z, label_phi <<<<< 1.34173 0.039450318
+>>> [label_z, test_z]  <<<<< 1.9194211 1.5293877
+>>> [label_phi, test_phi] << 0.19216642 0.1264016
+>>> test_loss, epoch   <<<<< 110 1.4088115692138672
+>>> label_z, label_phi <<<<< 1.369927 0.03888455
+>>> [label_z, test_z]  <<<<< 1.9194211 2.168543
+>>> [label_phi, test_phi] << 0.19216642 0.11849195
+>>> test_loss, epoch   <<<<< 120 1.4098724126815796
+>>> label_z, label_phi <<<<< 1.3692521 0.04062027
+>>> [label_z, test_z]  <<<<< 1.9194211 2.300056
+>>> [label_phi, test_phi] << 0.19216642 0.1007427
+>>> test_loss, epoch   <<<<< 130 1.4594367742538452
+>>> label_z, label_phi <<<<< 1.4196599 0.03977688
+>>> [label_z, test_z]  <<<<< 1.9194211 2.387583
+>>> [label_phi, test_phi] << 0.19216642 0.1054469
+>>> test_loss, epoch   <<<<< 140 1.421178936958313
+>>> label_z, label_phi <<<<< 1.3817863 0.03939257
+>>> [label_z, test_z]  <<<<< 1.9194211 2.4003315
+>>> [label_phi, test_phi] << 0.19216642 0.11389886
+>>> test_loss, epoch   <<<<< 150 1.4307585954666138
+>>> label_z, label_phi <<<<< 1.3925183 0.038240273
+>>> [label_z, test_z]  <<<<< 1.9194211 2.4212873
+>>> [label_phi, test_phi] << 0.19216642 0.13012391
+>>> test_loss, epoch   <<<<< 160 1.442007064819336
+>>> label_z, label_phi <<<<< 1.4033309 0.038676154
+>>> [label_z, test_z]  <<<<< 1.9194211 2.37395
+>>> [label_phi, test_phi] << 0.19216642 0.1382238
+>>> test_loss, epoch   <<<<< 170 1.4738731384277344
+>>> label_z, label_phi <<<<< 1.4319782 0.041894887
+>>> [label_z, test_z]  <<<<< 1.9194211 2.3494084
+>>> [label_phi, test_phi] << 0.19216642 0.11137355
+>>> test_loss, epoch   <<<<< 180 1.4404218196868896
+>>> label_z, label_phi <<<<< 1.4017806 0.03864124
+>>> [label_z, test_z]  <<<<< 1.9194211 2.3403344
+>>> [label_phi, test_phi] << 0.19216642 0.13547853
+>>> test_loss, epoch   <<<<< 190 1.460710048675537
+>>> label_z, label_phi <<<<< 1.4216177 0.03909226
+>>> [label_z, test_z]  <<<<< 1.9194211 2.3456922
+>>> [label_phi, test_phi] << 0.19216642 0.13968372
+>>> test_loss, epoch   <<<<< 200 1.4793645143508911
+>>> label_z, label_phi <<<<< 1.437799 0.04156548
+>>> [label_z, test_z]  <<<<< 1.9194211 2.3064318
+>>> [label_phi, test_phi] << 0.19216642 0.12154234
+>>> test_loss, epoch   <<<<< 210 1.4904146194458008
+>>> label_z, label_phi <<<<< 1.4519097 0.03850498
+>>> [label_z, test_z]  <<<<< 1.9194211 2.2253413
+>>> [label_phi, test_phi] << 0.19216642 0.1566684
+>>> test_loss, epoch   <<<<< 220 1.4557950496673584
+>>> label_z, label_phi <<<<< 1.4154329 0.040362082
+>>> [label_z, test_z]  <<<<< 1.9194211 2.2557824
+>>> [label_phi, test_phi] << 0.19216642 0.13940093
+>>> test_loss, epoch   <<<<< 230 1.4602335691452026
+>>> label_z, label_phi <<<<< 1.4213508 0.03888271
+>>> [label_z, test_z]  <<<<< 1.9194211 2.2297652
+>>> [label_phi, test_phi] << 0.19216642 0.16722389
+>>> test_loss, epoch   <<<<< 240 1.4664252996444702
+>>> label_z, label_phi <<<<< 1.4276751 0.03875013
+>>> [label_z, test_z]  <<<<< 1.9194211 2.2018473
+>>> [label_phi, test_phi] << 0.19216642 0.15809667
+>>> test_loss, epoch   <<<<< 250 1.494978904724121
+>>> label_z, label_phi <<<<< 1.4561428 0.03883618
+>>> [label_z, test_z]  <<<<< 1.9194211 2.185774
+>>> [label_phi, test_phi] << 0.19216642 0.16371399
+>>> test_loss, epoch   <<<<< 260 1.4495614767074585
+>>> label_z, label_phi <<<<< 1.4096627 0.03989875
+>>> [label_z, test_z]  <<<<< 1.9194211 2.1546488
+>>> [label_phi, test_phi] << 0.19216642 0.17092642
+>>> test_loss, epoch   <<<<< 270 1.4494510889053345
+>>> label_z, label_phi <<<<< 1.4106289 0.03882221
+>>> [label_z, test_z]  <<<<< 1.9194211 2.210265
+>>> [label_phi, test_phi] << 0.19216642 0.1661234
+>>> test_loss, epoch   <<<<< 280 1.4788302183151245
+>>> label_z, label_phi <<<<< 1.4394448 0.039385464
+>>> [label_z, test_z]  <<<<< 1.9194211 2.1843784
+>>> [label_phi, test_phi] << 0.19216642 0.16595796
+>>> test_loss, epoch   <<<<< 290 1.4702235460281372
+>>> label_z, label_phi <<<<< 1.4294741 0.040749382
+>>> [label_z, test_z]  <<<<< 1.9194211 2.1547084
+>>> [label_phi, test_phi] << 0.19216642 0.1394616

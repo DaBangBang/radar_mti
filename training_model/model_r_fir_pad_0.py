@@ -13,22 +13,33 @@ import os
 import glob
 import re
 import warnings
+import argparse
 warnings.filterwarnings("ignore")
 
 folder_name = 'D:/data_signal_MTI/data_ball_move_39_real_imag_clean/p*'
+model_path = 'D:/signal_MTI/training_model/wandb/run-20200709_035543-1i37sj07/fir_6cov_1.pt'
+save_predict_path = 'D:/data_signal_MTI/data_ball_move_39_graph/'
 
-epochs = 3000
-batch_size = 2000
-learning_rate = 0.001
-mm = 1e-3
-bin_resolution = 46.8410 ## millimeter = 4.6 cm
-padding = 0
+parser = argparse.ArgumentParser()
+parser.add_argument('-epochs', type=int, default=300)
+parser.add_argument('-batch_size', type=int, default=2000)
+parser.add_argument('-learning_rate', type=float, default= 0.001)
+parser.add_argument('-zero_padding', type=int, default=0)
+parser.add_argument('-test_batch_size', type=int, default= 2032)
+parser.add_argument('-loss_weight', type=int, default=3)
+parser.add_argument('-save_to_wandb', type=bool, default=False)
+parser.add_argument('-test_only', type=bool, default=False)
+parser.add_argument('-range_resolution', type=float, default=46.8410)
+args = parser.parse_args()
+
 train_all = []
 test_all = []
 train_label_all = []
 test_label_all = []
 device = 'cuda' if cuda.is_available() else 'cpu'
-wandb.init(project="model_r_fir_pad_")
+
+if args.save_to_wandb:
+    wandb.init(project="model_r_fir_pad_")
 
 def L2_loss(output, label):
     m_r = meshgrid()
@@ -39,11 +50,11 @@ def L2_loss(output, label):
 def cartesian_to_spherical(label):
     y_offset = 110
     r = np.sqrt(label[:,0,0]**2 + (label[:,0,1] - y_offset)**2 + label[:,0,2]**2)
-    # print(r)
     return r
 
 def meshgrid():
-    m_r = torch.arange(0, bin_resolution*25, bin_resolution).to(device)
+    m_r = torch.arange(0, args.range_resolution*25, args.range_resolution).to(device)
+    # print("m_r", m_r.shape)
     return m_r
 
 def data_preparation(data_real, label):
@@ -72,12 +83,13 @@ class Model(nn.Module):
         self.encode_conv2 = nn.Conv1d(in_channels=4, out_channels=4, kernel_size=3, stride = 2, padding=1)
         self.encode_conv3 = nn.Conv1d(in_channels=4, out_channels=8, kernel_size=3, stride = 1, padding=1)
         self.encode_conv4 = nn.Conv1d(in_channels=8, out_channels=8, kernel_size=3, stride = 2, padding=1)
-        self.encode_conv5 = nn.Conv1d(in_channels=8, out_channels=16, kernel_size=3, stride = 1, padding=1)
-        self.encode_conv6 = nn.Conv1d(in_channels=16, out_channels=16, kernel_size=3, stride = 2, padding=1)
+        # self.encode_conv5 = nn.Conv1d(in_channels=8, out_channels=16, kernel_size=3, stride = 1, padding=1)
+        # self.encode_conv6 = nn.Conv1d(in_channels=16, out_channels=16, kernel_size=3, stride = 2, padding=1)
 
-        self.fc1 = nn.Linear(in_features=4*16, out_features=200)
+        self.fc1 = nn.Linear(in_features=7*8, out_features=150)
         # self.fc2 = nn.Linear(in_features=200, out_features=100)
-        self.fc3 = nn.Linear(in_features=200, out_features=25)
+        self.fc3 = nn.Linear(in_features=150, out_features=25)
+        
 
 
     def forward(self, x):
@@ -86,8 +98,8 @@ class Model(nn.Module):
         x = F.leaky_relu(self.encode_conv2(x))
         x = F.leaky_relu(self.encode_conv3(x))
         x = F.leaky_relu(self.encode_conv4(x))
-        x = F.leaky_relu(self.encode_conv5(x))
-        x = F.leaky_relu(self.encode_conv6(x))
+        # x = F.leaky_relu(self.encode_conv5(x))
+        # x = F.leaky_relu(self.encode_conv6(x))
 
         x = x.view(x.size(0), -1)
         x = F.leaky_relu(self.fc1(x))
@@ -101,7 +113,11 @@ class Radar_train_Dataset(Dataset):
  
         data_real = np.load(real_part[0])
         label = np.load(label_file[0])
-        
+
+        #
+        data_real = data_real[5:]
+        label = label[5:]
+
         data_fft_modulus, label = data_preparation(data_real, label)
         
         train_all.extend(data_fft_modulus)
@@ -126,6 +142,10 @@ class Radar_test_Dataset(Dataset):
         data_real = np.load(real_part[0])
         label = np.load(label_file[0])
         
+        #
+        data_real = data_real[5:]
+        label = label[5:]
+
         data_fft_modulus, label = data_preparation(data_real, label)
         
         test_all.extend(data_fft_modulus)
@@ -145,11 +165,13 @@ class Radar_test_Dataset(Dataset):
 
 
 model = Model()
-wandb.watch(model)
+# wandb.watch(model)
+if args.test_only:
+    model.load_state_dict(torch.load(model_path))
 model.to(device)
 
 mse_loss = nn.MSELoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
 
 def train_function(train_loader):
     model.train()
@@ -161,7 +183,7 @@ def train_function(train_loader):
 
         optimizer.zero_grad()
         output = model(train_data)
-        loss, expect = L2_loss(output, train_labels)
+        loss, expect_r = L2_loss(output, train_labels)
         loss.backward()
         optimizer.step()
         avg_mini_train_loss.append(loss.item())
@@ -176,14 +198,15 @@ def test_function(test_loader):
         test_data = test_data.float()
         test_labels = test_labels.float()
         output = model(test_data)
-        loss, expect = L2_loss(output, test_labels)
-        # loss = loss*(1e-2)
+        loss, expect_r = L2_loss(output, test_labels)
+        
+        test_labels = test_labels.cpu().detach().numpy()
+        expect_r = expect_r.cpu().detach().numpy()
         avg_mini_test_loss.append(loss.item())
 
-    return np.mean(np.array(avg_mini_test_loss)), expect.cpu().detach().numpy(), test_labels.cpu().detach().numpy()
+    return np.mean(np.array(avg_mini_test_loss)), test_labels, expect_r 
     
 if __name__ == '__main__':
-    
     
     folder_name = glob.glob(folder_name)
     folder_name = natsort.natsorted(folder_name)
@@ -196,32 +219,42 @@ if __name__ == '__main__':
         label_name = f_name +'/radar_pos_label_*'
         label_name = glob.glob(label_name)
       
-        if count%4 == 0:
+        if count%6 == 0:
             test_data = Radar_test_Dataset(real_part= real_name,  label_file=label_name)
         else:
             train_data = Radar_train_Dataset(real_part= real_name, label_file=label_name)
             
-    train_loader = DataLoader(dataset=train_data, batch_size=batch_size, shuffle=True)
-    test_loader = DataLoader(dataset=test_data, batch_size=2032)
+    train_loader = DataLoader(dataset=train_data, batch_size=args.batch_size, shuffle=True)
+    test_loader = DataLoader(dataset=test_data, batch_size=args.test_batch_size)
 
-    for epoch in range(epochs):
-        # print("======> epoch =", epoch)
-        train_loss = train_function(train_loader)
-        wandb.log({'Train_loss': train_loss}, step=epoch)
-        
-        # print(">>>>>> train_loss <<<<<<", train_loss)
-        if epoch%100 == 0:
-            test_loss, expect, expect_label = test_function(test_loader)
-            plt.plot(expect[:500])
-            plt.plot(expect_label[:500])
-            plt.ylabel('r distance')
-            plt.xlabel('number of test point')
-            print(">>>>>> test_loss <<<<<< epoch", epoch , test_loss)
-            wandb.log({'distance': plt}, step=epoch)
-            wandb.log({'Test_loss': test_loss}, step=epoch)
+    if args.test_only:
+        test_loss, expect, expect_label = test_function(test_loader)
+        print(expect_label.shape)
+        np.save(save_predict_path + 'expect_r_2', expect_label)
+
+    else:
+        for epoch in range(args.epochs):
+            # print("======> epoch =", epoch)
+            train_loss = train_function(train_loader)
+            
+            if args.save_to_wandb:
+                wandb.log({'Train_loss': train_loss}, step=epoch)
+            
+            # print(">>>>>> train_loss <<<<<<", train_loss)
+            if epoch%10 == 0:
+                test_loss, label, expect_r = test_function(test_loader)
+                print(">>>>>> test_loss <<<<<< epoch", epoch , test_loss)
+                
+                if args.save_to_wandb:
+                    plt.plot(label[:500])
+                    plt.plot(expect_r[:500])
+                    plt.ylabel('r distance')
+                    plt.xlabel('number of test point')
+                    wandb.log({'distance': plt}, step=epoch)
+                    wandb.log({'Test_loss': test_loss}, step=epoch)
     
-
-    torch.save(model.state_dict(), os.path.join(wandb.run.dir, 'fir_6cov_1.pt'))
+    if args.save_to_wandb:
+        torch.save(model.state_dict(), os.path.join(wandb.run.dir, 'fir_6cov_1.pt'))
 
 
     

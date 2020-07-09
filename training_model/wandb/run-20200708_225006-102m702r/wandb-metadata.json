@@ -1,0 +1,31 @@
+{
+    "root": "D:/signal_MTI",
+    "program": ".\\model_z,f_fir_pad_0.py",
+    "git": {
+        "remote": "https://github.com/shikuzen/radar_mti.git",
+        "commit": "671ae37339b12ca8c92b4db744079d97fe6466fd"
+    },
+    "email": "nakorn.vistec@gmail.com",
+    "codePath": "training_model\\model_z,f_fir_pad_0.py",
+    "startedAt": "2020-07-08T22:50:06.982455",
+    "host": "DESKTOP-D437ST7",
+    "username": "nakorn-vision",
+    "executable": "C:\\Users\\nakorn-vision\\Anaconda3\\envs\\ice\\python.exe",
+    "os": "Windows-10-10.0.18362-SP0",
+    "python": "3.6.10",
+    "gpu": "GeForce GTX 1080 Ti",
+    "gpu_count": 1,
+    "cpu_count": 12,
+    "args": [
+        "-test_batch_size",
+        "1987",
+        "-save_to_wandb",
+        "True"
+    ],
+    "state": "finished",
+    "jobType": null,
+    "mode": "run",
+    "project": "model_zeta-phi_fir_angle",
+    "heartbeatAt": "2020-07-08T22:56:09.596659",
+    "exitcode": 0
+}

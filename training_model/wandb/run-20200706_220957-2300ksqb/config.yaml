@@ -1,0 +1,9 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    cli_version: 0.8.29
+    code_path: code/training_model/model_z,f_fir_pad_0.py
+    is_jupyter_run: false
+    python_version: 3.6.10

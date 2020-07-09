@@ -1,0 +1,28 @@
+{
+    "root": "D:/signal_MTI",
+    "program": ".\\model_r_abs_pad_0.py",
+    "git": {
+        "remote": "https://github.com/shikuzen/radar_mti.git",
+        "commit": "671ae37339b12ca8c92b4db744079d97fe6466fd"
+    },
+    "email": "nakorn.vistec@gmail.com",
+    "codePath": "training_model\\model_r_abs_pad_0.py",
+    "startedAt": "2020-07-08T15:37:35.001434",
+    "host": "DESKTOP-D437ST7",
+    "username": "nakorn-vision",
+    "executable": "C:\\Users\\nakorn-vision\\Anaconda3\\envs\\ice\\python.exe",
+    "os": "Windows-10-10.0.18362-SP0",
+    "python": "3.6.10",
+    "gpu": "GeForce GTX 1080 Ti",
+    "gpu_count": 1,
+    "cpu_count": 12,
+    "args": [
+        "-save_to_wandb",
+        "True"
+    ],
+    "state": "running",
+    "jobType": null,
+    "mode": "run",
+    "project": "model_r_abs_pad_",
+    "heartbeatAt": "2020-07-08T15:38:56.276403"
+}
