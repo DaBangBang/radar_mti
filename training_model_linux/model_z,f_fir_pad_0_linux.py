@@ -14,21 +14,26 @@ import glob
 import re
 import warnings
 import argparse
+
 warnings.filterwarnings("ignore")
-folder_name = 'D:/data_signal_MTI/data_ball_move_39_real_imag_clean/p*'
-model_path = 'D:/signal_MTI/training_model/wandb/run-20200709_193059-u6gffv2f/aoa_fir_6cov_1.pt'
-save_predict_path = 'D:/data_signal_MTI/data_ball_move_39_graph/'
+
+signal_dir = '/data/data_signal_MTI/project_util/signal_all_w_mti_cutoff_12/'
+label_dir = '/data/data_signal_MTI/project_util/label_all/'
+
+model_path = '/home/nakorn/weight_bias/wandb/run-20200818_162113-2k83zzsu/aoa_fir_6cov_1.pt'
+save_predict_path = '/home/nakorn/weight_bias/test_data/'
+all_trajectory = 117
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-epochs', type=int, default=300)
-parser.add_argument('-batch_size', type=int, default=2000)
+parser.add_argument('-epochs', type=int, default=500)
+parser.add_argument('-batch_size', type=int, default=4000)
 parser.add_argument('-learning_rate', type=float, default=0.001)
 parser.add_argument('-zero_padding', type=int, default=0)
-parser.add_argument('-test_batch_size', type=int, default= 2032)
+parser.add_argument('-test_batch_size', type=int, default= 9860)
 parser.add_argument('-loss_weight', type=int, default=1)
 parser.add_argument('-save_to_wandb', type=bool, default=False)
 parser.add_argument('-test_only', type=bool, default=False)
-
+parser.add_argument('-wmodel', default='cnn+fc+reg')
 args = parser.parse_args()
 
 # epochs = 3000
@@ -41,25 +46,29 @@ train_all = []
 test_all = []
 train_label_all = []
 test_label_all = []
-device = 'cuda' if cuda.is_available() else 'cpu'
+device = 'cuda:1' if cuda.is_available() else 'cpu'
 
 if args.save_to_wandb:
-    wandb.init(project="model_zeta-phi_fir_angle")
+    wandb.init(project="cnn-fc-117", dir='/home/nakorn/weight_bias')
 
-def RMSE_loss(out_z, out_phi, label):
+def RMSE_loss(out_z, label, wmodel):
 
-    m_r = meshgrid()
-    expect_z = torch.matmul(out_z, m_r)
-    expect_phi = torch.matmul(out_phi, m_r)
-    mse_z = mse_loss(expect_z, label[:,1])
-    mse_phi = mse_loss(expect_phi, label[:,2])
-    rmse_z = torch.sqrt(mse_z)
-    rmse_phi = torch.sqrt(mse_phi)
-    loss = rmse_z + args.loss_weight*rmse_phi
-    return loss, expect_z, expect_phi, rmse_z, rmse_phi
+    if 'cnn+fc' == wmodel:
+        m_r = meshgrid()
+        expect_z = torch.matmul(out_z, m_r)
+        mse_z = mse_loss(expect_z, label[:,1])
+        rmse_z = torch.sqrt(mse_z)
+        loss = rmse_z
+    elif 'cnn+fc+reg' == args.wmodel:
+        expect_z = out_z.view(-1)
+        mse_z = mse_loss(expect_z, label[:,1])
+        rmse_z = torch.sqrt(mse_z)
+        loss = rmse_z
+
+    return loss, expect_z
 
 def cartesian_to_spherical(label):
-    y_offset = 110
+    y_offset = 105
     r = np.sqrt(label[:,0,0]**2 + (label[:,0,1] - y_offset)**2 + label[:,0,2]**2)
     zeta = np.arctan2(label[:,0,0], label[:,0,2])
     phi = np.arctan2(label[:,0,1] - y_offset , np.sqrt(label[:,0,0]**2 + label[:,0,2]**2))
@@ -72,27 +81,29 @@ def meshgrid():
     # print(m_r, m_r.shape)
     return m_r
 
-def data_preparation(data_real, label):
+def data_preparation(data_iq, label):
     
-    n_pad = ((0,0),(0,0),(0,0),(0,args.zero_padding))
-    data_real = np.pad(data_real, pad_width=n_pad, mode='constant', constant_values=0)
-    n = data_real.shape[3]
-    data_fft_modulus = np.fft.fftshift(np.fft.fft(data_real, axis=3) / n, axes=3) # angle fft
-    data_fft_modulus = abs(data_fft_modulus)
-    data_fft_modulus = data_fft_modulus[:,:,:50,:]
+    # n_pad = ((0,0),(0,0),(0,0),(0,args.zero_padding))
+    # data_real = np.pad(data_real, pad_width=n_pad, mode='constant', constant_values=0)
 
-    # plt.imshow(data_fft_modulus[100,:,10,:])
-    # plt.show() 
+    data_fft_range = np.fft.fft(data_iq, axis=2) / data_iq.shape[2]
+    data_fft_velocity = np.fft.fftshift(np.fft.fft(data_fft_range, axis=1) / data_iq.shape[1], axes=1)
+    half_velocity_bin = data_iq.shape[1] / 2
+    data_fft_angle = np.fft.fftshift(np.fft.fft(data_fft_velocity, axis=3) / data_iq.shape[3], axes=3) # angle fft
+    data_fft_angle = abs(data_fft_angle)
+    data_fft_angle = data_fft_angle[:,int(half_velocity_bin-10):int(half_velocity_bin+10),:int(data_iq.shape[2]/4),:]
 
-    data_fft_modulus = np.swapaxes(data_fft_modulus, 1,2)
-    data_fft_modulus = np.float64(data_fft_modulus)
+    data_fft_angle = np.swapaxes(data_fft_angle, 1,2)
+    data_fft_angle = np.float64(data_fft_angle)
+
+    print(data_fft_angle.shape)
 
     r, zeta, phi = cartesian_to_spherical(label)
     # print(r[0], zeta[0], phi[0])
     label = np.array([r, zeta, phi])
     label = np.float64(label.T)
     # print(label[0, :], label.shape)
-    return data_fft_modulus, label
+    return data_fft_angle, label
 
 # def plot_function():
 
@@ -103,47 +114,39 @@ class Model(nn.Module):
         super(Model, self).__init__()
 
         # 2D-CNN Layer
-        self.encode_conv1 = nn.Conv2d(in_channels=50, out_channels=4, kernel_size=(3,3), stride = 1, padding=(1,1))
+        self.encode_conv1 = nn.Conv2d(in_channels=64, out_channels=4, kernel_size=(3,3), stride = 1, padding=(1,1))
         self.encode_conv2 = nn.Conv2d(in_channels=4, out_channels=4, kernel_size=(3,3), stride = 2, padding=(1,1))
         self.encode_conv3 = nn.Conv2d(in_channels=4, out_channels=8, kernel_size=(3,3), stride = 1, padding=(1,1))
         self.encode_conv4 = nn.Conv2d(in_channels=8, out_channels=8, kernel_size=(3,3), stride = 2, padding=(1,1))
         # self.encode_conv5 = nn.Conv2d(in_channels=8, out_channels=16, kernel_size=(3,3), stride = 1, padding=(1,1))
         # self.encode_conv6 = nn.Conv2d(in_channels=16, out_channels=16, kernel_size=(3,3), stride = 2, padding=(1,1))
 
-        self.fc1_1 = nn.Linear(in_features=8*3*8, out_features=200)
-        self.fc1_2 = nn.Linear(in_features=8*3*8, out_features=200)
-        # self.fc2 = nn.Linear(in_features=200, out_features=100)
-        self.fc2_1 = nn.Linear(in_features=200, out_features=50)
-        self.fc2_2 = nn.Linear(in_features=200, out_features=50)
+        self.fc1 = nn.Linear(in_features=5*8*1, out_features=128)
+        self.fc2 = nn.Linear(in_features=128, out_features=128)
+        self.fc3 = nn.Linear(in_features=128, out_features=1)        
 
 
     def forward(self, x):
 
-        x = F.leaky_relu(self.encode_conv1(x))
-        x = F.leaky_relu(self.encode_conv2(x))
-        x = F.leaky_relu(self.encode_conv3(x))
-        x = F.leaky_relu(self.encode_conv4(x))
+        x = F.relu(self.encode_conv1(x))
+        x = F.relu(self.encode_conv2(x))
+        x = F.relu(self.encode_conv3(x))
+        x = F.relu(self.encode_conv4(x))
         # x = F.leaky_relu(self.encode_conv5(x))
         # x = F.leaky_relu(self.encode_conv6(x))
 
         x = x.view(x.size(0), -1)
-        x_1 = F.leaky_relu(self.fc1_1(x))
-        x_2 = F.leaky_relu(self.fc1_2(x))
-        
-        x_1 = F.softmax(self.fc2_1(x_1), dim=1)
-        x_2 = F.softmax(self.fc2_2(x_2), dim=1)
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
 
-        return x_1, x_2
+        return x
 
 class Radar_train_Dataset(Dataset):
     def __init__(self, real_part, label_file):
  
-        data_real = np.load(real_part[0])
-        label = np.load(label_file[0])
-
-        #
-        data_real = data_real[5:]
-        label = label[5:]
+        data_real = np.load(real_part)
+        label = np.load(label_file)
         
         data_fft_modulus, label = data_preparation(data_real, label)
         
@@ -166,13 +169,9 @@ class Radar_test_Dataset(Dataset):
 
     def __init__(self, real_part, label_file):
         
-        data_real = np.load(real_part[0])
-        label = np.load(label_file[0])
+        data_real = np.load(real_part)
+        label = np.load(label_file)
 
-        #
-        data_real = data_real[5:]
-        label = label[5:]
-        
         data_fft_modulus, label = data_preparation(data_real, label)
         
         test_all.extend(data_fft_modulus)
@@ -209,8 +208,8 @@ def train_function(train_loader):
         train_labels = train_labels.float()
 
         optimizer.zero_grad()
-        out_z, out_phi = model(train_data)
-        loss, expect_z, expect_phi, rmse_z, rmse_phi = RMSE_loss(out_z, out_phi, train_labels)
+        out_z = model(train_data)
+        loss, expect_z = RMSE_loss(out_z, train_labels, args.wmodel)
         loss.backward()
         optimizer.step()
         avg_mini_train_loss.append(loss.item())
@@ -224,33 +223,25 @@ def test_function(test_loader):
         test_data, test_labels = test_data.to(device), test_labels.to(device)
         test_data = test_data.float()
         test_labels = test_labels.float()
-        out_z, out_phi = model(test_data)
-        loss, expect_z, expect_phi, rmse_z, rmse_phi = RMSE_loss(out_z, out_phi, test_labels)
+        out_z = model(test_data)
+        loss, expect_z= RMSE_loss(out_z, test_labels, args.wmodel)
         # loss = loss*(1e-2)
         avg_mini_test_loss.append(loss.item())
         test_labels = test_labels.cpu().detach().numpy()
         expect_z = expect_z.cpu().detach().numpy()
-        expect_phi = expect_phi.cpu().detach().numpy()
-        rmse_z = rmse_z.cpu().detach().numpy()
-        rmse_phi = rmse_phi.cpu().detach().numpy()
 
-    return np.mean(np.array(avg_mini_test_loss)), test_labels, expect_z, expect_phi, rmse_z, rmse_phi 
+    return np.mean(np.array(avg_mini_test_loss)), test_labels, expect_z 
     
 if __name__ == '__main__':
     
     
-    folder_name = glob.glob(folder_name)
-    folder_name = natsort.natsorted(folder_name)
     count = 0
-    for f_name in folder_name:
+    for f_name in range(all_trajectory):
         count += 1
-        real_name = f_name + '/doppler_fft_zero_pad_0_fir*'
-        real_name = glob.glob(real_name)
-  
-        label_name = f_name +'/radar_pos_label_*'
-        label_name = glob.glob(label_name)
+        real_name = signal_dir + 'raw_iq_w_mti_' + str(count) + '.npy'
+        label_name = label_dir + 'label_' + str(count) + '.npy'
       
-        if count%5 == 0:
+        if count%4 == 0:
             test_data = Radar_test_Dataset(real_part= real_name,  label_file=label_name)
         else:
             train_data = Radar_train_Dataset(real_part= real_name, label_file=label_name)
@@ -260,10 +251,10 @@ if __name__ == '__main__':
 
 
     if args.test_only:
-        test_loss, expect, expect_z, expect_phi, rmse_z, rmse_phi = test_function(test_loader)
-        np.save(save_predict_path + 'expect_z_%5', expect_z)
-        np.save(save_predict_path + 'expect_phi_%5', expect_phi)
-        print(test_loss, expect_z.shape, expect_phi.shape)
+        test_loss, label, expect_z = test_function(test_loader)
+        np.save(save_predict_path + 'label_z_%4', label)
+        np.save(save_predict_path + 'expect_z_%4', expect_z)
+        print(test_loss, expect_z.shape)
 
     else :
         for epoch in range(args.epochs):
@@ -275,26 +266,17 @@ if __name__ == '__main__':
             
             # print(">>>>>> train_loss <<<<<<", train_loss)
             if epoch%10 == 0:
-                test_loss, label, expect_z, expect_phi, rmse_z, rmse_phi = test_function(test_loader)
+                test_loss, label, expect_z = test_function(test_loader)
                 
                 print(">>> test_loss, epoch   <<<<<", epoch , test_loss)
-                print(">>> label_z, label_phi <<<<<", rmse_z, rmse_phi)
-                print(">>> [label_z, test_z]  <<<<<", label[0,1], expect_z[0])
-                print(">>> [label_phi, test_phi] <<", label[0,2], expect_phi[0])
                 
                 if args.save_to_wandb:
                     plt.figure(1)
-                    plt.plot(label[:500, 1])
-                    plt.plot(expect_z[:500])
+                    plt.plot(label[:, 1])
+                    plt.plot(expect_z[:])
                     plt.ylabel('rmse zeta')
                     plt.xlabel('number of test point')
                     wandb.log({'distance_z': plt}, step=epoch)
-                    plt.figure(2)
-                    plt.plot(label[:500, 2])
-                    plt.plot(expect_phi[:500])
-                    plt.ylabel('rmse phi')
-                    plt.xlabel('number of test point')
-                    wandb.log({'distance_phi': plt}, step=epoch)
                     wandb.log({'Test_loss': test_loss}, step=epoch)
     
     if args.save_to_wandb:

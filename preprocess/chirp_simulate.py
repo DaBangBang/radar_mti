@@ -13,14 +13,14 @@ c = 299792458 * m
 k = 1000
 mm = 1e-3
 cm = 1e-2
-RampEndTime = 13.30 * us
+RampEndTime = 20 * us
 IdleTime = 9 * us
-Bandwidth = 3.99013 * GHz
+Bandwidth = 3.9995 * GHz
 Frequency = 77 * GHz
-FrequencySlope = 300.010 * MHz / us
-ADCSamples = 200
+FrequencySlope = 199.975 * MHz / us
+ADCSamples = 256
 SamplingRate = 18750 * k
-ADCStartTime = 2 * us
+ADCStartTime = 3 * us
 
 ADCSamplingTime = ADCSamples / SamplingRate
 ChirpCycleTime = RampEndTime + IdleTime
@@ -51,6 +51,7 @@ def read_label():
       r = np.sqrt(dis[0,0]**2 + (dis[0,1] - y_offset)**2 + dis[0,2]**2)
       # r = dis[0,2]
       r = r*mm
+      r = 2000
       print("range r", r)
       simulate(r, sim_chirp, peak_position)
     sim_chirp = np.array(sim_chirp)
@@ -82,7 +83,7 @@ def simulate(dis, sim_chirp, peak_position):
     t = i / ADCSamples * ADCSamplingTime
     ls.append(np.exp(2 * np.pi * t * 1j * fbeat(obj_distance)))
 
-  n_pad = ((0,200))
+  n_pad = ((0,0))
   ls = np.pad(ls, pad_width=n_pad, mode='constant', constant_values=0)
   
   random_multiply_peak = np.random.randint(low=1, high=20, size=10)

@@ -14,16 +14,17 @@ def callBinfile(fname):
     # print(fname)    
     fid = open(fname,'r')
     fid = np.fromfile(fid, np.int16)
-    # fid = fid[:92544000] # for 500 frame
+    print(fid.shape)
+    fid = fid[:98566144] # for 376 frame 15 sec 25 fps
 
     '''
         read data from bin file. Pls see data structure in MMwave radar device
     '''
-    frameNumber = 251
-    numADCSamples = 200
+    frameNumber = 376
+    numADCSamples = 1024
     numADCbits = 16
-    numTx = 3
-    numChirps = 32
+    numTx = 2
+    numChirps = 16
     numLanes = 4
     '''
     --------------------------------------------------------------------------------
@@ -36,13 +37,14 @@ def callBinfile(fname):
     for i in range(0, numTx*numChirps*numADCSamples, numTx*numADCSamples):
         Tx1.append(adcData_complex[:,i:i+numADCSamples,:])
         Tx2.append(adcData_complex[:,i+numADCSamples:i+(numADCSamples*2),:])
-        Tx3.append(adcData_complex[:,i+(numADCSamples*2):i+(numADCSamples*3),:])
+        # Tx3.append(adcData_complex[:,i+(numADCSamples*2):i+(numADCSamples*3),:])
     
     adcData_Tx1 = np.array(Tx1)
     adcData_Tx2 = np.array(Tx2)
-    adcData_Tx3 = np.array(Tx3)
+    # adcData_Tx3 = np.array(Tx3)
 
-    list_adc = [adcData_Tx1, adcData_Tx2, adcData_Tx3]
+    # list_adc = [adcData_Tx1, adcData_Tx2, adcData_Tx3]
+    list_adc = [adcData_Tx1, adcData_Tx2]
     adcData_Tx_all = np.concatenate(list_adc, axis = 3)
 
     # plt.show()
@@ -195,7 +197,7 @@ def main():
     global IQall, range_fft, range_doppler, phase
 
     
-    folder_name = glob.glob('D:/data_signal_MTI/data_ball_move_39_pos')
+    folder_name = glob.glob('D:/data_signal_MTI/project_util_2/signal_triangle_raw')
     # folder_name.sort(key=lambda f: int(re.sub('\D','',f)))
     # folder_name = natsort.natsorted(folder_name)
     # print(folder_name)
@@ -235,8 +237,8 @@ def main():
             # range_fft_mean_real.extend(IQreal)
             # range_fft_mean_imag.extend(IQimag)
             # runGraphInitial()
-            save_real = 'D:/data_signal_MTI/data_ball_move_39_real_imag/raw_signal_real_' + str(name_count)
-            save_imag = 'D:/data_signal_MTI/data_ball_move_39_real_imag/raw_signal_imag_' + str(name_count)
+            save_real = 'D:/data_signal_MTI/project_util_2/signal_triangle_preprocess/raw_signal_real_' + str(name_count)
+            save_imag = 'D:/data_signal_MTI/project_util_2/signal_triangle_preprocess/raw_signal_imag_' + str(name_count)
             np.save(save_real, IQreal)
             np.save(save_imag, IQimag)
         # range_fft_mean_real = np.array(range_fft_mean_real)

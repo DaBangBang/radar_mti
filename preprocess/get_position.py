@@ -142,7 +142,7 @@ def Line():
 def cam_config():
     global cap, fps
     # cap = cv2.VideoCapture(0+ cv2.CAP_DSHOW)
-    cap = cv2.VideoCapture('D:/data_signal_MTI/data_ball_move_39_pos/moving_ball_39_pos.mp4')
+    cap = cv2.VideoCapture('D:/data_signal_MTI/project_util_2/triangle_clockwise.mp4')
     # cap = cv2.VideoCapture('C:/Users/nakorn-vision/Videos/Logitech/LogiCapture/2020-06-09_21-25-24.mp4')
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
@@ -213,11 +213,11 @@ def draw_function(vec_1_pixel, vec_2_pixel, vec_3_pixel, vec_4_pixel, vec_21_mov
     # cv2.circle(frame, (vec_2_pixel[0], vec_2_pixel[1]), 3, (255,0,255), -1)
     # cv2.circle(frame, (vec_3_pixel[0], vec_3_pixel[1]), 3, (255,0,0), -1) 
 
-    cv2.circle(frame, (vec_rad_0_pixel[0], vec_rad_0_pixel[1]), 5, (0,0,255), -1)
+    cv2.circle(frame, (vec_rad_0_pixel[0], vec_rad_0_pixel[1]), 5, (255,0,0), -1)
     cv2.circle(frame, (vec_rad_1_pixel[0], vec_rad_1_pixel[1]), 5, (255,0,0), -1) 
-    cv2.circle(frame, (vec_rad_2_pixel[0], vec_rad_2_pixel[1]), 5, (0,0,255), -1)  
+    cv2.circle(frame, (vec_rad_2_pixel[0], vec_rad_2_pixel[1]), 5, (255,0,0), -1)  
     
-    cv2.circle(frame, (rt_pixel[0], rt_pixel[1]), 5, (0,0,255), -1)
+    cv2.circle(frame, (rt_pixel[0], rt_pixel[1]), 5, (255,0,255), -1)
 
     
     '''
@@ -226,7 +226,7 @@ def draw_function(vec_1_pixel, vec_2_pixel, vec_3_pixel, vec_4_pixel, vec_21_mov
     cv2.line(frame, (vec_rad_1_pixel[0], vec_rad_1_pixel[1]), (vec_rad_2_pixel[0], vec_rad_2_pixel[1]), (255,0,0), 2) 
 
     cv2.line(frame, (vec_2_pixel[0], vec_2_pixel[1]), (vec_1_pixel[0], vec_1_pixel[1]), (255,0,0), 2)
-    cv2.line(frame, (vec_2_pixel[0] ,vec_2_pixel[1]), (vec_3_pixel[0], vec_3_pixel[1]), (0,0,255), 2)
+    cv2.line(frame, (vec_2_pixel[0] ,vec_2_pixel[1]), (vec_3_pixel[0], vec_3_pixel[1]), (255,0,0), 2)
     cv2.line(frame, (vec_2_pixel[0], vec_2_pixel[1]), (vec_21_mov_pixel[0,0], vec_21_mov_pixel[0,1]), (255,0,255), 2)
     cv2.line(frame, (vec_1_pixel[0], vec_1_pixel[1]), (vec_21_mov_pixel[1,0], vec_21_mov_pixel[1,1]), (255,0,255), 2)
     cv2.line(frame, (vec_3_pixel[0], vec_3_pixel[1]), (vec_21_mov_pixel[2,0], vec_21_mov_pixel[2,1]), (255,0,255), 2)
@@ -373,7 +373,7 @@ def vec_radar_coordinate(rvec_r, tvec_r):
 
     # global rvec_r, tvec_r
     
-    radar_point = np.array([[-19.8,19.8,0], [19.8,19.8,0], [19.8,-19.8,0], [-19.8,-19.8,0]], dtype="float64")
+    radar_point = np.array([[-18.8,18.8,0], [18.8,18.8,0], [18.8,-18.8,0], [-18.8,-18.8,0]], dtype="float64")
     radar_point = radar_point.reshape(4,1,3)
     
     # print(stage_flag)
@@ -437,28 +437,30 @@ def findObject(image_point):
     '''
     param_x = 0.2
     param_y = 0.2
-    px = 575
-    py = 365
+    px = 500
+    py = 370
     # px = 0
     # py = 0
     
-    crop_frame = frame[py:py+150, px:px+150]
+    crop_frame = frame[py:py+200, px:px+300]
 
     '''
     check hsv
     '''
     # hsv_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    # low_green = np.array([25, 52, 72])
-    # high_green = np.array([102, 255, 255])
+    # low_green = np.array([170, 120, 70])
+    # high_green = np.array([180, 255, 255])
     # green_mask = cv2.inRange(hsv_frame, low_green, high_green)
     # (im2, contours, hierarchy) = cv2.findContours(green_mask, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
-    # # cv2.imshow("Green", green_mask)
+    # cv2.imshow("Green", green_mask)
     # if contours:
     #     c1 = max(contours, key= cv2.contourArea)
     #     x1,y1,w1,h1 = cv2.boundingRect(c1)
         
-    #     param_x = int((2*x1 + 2*px+ 10)/2)
-    #     param_y = int((2*y1 + 2*py + 10)/2)
+    #     param_x = int((x1 + (x1+5)) / 2)
+    #     param_y = int((y1 + (y1+5)) / 2)
+    #     # param_x = int((2*x1 + 2*px+ 10)/2)
+    #     # param_y = int((2*y1 + 2*py + 10)/2)
 
     # elif not contours:
     
@@ -537,9 +539,9 @@ def cam_run():
     '''
         save stat
     '''
-    text_file = open('D:/data_signal_MTI/data_ball_move_39_label/frame_number.txt', 'w')
-    rt_text_file = open('D:/data_signal_MTI/data_ball_move_39_label/rt_matrix.txt', 'w')
-    all_frame_detect = open('D:/data_signal_MTI/data_ball_move_39_label/all_frame.txt', 'w')
+    text_file = open('D:/data_signal_MTI/project_util_2/label_triangle/frame_number.txt', 'w')
+    rt_text_file = open('D:/data_signal_MTI/project_util_2/label_triangle/rt_matrix.txt', 'w')
+    all_frame_detect = open('D:/data_signal_MTI/project_util_2/label_triangle/all_frame.txt', 'w')
     '''
         pygame and opengl function
     '''
@@ -587,7 +589,7 @@ def cam_run():
             crea
             te point in real world coordinate
         '''
-        w_coor_camera = np.array([[132.5,132.5, 0],[-132.5,132.5,0],[132.5,-132.5,0],[-132.5,-132.5,0]], dtype="float64")
+        w_coor_camera = np.array([[95,95, 0],[-95,95,0],[95,-95,0],[-95,-95,0]], dtype="float64")
         w_coor_camera = w_coor_camera.reshape(4,1,3)
         
         '''
@@ -633,12 +635,13 @@ def cam_run():
                 '''
                     solvepnp and calculate vector of radar plane
                 '''
-                w_coor_radar = np.array([[-19.8,19.8,0], [19.8,19.8,0], [19.8,-19.8,0], [-19.8,-19.8,0]], dtype="float64")
+                w_coor_radar = np.array([[-18.8,18.8,0], [18.8,18.8,0], [18.8,-18.8,0], [-18.8,-18.8,0]], dtype="float64")
                 w_coor_radar = w_coor_radar.reshape(4,1,3)
                 uv_coor_radar = np.swapaxes(corners[point_compare[0,4]], 0,1)
                 
                 if stage_flag:
                     rvec, tvec, rvec_r, tvec_r, stage_flag = solvePnP_function(w_coor_camera, uv_coor_camera, w_coor_radar, uv_coor_radar)
+                    print(stage_flag)
                 
                 else:
                     
@@ -655,7 +658,8 @@ def cam_run():
                     draw_function(vec_1_pixel, vec_2_pixel, vec_3_pixel, vec_4_pixel, vec_21_mov_pixel, 
                         vec_rad_1_pixel, vec_rad_2_pixel, rt_pixel, vec_rad_0_pixel, vec_0_pixel)
                     
-                    # print(frame_count)
+                    print(frame_count)
+                    # print(param_x, param_y)
                     '''
                         draw frustum
                     '''
@@ -688,7 +692,7 @@ def cam_run():
                 all_frame_detect.write(str(np.array(pos_label).shape[0]) + '\n')
                 rt_text_file.write(str(r_rad_matrix))
                 rt_text_file.write(str(t_rad_matrix) + '\n')
-                np.save("D:/data_signal_MTI/data_ball_move_39_label/radar_pos_label_" + str(number_of_label) ,np.array(pos_label))
+                np.save("D:/data_signal_MTI/project_util_2/label_triangle/radar_pos_label_" + str(number_of_label) ,np.array(pos_label))
                 print('wake text')
                 print(np.array(pos_label).shape)
 
@@ -730,8 +734,8 @@ def main():
     '''
         fine tune focal length
     '''
-    camera_matrix[0,0] -= 170
-    camera_matrix[1,1] -= 170
+    camera_matrix[0,0] -= 200
+    camera_matrix[1,1] -= 200
     
     print(camera_matrix)
     cam_run()

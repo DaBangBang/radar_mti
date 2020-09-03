@@ -11,7 +11,9 @@ from pylab import *
 import scipy.signal as signal
 
 
-signal_dir = 'D:/data_signal_MTI/data_ball_move_39_real_imag_clean/pos*'
+signal_dir = 'D:/data_signal_MTI/project_util_2/signal_all_wo_mti/'
+save_dir = 'D:/data_signal_MTI/project_util_2/signal_all_w_mti_cutoff_12/'
+all_trajectory = 117
 
 def animate(i):
     line1.set_ydata(abs(range_fft[i,0,:100,0]))
@@ -24,7 +26,7 @@ def runGraphInitial():
 
     fig = plt.figure(1)
     ax1 = fig.add_subplot(121)
-    ax1.set_ylim([-1,5])
+    ax1.set_ylim([-1,10])
     line1, = ax1.plot(abs(range_fft[0,0,:100,0]))
     
     ax2 = fig.add_subplot(122)
@@ -39,7 +41,7 @@ def dopplerFFT(f_name):
     dop_fft = np.fft.fftshift(np.fft.fft(range_fft, axis=1) / n, axes=1)
 
     #----- save dop in complex ---------
-    np.save(f_name + '/doppler_fft_zero_pad_0_fir', dop_fft[:,:,:100,:])
+    # np.save(f_name + '/doppler_fft_zero_pad_2000_fir', dop_fft[:,:,:200,:])
 
     dop_fft = abs(dop_fft)
     return dop_fft
@@ -71,7 +73,7 @@ def firMTI():
     M_order = 97
     slowtime_sampling = 25*32
     nyq =  slowtime_sampling / 2
-    Fc = 20
+    Fc = 12
     hp_filter = signal.firwin(M_order, cutoff = Fc / nyq , window="hamming", pass_zero=False)
     signal_out = signal.filtfilt(hp_filter, 1, raw_iq, axis=0)
     # signal_out = signal.filtfilt(lf_filter, 1, range_fft, axis=0)
@@ -188,18 +190,20 @@ def main():
 
     folder_name = glob.glob(signal_dir)
     folder_name = natsort.natsorted(folder_name)
+    print(folder_name)
     
-    for f_name in folder_name:
-        real_name = f_name + '/raw_signal_real_*'
-        real_name = glob.glob(real_name)
-        imag_name = f_name + '/raw_signal_imag_*'
-        imag_name = glob.glob(imag_name)
+    for f_name in range(all_trajectory):
         print(f_name)
-        print(real_name[0])
-        print(imag_name[0])
+        real_name = signal_dir + 'raw_signal_real_' + str(f_name+1) + '.npy'
+        # real_name = glob.glob(real_name)
+        imag_name = signal_dir + 'raw_signal_imag_' + str(f_name+1) + '.npy'
+        # imag_name = glob.glob(imag_name)
+        print(f_name)
+        print(real_name)
+        print(imag_name)
 
-        real_part = np.load(real_name[0])
-        imag_part = np.load(imag_name[0])
+        real_part = np.load(real_name)
+        imag_part = np.load(imag_name)
         raw_iq = real_part + 1j*imag_part
         raw_iq = np.complex64(raw_iq)
         print(raw_iq.shape[0], raw_iq.shape[1], raw_iq.shape[2], raw_iq.shape[3])
@@ -235,6 +239,9 @@ def main():
         # FIR M=97 cut-off 20 hz
         raw_iq = np.reshape(raw_iq,(frame_number*chirp, adcSamples, TxRx))
         raw_iq = firMTI()
+        raw_iq = np.complex64(raw_iq)
+        print(raw_iq.shape, raw_iq[0,0,0,0])
+        np.save(save_dir + 'raw_iq_w_mti_' + str(f_name+1) , raw_iq)
 
         # IIR M=12 cut-off 20 hz
         # raw_iq = np.reshape(raw_iq,(frame_number*chirp, adcSamples, TxRx))
@@ -243,7 +250,7 @@ def main():
         #### --------------------------------------------------------------------
 
         # print(raw_iq.shape)
-        range_fft = rangeFFT(f_name)
+        # range_fft = rangeFFT(f_name)
         
         # plot_range_fft()
         # plot_micro_doppler()
@@ -254,7 +261,7 @@ def main():
         # plt.plot(freq, abs(range_fft[0,0,:,0])) 
         # plt.show()
 
-        velocity_fft = dopplerFFT(f_name)
+        # velocity_fft = dopplerFFT(f_name)
 
         # velocity_fft = velocity_fft[:,44:84,:,:]
         # print(velocity_fft.shape)

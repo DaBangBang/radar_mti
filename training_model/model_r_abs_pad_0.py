@@ -17,6 +17,18 @@ warnings.filterwarnings("ignore")
 
 folder_name = 'D:/data_signal_MTI/data_ball_move_39_real_imag_clean/p*'
 
+parser = argparse.ArgumentParser()
+parser.add_argument('-epochs', type=int, default=300)
+parser.add_argument('-batch_size', type=int, default=2000)
+parser.add_argument('-learning_rate', type=float, default= 0.001)
+parser.add_argument('-zero_padding', type=int, default=0)
+parser.add_argument('-test_batch_size', type=int, default= 2032)
+parser.add_argument('-loss_weight', type=int, default=3)
+parser.add_argument('-save_to_wandb', type=bool, default=False)
+parser.add_argument('-test_only', type=bool, default=False)
+parser.add_argument('-range_resolution', type=float, default=46.8410)
+args = parser.parse_args()
+
 epochs = 1000
 batch_size = 2000
 learning_rate = 0.001

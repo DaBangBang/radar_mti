@@ -1,11 +1,10 @@
-
-oewpfjkweopkfpwefk
 import torch
 import torchvision
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import numpy as np
+from torch import nn, optim, cuda
 from torch.utils.data import Dataset, DataLoader
 import matplotlib.pyplot as plt
 import natsort
@@ -15,52 +14,67 @@ import glob
 import re
 import warnings
 import argparse
-warnings.filterwarnings("ignore")
+from torch.autograd import Variable
 
-folder_name = 'D:/data_signal_MTI/data_ball_move_39_real_imag_clean/p*'
-model_path = 'D:/signal_MTI/training_model/wandb/run-20200709_035543-1i37sj07/fir_6cov_1.pt'
-save_predict_path = 'D:/data_signal_MTI/data_ball_move_39_graph/'
+warnings.filterwarnings("ignore")
+signal_dir = '/data/data_signal_MTI/project_util/signal_all_w_mti_cutoff_12/'
+label_dir = '/data/data_signal_MTI/project_util/label_all/'
+
+model_path = '/home/nakorn/weight_bias/wandb/run-20200818_161847-3tv89mst/fir_6cov_1.pt'
+save_predict_path = '/home/nakorn/weight_bias/test_data/'
+all_trajectory = 117
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-epochs', type=int, default=300)
-parser.add_argument('-batch_size', type=int, default=2000)
+parser.add_argument('-epochs', type=int, default=500)
+parser.add_argument('-batch_size', type=int, default=4000)
 parser.add_argument('-learning_rate', type=float, default= 0.001)
 parser.add_argument('-zero_padding', type=int, default=0)
-parser.add_argument('-test_batch_size', type=int, default= 2032)
+parser.add_argument('-test_batch_size', type=int, default = 9860)
 parser.add_argument('-loss_weight', type=int, default=3)
 parser.add_argument('-save_to_wandb', type=bool, default=False)
 parser.add_argument('-test_only', type=bool, default=False)
-parser.add_argument('-range_resolution', type=float, default=46.8410)
+parser.add_argument('-range_resolution', type=float, default=54.90)
+parser.add_argument('-wmodel', default='cnn+fc+reg')
 args = parser.parse_args()
 
 train_all = []
 test_all = []
 train_label_all = []
 test_label_all = []
-device = 'cuda' if cuda.is_available() else 'cpu'
+device = 'cuda:0' if cuda.is_available() else 'cpu'
 
 if args.save_to_wandb:
-    wandb.init(project="model_predict_r-z-phi_using-fc-only")
+    wandb.init(project="cnn-fc-117", dir='/home/nakorn/weight_bias')
 
-def L2_loss(output, label):
-    m_r = meshgrid()
-    expect = torch.matmul(output, m_r)
-    mse = mse_loss(expect, label)
+def L2_loss(output, label, wmodel):
+    
+    if 'cnn+fc' == wmodel: 
+        m_r = meshgrid()
+        expect = torch.matmul(output, m_r)
+        mse = mse_loss(expect, label)
+    
+    elif 'cnn+fc+reg' == wmodel:
+        expect = output.view(-1)
+        mse = mse_loss(expect, label)
+
+    # print(expect.size(), label.size())
+
     return mse, expect
 
 def cartesian_to_spherical(label):
-    y_offset = 110
+    y_offset = 105
     r = np.sqrt(label[:,0,0]**2 + (label[:,0,1] - y_offset)**2 + label[:,0,2]**2)
     return r
 
 def meshgrid():
-    m_r = torch.arange(0, args.range_resolution*25, args.range_resolution).to(device)
+    m_r = torch.arange(0, args.range_resolution*16, args.range_resolution).to(device)
     # print("m_r", m_r.shape)
     return m_r
 
-def data_preparation(data_real, label):
+def data_preparation(data_iq, label):
     
-    data_fft_modulus = abs(data_real)
+    data_fft = np.fft.fft(data_iq, axis=2) / data_iq.shape[2]
+    data_fft_modulus = abs(data_fft)
     data_fft_modulus = np.mean(data_fft_modulus, axis=1)
     
     data_fft_modulus = np.swapaxes(data_fft_modulus, 1,2)
@@ -79,35 +93,81 @@ def data_preparation(data_real, label):
 class Model(nn.Module):
     def __init__(self):
         super(Model, self).__init__()
+        # 2D-CNN Layer
+        self.encode_conv1 = nn.Conv1d(in_channels=4, out_channels=8, kernel_size=3, stride = 1, padding=1)
+        self.encode_conv2 = nn.Conv1d(in_channels=8, out_channels=8, kernel_size=3, stride = 2, padding=1)
+        self.encode_conv3 = nn.Conv1d(in_channels=8, out_channels=16, kernel_size=3, stride = 1, padding=1)
+        self.encode_conv4 = nn.Conv1d(in_channels=16, out_channels=16, kernel_size=3, stride = 2, padding=1)
+        # self.encode_conv5 = nn.Conv1d(in_channels=8, out_channels=16, kernel_size=3, stride = 1, padding=1)
+        # self.encode_conv6 = nn.Conv1d(in_channels=16, out_channels=16, kernel_size=3, stride = 2, padding=1)
 
-        self.fc1 = nn.Linear(in_features=300, out_features=150)
-        self.fc2 = nn.Linear(in_features=150, out_features=100)
-        self.fc3 = nn.Linear(in_features=100, out_features=25)
+        self.fc1 = nn.Linear(in_features=16*16, out_features=256)
         
+        self.fc2 = nn.Linear(in_features=256, out_features=256)
 
+        self.lstm = nn.LSTM(input_size=128, hidden_size=128, num_layers=2, batch_first = True)
+        
+        self.fc3 = nn.Linear(in_features=128, out_features=16)
 
-    def forward(self, x):
-        
-        
-        x = F.leaky_relu(self.fc1(x))
-        x = F.leaky_relu(self.fc2(x))
-        x = F.softmax(self.fc3(x), dim=1)
+        self.fc4 = nn.Linear(in_features=256, out_features=1)
+
+    def forward(self, x, wmodel):
+
+        if 'cnn+fc' == wmodel:
+            x = F.relu(self.encode_conv1(x))
+            x = F.relu(self.encode_conv2(x))
+            x = F.relu(self.encode_conv3(x))
+            x = F.relu(self.encode_conv4(x))
+            # x = F.leaky_relu(self.encode_conv5(x))
+            # x = F.leaky_relu(self.encode_conv6(x))
+
+            x = x.view(x.size(0), -1)
+            x = F.relu(self.fc1(x))
+            x = F.relu(self.fc2(x))
+            x = F.softmax(self.fc3(x), dim=1)
+
+        elif 'cnn+fc+reg' == wmodel:
+            
+            x = F.relu(self.encode_conv1(x))
+            x = F.relu(self.encode_conv2(x))
+            x = F.relu(self.encode_conv3(x))
+            x = F.relu(self.encode_conv4(x))
+            # x = F.leaky_relu(self.encode_conv5(x))
+            # x = F.leaky_relu(self.encode_conv6(x))
+
+            x = x.view(x.size(0), -1)
+            x = F.relu(self.fc1(x))
+            x = F.relu(self.fc2(x))
+            # x = F.relu(self.fc3(x))
+            x = self.fc4(x)
+
+        elif 'cnn+fc+lstm' == wmodel:
+            x = F.relu(self.encode_conv1(x))
+            x = F.relu(self.encode_conv2(x))
+            x = F.relu(self.encode_conv3(x))
+            x = F.relu(self.encode_conv4(x))
+            # x = F.leaky_relu(self.encode_conv5(x))
+            # x = F.leaky_relu(self.encode_conv6(x))
+
+            x = x.view(x.size(0), -1)
+            x = F.relu(self.fc1(x))
+            x = x.view(x.size(0), 1, -1)
+            h0 = Variable(torch.zeros(1*2, x.size(0), 128).to(device))
+            c0 = Variable(torch.zeros(1*2, x.size(0), 128).to(device))
+            out, (hn, cn) = self.lstm(x, (h0, c0))
+            x = F.softmax(self.fc3(out[:, -1, :]), dim=1)            
+
 
         return x
 
 class Radar_train_Dataset(Dataset):
     def __init__(self, real_part, label_file):
  
-        data_real = np.load(real_part[0])
-        label = np.load(label_file[0])
+        data_iq = np.load(real_part)
+        label = np.load(label_file)
 
-        # erase first five data
-        data_real = data_real[5:]
-        label = label[5:]
-
-        data_fft_modulus, label = data_preparation(data_real, label)
-        data_fft_modulus = np.reshape(data_fft_modulus, (data_fft_modulus.shape[0], -1)) # flatten
-
+        data_fft_modulus, label = data_preparation(data_iq, label)
+        
         train_all.extend(data_fft_modulus)
         train_label_all.extend(label)
                 
@@ -127,17 +187,11 @@ class Radar_test_Dataset(Dataset):
 
     def __init__(self, real_part, label_file):
         
-        data_real = np.load(real_part[0])
-        label = np.load(label_file[0])
+        data_iq = np.load(real_part)
+        label = np.load(label_file)
         
-        # erase first five data
-        data_real = data_real[5:]
-        label = label[5:]
-
-        data_fft_modulus, label = data_preparation(data_real, label)
-        data_fft_modulus = np.reshape(data_fft_modulus, (data_fft_modulus.shape[0], -1)) # flatten
-
-
+        data_fft_modulus, label = data_preparation(data_iq, label)
+        
         test_all.extend(data_fft_modulus)
         test_label_all.extend(label)
                 
@@ -172,8 +226,8 @@ def train_function(train_loader):
         train_labels = train_labels.float()
 
         optimizer.zero_grad()
-        output = model(train_data)
-        loss, expect_r = L2_loss(output, train_labels)
+        output = model(train_data, args.wmodel)
+        loss, expect_r = L2_loss(output, train_labels, args.wmodel)
         loss.backward()
         optimizer.step()
         avg_mini_train_loss.append(loss.item())
@@ -187,8 +241,8 @@ def test_function(test_loader):
         test_data, test_labels = test_data.to(device), test_labels.to(device)
         test_data = test_data.float()
         test_labels = test_labels.float()
-        output = model(test_data)
-        loss, expect_r = L2_loss(output, test_labels)
+        output = model(test_data, args.wmodel)
+        loss, expect_r = L2_loss(output, test_labels, args.wmodel)
         
         test_labels = test_labels.cpu().detach().numpy()
         expect_r = expect_r.cpu().detach().numpy()
@@ -198,18 +252,14 @@ def test_function(test_loader):
     
 if __name__ == '__main__':
     
-    folder_name = glob.glob(folder_name)
-    folder_name = natsort.natsorted(folder_name)
     count = 0
-    for f_name in folder_name:
+    for f_name in range(all_trajectory):
         count += 1
-        real_name = f_name + '/range_fft_zero_pad_0_fir*'
-        real_name = glob.glob(real_name)
-  
-        label_name = f_name +'/radar_pos_label_*'
-        label_name = glob.glob(label_name)
+        real_name = signal_dir + 'raw_iq_w_mti_' + str(count) + '.npy' 
+        label_name = label_dir + 'label_' + str(count) + '.npy'
+
       
-        if count%5 == 0:
+        if count%4 == 0:
             test_data = Radar_test_Dataset(real_part= real_name,  label_file=label_name)
         else:
             train_data = Radar_train_Dataset(real_part= real_name, label_file=label_name)
@@ -218,9 +268,10 @@ if __name__ == '__main__':
     test_loader = DataLoader(dataset=test_data, batch_size=args.test_batch_size)
 
     if args.test_only:
-        test_loss, expect, expect_label = test_function(test_loader)
-        print(expect_label.shape)
-        np.save(save_predict_path + 'expect_r_2', expect_label)
+        test_loss, label, expect_r = test_function(test_loader)
+        print(expect_r.shape)
+        np.save(save_predict_path + 'label_r_%4', label)
+        np.save(save_predict_path + 'expect_r_%4', expect_r)
 
     else:
         for epoch in range(args.epochs):
@@ -236,8 +287,8 @@ if __name__ == '__main__':
                 print(">>>>>> test_loss <<<<<< epoch", epoch , test_loss)
                 
                 if args.save_to_wandb:
-                    plt.plot(label[:500])
-                    plt.plot(expect_r[:500])
+                    plt.plot(label[:])
+                    plt.plot(expect_r[:])
                     plt.ylabel('r distance')
                     plt.xlabel('number of test point')
                     wandb.log({'distance': plt}, step=epoch)

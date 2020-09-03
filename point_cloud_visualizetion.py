@@ -2,93 +2,122 @@ import numpy as np
 import plotly.graph_objects as go
 import glob
 import natsort
-from pyqtgraph.Qt import QtCore, QtGui
-import pyqtgraph.opengl as gl
+from pyqtgraph.Qt import QtGui
+import pyqtgraph as pg
 from time import sleep
+import sys
+import matplotlib.pyplot as plt
+from plotly.subplots import make_subplots
+expect_r_file = 'D:/data_signal_MTI/project_util/test_data/expect_r_%4.npy'
+expect_z_file = 'D:/data_signal_MTI/project_util/test_data/expect_z_%4.npy'
+label_r_file = 'D:/data_signal_MTI/project_util/test_data/label_r_%4.npy'
+label_z_file = 'D:/data_signal_MTI/project_util/test_data/label_z_%4.npy'
 
-expect_folder = 'D:/data_signal_MTI/data_ball_move_39_graph/'
-folder_name = 'D:/data_signal_MTI/data_ball_move_39_real_imag_clean/p*'
-folder_name = glob.glob(folder_name)
-folder_name = natsort.natsorted(folder_name)
-count = 0
+dbf_r_file = 'D:/data_signal_MTI/project_util/test_data/dbf_r%4.npy'
+dbf_z_file = 'D:/data_signal_MTI/project_util/test_data/dbf_z%4.npy'
 
-test_label_all = []
-train_label_all = []
-app = QtGui.QApplication([])
-w = gl.GLViewWidget()
-w.show()
-g = gl.GLGridItem()
-w.addItem(g)
+music_r_file = 'D:/data_signal_MTI/project_util/test_data/music_r%4.npy'
+music_z_file = 'D:/data_signal_MTI/project_util/test_data/music_z%4.npy'
+esprit_z_file = 'D:/data_signal_MTI/project_util/test_data/esprit_z%4.npy'
+
 
 colors_1 = [1.0,0,0,0.5]
 colors_2 = [0,1.0,0,0.5]
 
-for f_name in folder_name[:]:
-    
-    count += 1
-    label_name = f_name +'/radar_pos_label_*'
-    label_name = glob.glob(label_name)
-
-
-    if count%6 == 0:
-        test_label = np.load(label_name[0])
-        test_label = test_label[5:]
-        test_label = test_label/10
-        test_label_all.extend(test_label)
-        # sp0 = gl.GLScatterPlotItem(pos=test_label[10:100], color=colors_1)
-        # w.addItem(sp0)
-    
-    else:
-        train_label = np.load(label_name[0])
-        train_label = train_label[5:]
-        train_label = train_label/10
-        train_label_all.extend(train_label)
-        # sp1 = gl.GLScatterPlotItem(pos=train_label[10:100], color=colors_2)
-        # w.addItem(sp1)
-test_label_all = np.array(test_label_all)
-train_label_all = np.array(train_label_all)
-print(test_label_all.shape, train_label_all.shape)
-
 ## ====== prediction ======
 
 
-expect_r = np.load(expect_folder + 'expect_r_2.npy')
-expect_z = np.load(expect_folder + 'expect_z_2.npy')
-expect_phi = np.load(expect_folder + 'expect_phi_2.npy')
+expect_r = np.load(expect_r_file)
+expect_z = np.load(expect_z_file)
+label_r = np.load(label_r_file)
+label_z = np.load(label_z_file)
+dbf_r = np.load(dbf_r_file)
+music_r = np.load(music_r_file)
+dbf_z = np.load(dbf_z_file)
+music_z = np.load(music_z_file)
+esprit_z = np.load(esprit_z_file)
+label_z = label_z[:,1].reshape(-1)
+# print(expect_r.shape, label_r[0], label_z[0,0])
+print(expect_z.shape)
 
-x = expect_r * np.cos(expect_phi) * np.sin(expect_z)
-y = expect_r * np.sin(expect_phi) + 110
-z = expect_r * np.cos(expect_phi) * np.cos(expect_z)
+music_z = music_z.reshape(-1)
+mean_music_z = np.sqrt(np.mean((label_z - music_z[::-1])**2))
 
-expect_xyz = np.array([[x, y, z]])
-expect_xyz = np.swapaxes(np.swapaxes(expect_xyz,0,2),1,2)
-expect_xyz = expect_xyz/10
-
-
-# sp0 = gl.GLScatterPlotItem(pos=test_label_all, color=colors_1)
-# w.addItem(sp0)
-# # sp1 = gl.GLScatterPlotItem(pos=train_label_all[5:], color=colors_2)
-# # w.addItem(sp1)
-# sp2 = gl.GLScatterPlotItem(pos=expect_xyz)
-# w.addItem(sp2)
-
-print(x.shape, y.shape, z.shape, expect_xyz.shape)
-
-i = 0
-def update():
-    global i
-    sp0 = gl.GLScatterPlotItem(pos=test_label_all[i], color=colors_1)
-    w.addItem(sp0)
-    sp2 = gl.GLScatterPlotItem(pos=expect_xyz[i])
-    w.addItem(sp2)
-    i += 2
-
-time = QtCore.QTimer()
-time.timeout.connect(update)
-time.start(5)
+esprit_z = esprit_z.reshape(-1)
+mean_esprit_z = np.sqrt(np.mean((label_z - esprit_z[::-1])**2))
+print(mean_music_z, mean_esprit_z)
 
 
-if __name__ == '__main__':
-    import sys
-    if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
-        QtGui.QApplication.instance().exec_()
+# x = expect_r * np.cos(label_z[:,2].reshape(-1)) * np.sin(expect_z)
+# z = expect_r * np.cos(label_z[:,2].reshape(-1)) * np.cos(expect_z)
+
+# xl = label_r * np.cos(label_z[:,2].reshape(-1)) * np.sin(label_z[:,1].reshape(-1))
+# zl = label_r * np.cos(label_z[:,2].reshape(-1)) * np.cos(label_z[:,1].reshape(-1))
+expect_r = expect_r[::10]
+expect_z = expect_z[::10]
+label_r = label_r[::10]
+label_z = label_z[::10]
+dbf_r = dbf_r[::10]
+music_r = music_r[::10]
+music_r = music_r.reshape(-1)
+dbf_z = dbf_z[::10]
+music_z = music_z[::10]
+music_z = music_z.reshape(-1)
+esprit_z = esprit_z[::10]
+esprit_z = esprit_z.reshape(-1)
+print(esprit_z.shape)
+
+
+
+
+
+N = expect_r.shape[0]
+xn = np.arange(N)
+p = label_r.argsort()
+k = label_z.argsort()
+
+
+fig = make_subplots(rows=2, cols=1)
+
+# fig.add_trace(go.Scatter(x=xn, y=label_r[p],
+#                     mode='lines',
+#                     name='label'), row=1, col=1)
+# fig.add_trace(go.Scatter(x=xn, y=expect_r[p],
+#                     mode='markers',
+#                     name='our_model'), row=1, col=1)
+# fig.add_trace(go.Scatter(x=xn, y=dbf_r[p],
+#                     mode='markers',
+#                     name='2D-FFT'), row=1, col=1)
+# fig.add_trace(go.Scatter(x=xn, y=music_r[p],
+#                     mode='markers',
+#                     name='MUSIC'), row=1, col=1)
+
+fig.add_trace(go.Scatter(x=xn, y=label_z[k],
+                    mode='lines',
+                    name='lines'), row=1, col=1)
+# fig.add_trace(go.Scatter(x=xn, y=expect_z[k],
+#                     mode='markers',
+#                     name='our_model'), row=1, col=1)
+# fig.add_trace(go.Scatter(x=xn, y=dbf_z[k],
+#                     mode='markers',
+#                     name='markers'), row=1, col=1)
+# fig.add_trace(go.Scatter(x=xn, y=music_z[k][::-1],
+#                     mode='markers',
+#                     name='music'), row=1, col=1)
+fig.add_trace(go.Scatter(x=xn, y=esprit_z[k][::-1],
+                    mode='markers',
+                    name='ESPRIT'), row=1, col=1)
+fig.update_layout(
+    title="Range_plot",
+    xaxis_title="Number of data point",
+    yaxis_title="Azimuth(radian)",
+    # legend_title="Legend Title",
+    # font=dict(
+    #     family="Courier New, monospace",
+    #     size=18,
+    #     color="RebeccaPurple"
+    # )
+)
+
+
+fig.show()

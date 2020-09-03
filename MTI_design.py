@@ -37,7 +37,7 @@ def runGraphInitial():
 
     fig = plt.figure(1)
     ax1 = fig.add_subplot(121)
-    ax1.set_ylim([-1,5])
+    ax1.set_ylim([-1,100])
     line1, = ax1.plot(abs(range_fft[0,0,:100,0]))
     
     ax2 = fig.add_subplot(122)
@@ -242,7 +242,7 @@ def main():
     # -----------------------------------------------------------------------
     #### ---------------- Matthew ash paper - IEEE sensor -------------------
     # static bg subtraction
-    raw_iq = bgSubtraction()
+    # raw_iq = bgSubtraction()
 
     # bg subtraction MTI with updating
     # raw_iq = bgSubtraction_update() # pre-processing using bg subtraction technique
