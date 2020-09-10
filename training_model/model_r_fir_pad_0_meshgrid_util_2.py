@@ -18,8 +18,8 @@ from torch.autograd import Variable
 
 warnings.filterwarnings("ignore")
 
-signal_dir = 'D:/data_signal_MTI/project_util/signal_all_w_mti_cutoff_12/'
-label_dir = 'D:/data_signal_MTI/project_util/label_all/'
+signal_dir = 'D:/data_signal_MTI/project_util_2/signal_all_w_mti_cutoff_12/'
+label_dir = 'D:/data_signal_MTI/project_util_2/label_all/'
 
 model_path = 'D:/signal_MTI/training_model/wandb/run-20200709_193224-3ni7z2r3/fir_6cov_1.pt'
 save_predict_path = 'D:/data_signal_MTI/data_ball_move_39_graph/'
@@ -34,7 +34,7 @@ parser.add_argument('-test_batch_size', type=int, default = 9860)
 parser.add_argument('-loss_weight', type=int, default=3)
 parser.add_argument('-save_to_wandb', type=bool, default=False)
 parser.add_argument('-test_only', type=bool, default=False)
-parser.add_argument('-range_resolution', type=float, default=54.90)
+parser.add_argument('-range_resolution', type=float, default=41.59)
 parser.add_argument('-mesh_w', type=float, default=0.1)
 parser.add_argument('-use_mesh', type=bool, default=False)
 args = parser.parse_args()
@@ -68,7 +68,7 @@ def cartesian_to_spherical(label):
     return r
 
 def meshgrid():
-    m_r = torch.arange(0, args.range_resolution*16, args.range_resolution).to(device)
+    m_r = torch.arange(0, args.range_resolution*128, args.range_resolution).to(device)
     # print("m_r", m_r.shape)
     # print(m_r)
     return m_r
@@ -80,7 +80,7 @@ def data_preparation(data_iq, label):
     data_fft_modulus = np.mean(data_fft_modulus, axis=1)
     
     data_fft_modulus = np.swapaxes(data_fft_modulus, 1,2)
-    data_fft_modulus = data_fft_modulus[:,:,:int(data_fft_modulus.shape[2]/16)]
+    data_fft_modulus = data_fft_modulus[:,:,:int(data_fft_modulus.shape[2]/8)]
     data_fft_modulus = np.float64(data_fft_modulus)
     
     # plt.plot(data_fft_modulus[0,0,:])
@@ -99,7 +99,7 @@ class Model(nn.Module):
     def __init__(self):
         super(Model, self).__init__()
         # 2D-CNN Layer
-        self.encode_conv1 = nn.Conv1d(in_channels=4, out_channels=8, kernel_size=3, stride = 1, padding=1)
+        self.encode_conv1 = nn.Conv1d(in_channels=8, out_channels=8, kernel_size=3, stride = 1, padding=1)
         self.encode_conv2 = nn.Conv1d(in_channels=8, out_channels=8, kernel_size=3, stride = 1 , padding=1)
         self.encode_conv3 = nn.Conv1d(in_channels=8, out_channels=16, kernel_size=3, stride = 1, padding=1)
         self.encode_conv4 = nn.Conv1d(in_channels=16, out_channels=16, kernel_size=3, stride = 1, padding=1)
@@ -216,7 +216,7 @@ def test_function(test_loader):
 if __name__ == '__main__':
     
     count = 0
-    for f_name in range(all_trajectory)[:78]:
+    for f_name in range(all_trajectory):
         count += 1
         real_name = signal_dir + 'raw_iq_w_mti_' + str(count) + '.npy' 
         label_name = label_dir + 'label_' + str(count) + '.npy'
