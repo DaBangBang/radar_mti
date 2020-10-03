@@ -15,13 +15,13 @@ def callBinfile(fname):
     fid = open(fname,'r')
     fid = np.fromfile(fid, np.int16)
     print(fid.shape)
-    fid = fid[:98566144] # for 376 frame 15 sec 25 fps
+    fid = fid[:49283072] # for 376 frame 15 sec 25 fps
 
     '''
         read data from bin file. Pls see data structure in MMwave radar device
     '''
     frameNumber = 376
-    numADCSamples = 1024
+    numADCSamples = 512
     numADCbits = 16
     numTx = 2
     numChirps = 16
@@ -197,7 +197,7 @@ def main():
     global IQall, range_fft, range_doppler, phase
 
     
-    folder_name = glob.glob('D:/data_signal_MTI/project_util_2/signal_triangle_raw')
+    folder_name = glob.glob('D:/data_signal_MTI/project_util_3/signal_triangle_raw')
     # folder_name.sort(key=lambda f: int(re.sub('\D','',f)))
     # folder_name = natsort.natsorted(folder_name)
     # print(folder_name)
@@ -237,8 +237,8 @@ def main():
             # range_fft_mean_real.extend(IQreal)
             # range_fft_mean_imag.extend(IQimag)
             # runGraphInitial()
-            save_real = 'D:/data_signal_MTI/project_util_2/signal_triangle_preprocess/raw_signal_real_' + str(name_count)
-            save_imag = 'D:/data_signal_MTI/project_util_2/signal_triangle_preprocess/raw_signal_imag_' + str(name_count)
+            save_real = 'D:/data_signal_MTI/project_util_3/signal_triangle_preprocess/raw_signal_real_' + str(name_count)
+            save_imag = 'D:/data_signal_MTI/project_util_3/signal_triangle_preprocess/raw_signal_imag_' + str(name_count)
             np.save(save_real, IQreal)
             np.save(save_imag, IQimag)
         # range_fft_mean_real = np.array(range_fft_mean_real)

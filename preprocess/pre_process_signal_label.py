@@ -2,9 +2,9 @@ import numpy as np
 import glob
 import natsort
 
-dir_project = 'D:/data_signal_MTI/project_util_2/'
-sig_dir = 'D:/data_signal_MTI/project_util_2/signal_all_wo_mti'
-label_dir = 'D:/data_signal_MTI/project_util_2/label_all'
+dir_project = 'D:/data_signal_MTI/project_util_3/'
+sig_dir = 'D:/data_signal_MTI/project_util_3/signal_all_wo_mti'
+label_dir = 'D:/data_signal_MTI/project_util_3/label_all'
 
 signal_folder = [dir_project + 'signal_circle_preprocess/', dir_project + 'signal_square_preprocess/', 
                 dir_project + 'signal_triangle_preprocess/' ]

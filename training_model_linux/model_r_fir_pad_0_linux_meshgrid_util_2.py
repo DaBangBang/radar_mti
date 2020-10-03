@@ -18,8 +18,8 @@ from torch.autograd import Variable
 
 warnings.filterwarnings("ignore")
 
-signal_dir = 'D:/data_signal_MTI/project_util_2/signal_all_w_mti_cutoff_12/'
-label_dir = 'D:/data_signal_MTI/project_util_2/label_all/'
+signal_dir = '/data/data_signal_MTI/project_util_2/signal_all_w_mti_cutoff_12/'
+label_dir = '/data/data_signal_MTI/project_util_2/label_all/'
 
 model_path = 'D:/signal_MTI/training_model/wandb/run-20200709_193224-3ni7z2r3/fir_6cov_1.pt'
 save_predict_path = 'D:/data_signal_MTI/data_ball_move_39_graph/'
@@ -30,12 +30,12 @@ parser.add_argument('-epochs', type=int, default=2000)
 parser.add_argument('-batch_size', type=int, default=2500)
 parser.add_argument('-learning_rate', type=float, default= 0.001)
 parser.add_argument('-zero_padding', type=int, default=0)
-parser.add_argument('-test_batch_size', type=int, default = 39440)
+parser.add_argument('-test_batch_size', type=int, default = 2000)
 parser.add_argument('-loss_weight', type=int, default=3)
 parser.add_argument('-save_to_wandb', type=bool, default=False)
 parser.add_argument('-test_only', type=bool, default=False)
-parser.add_argument('-range_resolution', type=float, default=41.59)
-parser.add_argument('-mesh_w', type=float, default=0.1)
+parser.add_argument('-range_resolution', type=float, default=35.59) #41.59
+parser.add_argument('-mesh_w', type=float, default=0.4)
 parser.add_argument('-use_mesh', type=bool, default=False)
 args = parser.parse_args()
 
@@ -43,11 +43,11 @@ train_all = []
 test_all = []
 train_label_all = []
 test_label_all = []
-device = 'cuda' if cuda.is_available() else 'cpu'
+device = 'cuda:0' if cuda.is_available() else 'cpu'
 
 
 if args.save_to_wandb:
-    wandb.init(project="training-117-trajactory-range")
+    wandb.init(project="training-117-trajactory-range", dir='/home/nakorn/weight_bias')
 
 
 def L2_loss(output, label, op_w):
@@ -68,16 +68,16 @@ def cartesian_to_spherical(label):
     return r
 
 def meshgrid():
-    m_r = torch.arange(0, args.range_resolution*128, args.range_resolution).to(device)
+    m_r = torch.arange(0, args.range_resolution*32, args.range_resolution).to(device)
     # print("m_r", m_r.shape)
     # print(m_r)
     return m_r
 
 def augmented(data_fft_modulus, label):
     power_spectral = data_fft_modulus**2
-    power_spectral_all = np.concatenate((power_spectral, power_spectral/10, power_spectral/100, power_spectral/1000), axis=0)
+    power_spectral_all = np.concatenate((power_spectral/10, power_spectral/100), axis=0)
 
-    label_all = np.concatenate((label, label, label, label), axis=0)
+    label_all = np.concatenate((label, label), axis=0)
 
     return power_spectral_all, label_all
 
@@ -88,7 +88,7 @@ def data_preparation(data_iq, label):
     data_fft_modulus = np.mean(data_fft_modulus, axis=1)
     
     data_fft_modulus = np.swapaxes(data_fft_modulus, 1,2)
-    data_fft_modulus = data_fft_modulus[:,:,:int(data_fft_modulus.shape[2]/8)]
+    data_fft_modulus = data_fft_modulus[:,:,:int(data_fft_modulus.shape[2]/32)]
     data_fft_modulus = np.float64(data_fft_modulus)
     
     # plt.plot(data_fft_modulus[0,0,:])
@@ -97,10 +97,11 @@ def data_preparation(data_iq, label):
     label = cartesian_to_spherical(label)
     label = np.float64(label)
 
-    data_fft_modulus_aug, label_aug = augmented(data_fft_modulus, label)
+    # data_fft_modulus_aug, label_aug = augmented(data_fft_modulus, label)
     
 
-    return data_fft_modulus_aug, label_aug
+    # return data_fft_modulus_aug, label_aug
+    return data_fft_modulus, label
 
 # def plot_function():
 

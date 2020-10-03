@@ -18,36 +18,37 @@ from torch.autograd import Variable
 
 warnings.filterwarnings("ignore")
 
-signal_dir = 'D:/data_signal_MTI/project_util_2/signal_all_w_mti_cutoff_12/'
-label_dir = 'D:/data_signal_MTI/project_util_2/label_all/'
+signal_dir = '/data/data_signal_MTI/project_util_3/signal_all_w_mti_cutoff_12/'
+label_dir = '/data/data_signal_MTI/project_util_3/label_all/'
 
-model_path = 'D:/signal_MTI/training_model/wandb/run-20200709_193224-3ni7z2r3/fir_6cov_1.pt'
-save_predict_path = 'D:/data_signal_MTI/data_ball_move_39_graph/'
-all_trajectory = 117
+model_path = '/home/nakorn/weight_bias/wandb/run-20200930_201418-1dzier7q/files/fir_6cov_1.pt'
+save_predict_path = '/data/data_signal_MTI/project_util_3/prediction_result/'
+all_trajectory = 120
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-epochs', type=int, default=2000)
+parser.add_argument('-epochs', type=int, default=1001)
 parser.add_argument('-batch_size', type=int, default=2500)
 parser.add_argument('-learning_rate', type=float, default= 0.001)
 parser.add_argument('-zero_padding', type=int, default=0)
-parser.add_argument('-test_batch_size', type=int, default = 39440)
+parser.add_argument('-test_batch_size', type=int, default = 10200)
 parser.add_argument('-loss_weight', type=int, default=3)
 parser.add_argument('-save_to_wandb', type=bool, default=False)
 parser.add_argument('-test_only', type=bool, default=False)
-parser.add_argument('-range_resolution', type=float, default=41.59)
-parser.add_argument('-mesh_w', type=float, default=0.1)
+parser.add_argument('-range_resolution', type=float, default= 45.74) #41.59
+parser.add_argument('-mesh_w', type=float, default=0.4)
 parser.add_argument('-use_mesh', type=bool, default=False)
+parser.add_argument('-cuda', type=int, default=0)
 args = parser.parse_args()
 
 train_all = []
 test_all = []
 train_label_all = []
 test_label_all = []
-device = 'cuda' if cuda.is_available() else 'cpu'
+device = 'cuda:'+ str(args.cuda) if cuda.is_available() else 'cpu'
 
 
 if args.save_to_wandb:
-    wandb.init(project="training-117-trajactory-range")
+    wandb.init(project="training-120-trajactory-range", dir='/home/nakorn/weight_bias')
 
 
 def L2_loss(output, label, op_w):
@@ -63,32 +64,40 @@ def L2_loss(output, label, op_w):
     return mse, expect
 
 def cartesian_to_spherical(label):
-    y_offset = 105
+    y_offset = 100
     r = np.sqrt(label[:,0,0]**2 + (label[:,0,1] - y_offset)**2 + label[:,0,2]**2)
     return r
 
 def meshgrid():
-    m_r = torch.arange(0, args.range_resolution*128, args.range_resolution).to(device)
+    m_r = torch.arange(0, args.range_resolution*64, args.range_resolution).to(device)
     # print("m_r", m_r.shape)
     # print(m_r)
     return m_r
 
 def augmented(data_fft_modulus, label):
     power_spectral = data_fft_modulus**2
-    power_spectral_all = np.concatenate((power_spectral, power_spectral/10, power_spectral/100, power_spectral/1000), axis=0)
+    power_spectral_all = np.concatenate((power_spectral/10, power_spectral/100), axis=0)
 
-    label_all = np.concatenate((label, label, label, label), axis=0)
+    label_all = np.concatenate((label, label), axis=0)
 
     return power_spectral_all, label_all
 
 def data_preparation(data_iq, label):
 
     data_fft = np.fft.fft(data_iq, axis=2)
+
+    #test_angle_fft to predict zeta
+    # data_fft_v = np.fft.fftshift(np.fft.fft(data_fft, axis=1), axes=1)
+    # data_fft_a = np.fft.fftshift(np.fft.fft(data_fft_v, axis=3), axes=3)
+
     data_fft_modulus = abs(data_fft)
     data_fft_modulus = np.mean(data_fft_modulus, axis=1)
-    
+
+    # data_fft_modulus = data_fft_modulus[:,:int(data_fft_modulus.shape[1]/8),:]    
+
     data_fft_modulus = np.swapaxes(data_fft_modulus, 1,2)
     data_fft_modulus = data_fft_modulus[:,:,:int(data_fft_modulus.shape[2]/8)]
+
     data_fft_modulus = np.float64(data_fft_modulus)
     
     # plt.plot(data_fft_modulus[0,0,:])
@@ -97,10 +106,10 @@ def data_preparation(data_iq, label):
     label = cartesian_to_spherical(label)
     label = np.float64(label)
 
-    data_fft_modulus_aug, label_aug = augmented(data_fft_modulus, label)
-    
+    # data_fft_modulus_aug, label_aug = augmented(data_fft_modulus, label)
 
-    return data_fft_modulus_aug, label_aug
+    # return data_fft_modulus_aug, label_aug
+    return data_fft_modulus, label
 
 # def plot_function():
 
@@ -111,10 +120,10 @@ class Model(nn.Module):
         super(Model, self).__init__()
         # 2D-CNN Layer
         self.encode_conv1 = nn.Conv1d(in_channels=8, out_channels=8, kernel_size=3, stride = 1, padding=1)
-        self.encode_conv2 = nn.Conv1d(in_channels=8, out_channels=8, kernel_size=3, stride = 1 , padding=1)
-        self.encode_conv3 = nn.Conv1d(in_channels=8, out_channels=16, kernel_size=3, stride = 1, padding=1)
-        self.encode_conv4 = nn.Conv1d(in_channels=16, out_channels=16, kernel_size=3, stride = 1, padding=1)
-        self.encode_conv5 = nn.Conv1d(in_channels=16, out_channels=1, kernel_size=3, stride = 1, padding=1)
+        self.encode_conv2 = nn.Conv1d(in_channels=8, out_channels=16, kernel_size=3, stride = 1 , padding=1)
+        self.encode_conv3 = nn.Conv1d(in_channels=16, out_channels=32, kernel_size=3, stride = 1, padding=1)
+        self.encode_conv4 = nn.Conv1d(in_channels=32, out_channels=64, kernel_size=3, stride = 1, padding=1)
+        self.encode_conv5 = nn.Conv1d(in_channels=64, out_channels=1, kernel_size=3, stride = 1, padding=1)
 
         self.op_w = nn.Parameter(torch.randn(1), requires_grad=args.use_mesh)
      
@@ -242,9 +251,9 @@ if __name__ == '__main__':
     test_loader = DataLoader(dataset=test_data, batch_size=args.test_batch_size)
 
     if args.test_only:
-        test_loss, expect, expect_label = test_function(test_loader)
-        print(expect_label.shape)
-        np.save(save_predict_path + 'expect_r_%5', expect_label)
+        test_loss, label, expect_r, op_w = test_function(test_loader)
+        print(expect_r.shape)
+        np.save(save_predict_path + 'expect_r_%4', expect_r)
 
     else:
         for epoch in range(args.epochs):

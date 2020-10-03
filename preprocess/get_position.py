@@ -142,7 +142,7 @@ def Line():
 def cam_config():
     global cap, fps
     # cap = cv2.VideoCapture(0+ cv2.CAP_DSHOW)
-    cap = cv2.VideoCapture('D:/data_signal_MTI/project_util_2/triangle_clockwise.mp4')
+    cap = cv2.VideoCapture('D:/data_signal_MTI/project_util_3/square_counter_clockwise.mp4')
     # cap = cv2.VideoCapture('C:/Users/nakorn-vision/Videos/Logitech/LogiCapture/2020-06-09_21-25-24.mp4')
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
@@ -437,12 +437,12 @@ def findObject(image_point):
     '''
     param_x = 0.2
     param_y = 0.2
-    px = 500
+    px = 600
     py = 370
     # px = 0
     # py = 0
     
-    crop_frame = frame[py:py+200, px:px+300]
+    crop_frame = frame[py:py+150, px:px+200]
 
     '''
     check hsv
@@ -539,9 +539,9 @@ def cam_run():
     '''
         save stat
     '''
-    text_file = open('D:/data_signal_MTI/project_util_2/label_triangle/frame_number.txt', 'w')
-    rt_text_file = open('D:/data_signal_MTI/project_util_2/label_triangle/rt_matrix.txt', 'w')
-    all_frame_detect = open('D:/data_signal_MTI/project_util_2/label_triangle/all_frame.txt', 'w')
+    # text_file = open('D:/data_signal_MTI/project_util_3/label_square/frame_number.txt', 'w')
+    # rt_text_file = open('D:/data_signal_MTI/project_util_3/label_square/rt_matrix.txt', 'w')
+    # all_frame_detect = open('D:/data_signal_MTI/project_util_3/label_square/all_frame.txt', 'w')
     '''
         pygame and opengl function
     '''
@@ -552,6 +552,8 @@ def cam_run():
 
     cam_config()
     ret, frame = cap.read()
+    cv2.rectangle(frame, (900,0), (1280, 100), (0,0,0), -1)
+
     stage_flag = True
     frame_count = 0
     number_of_label = 0
@@ -584,6 +586,7 @@ def cam_run():
         ids = np.array(ids)
         corners = np.array(corners)
         image_point = []
+        # frame_markers = aruco.drawDetectedMarkers(frame, corners, ids)
 
         '''
             crea
@@ -615,7 +618,7 @@ def cam_run():
             if len(ids) == 5 and mask.all() == True :
 
                 point_compare = (ids[:, None] == point_constraint).argmax(axis=0)
-                
+
                 for i in range(ids.shape[0]):
                 
                     # image_point.append([np.sum(corners[point_compare[0,i],0], axis=0)])
@@ -630,6 +633,7 @@ def cam_run():
                     equal to [-11.5,7, 0],[-11.5,-7,0],[11.5,7,0],[11.5,-7,0]
                 '''
                 uv_coor_camera = np.array([image_point[0],image_point[1],image_point[2],image_point[3]])
+                # print(uv_coor_camera)
 
 
                 '''
@@ -658,7 +662,7 @@ def cam_run():
                     draw_function(vec_1_pixel, vec_2_pixel, vec_3_pixel, vec_4_pixel, vec_21_mov_pixel, 
                         vec_rad_1_pixel, vec_rad_2_pixel, rt_pixel, vec_rad_0_pixel, vec_0_pixel)
                     
-                    print(frame_count)
+                    # print(frame_count)
                     # print(param_x, param_y)
                     '''
                         draw frustum
@@ -666,7 +670,7 @@ def cam_run():
                     Frustum_cam(frustum_edge, frustum, rt_matrix_inv_1, rt_matrix_inv_2)
                     Frustum_rad(frustum_edge, frustum, r_rad_matrix, t_rad_matrix, rt_matrix_inv_1, rt_matrix_inv_2)
 
-            # print(frame_count)
+            print(frame_count)
             cv2.imshow('org', frame)
             
             
@@ -685,16 +689,16 @@ def cam_run():
                 enable this function if you want to read from video
             '''
             ########################################################
-            if frame_count > 0 :
-                number_of_label += 1
-                print(frame_count)
-                text_file.write(str(frame_count) + '\n')
-                all_frame_detect.write(str(np.array(pos_label).shape[0]) + '\n')
-                rt_text_file.write(str(r_rad_matrix))
-                rt_text_file.write(str(t_rad_matrix) + '\n')
-                np.save("D:/data_signal_MTI/project_util_2/label_triangle/radar_pos_label_" + str(number_of_label) ,np.array(pos_label))
-                print('wake text')
-                print(np.array(pos_label).shape)
+            # if frame_count > 0 :
+            #     number_of_label += 1
+            #     print(frame_count)
+            #     text_file.write(str(frame_count) + '\n')
+            #     all_frame_detect.write(str(np.array(pos_label).shape[0]) + '\n')
+            #     rt_text_file.write(str(r_rad_matrix))
+            #     rt_text_file.write(str(t_rad_matrix) + '\n')
+            #     np.save("D:/data_signal_MTI/project_util_3/label_square/radar_pos_label_" + str(number_of_label) ,np.array(pos_label))
+            #     print('wake text')
+            #     print(np.array(pos_label).shape)
 
             ########################################################  
            
@@ -706,6 +710,7 @@ def cam_run():
            
 
         ret, frame = cap.read()
+        cv2.rectangle(frame, (900,0), (1280, 100), (0,0,0), -1)
         # cv2.imshow('org', frame)
 
 
@@ -723,7 +728,7 @@ def main():
 
     dictionary = aruco.getPredefinedDictionary(aruco.DICT_5X5_100)
     parameters =  aruco.DetectorParameters_create()
-    parameters.adaptiveThreshConstant = 5
+    parameters.adaptiveThreshConstant = 10
     # CORNER_REFINE_NONE, no refinement. CORNER_REFINE_SUBPIX, do subpixel refinement. CORNER_REFINE_CONTOUR use contour-Points
     parameters.cornerRefinementMethod = aruco.CORNER_REFINE_CONTOUR
     

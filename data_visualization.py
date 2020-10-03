@@ -6,10 +6,10 @@ from pyqtgraph.Qt import QtCore, QtGui
 import pyqtgraph.opengl as gl
 from time import sleep
 
-expect_r_file = 'D:/data_signal_MTI/project_util/test_data/expect_r_%4.npy'
-expect_z_file = 'D:/data_signal_MTI/project_util/test_data/expect_z_%4.npy'
-label_r_file = 'D:/data_signal_MTI/project_util/test_data/label_r_%4.npy'
-label_z_file = 'D:/data_signal_MTI/project_util/test_data/label_z_%4.npy'
+expect_r_file = 'D:/data_signal_MTI/project_util_3/test_data/expect_r_%4.npy'
+expect_z_file = 'D:/data_signal_MTI/project_util_3/test_data/expect_z_%4.npy'
+label_r_file = 'D:/data_signal_MTI/project_util_3/test_data/label_r_%4.npy'
+label_z_file = 'D:/data_signal_MTI/project_util_3/test_data/label_z_%4.npy'
 
 dbf_r_file = 'D:/data_signal_MTI/project_util/test_data/dbf_r%4.npy'
 dbf_z_file = 'D:/data_signal_MTI/project_util/test_data/dbf_z%4.npy'

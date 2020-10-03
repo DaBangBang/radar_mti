@@ -13,13 +13,13 @@ c = 299792458 * m
 k = 1000
 mm = 1e-3
 cm = 1e-2
-RampEndTime = 63.14 * us
+RampEndTime = 50 * us
 IdleTime = 10 * us
-Bandwidth = 3.99948 * GHz
+Bandwidth = 4 * GHz
 Frequency = 77 * GHz
-FrequencySlope = 63.343 * MHz / us
-ADCSamples = 1024
-SamplingRate = 18000 * k
+FrequencySlope = 80.00 * MHz / us
+ADCSamples = 512
+SamplingRate = 12500 * k
 ADCStartTime = 6 * us
 
 ADCSamplingTime = ADCSamples / SamplingRate
@@ -47,7 +47,7 @@ def read_label():
     sim_chirp = []
     peak_position = []
     for dis in f_label:
-      y_offset = 110
+      y_offset = 100
       r = np.sqrt(dis[0,0]**2 + (dis[0,1] - y_offset)**2 + dis[0,2]**2)
       # r = dis[0,2]
       r = r*mm
