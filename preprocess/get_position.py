@@ -429,7 +429,6 @@ def ballRadPosition(rt, rt_rad_matrix_inv_1, rt_rad_matrix_inv_2, param_x, param
         pos_label.append(ball_rad_posi.T)
         # print(ball_rad_posi.T)
         
-
 def findObject(image_point):
 
     '''
@@ -744,7 +743,6 @@ def main():
     
     print(camera_matrix)
     cam_run()
-
 
 if __name__ == '__main__':
     main()
