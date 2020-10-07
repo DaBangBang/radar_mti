@@ -12,9 +12,11 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 import time
 import re
+from scipy.signal import savgol_filter
+import matplotlib.pyplot as plt
 
-expect_r_file = 'D:/data_signal_MTI/project_util_3/prediction_result/expect_r_%4.npy'
-expect_z_file = 'D:/data_signal_MTI/project_util_3/prediction_result/expect_z_%4.npy'
+expect_r_file = 'D:/data_signal_MTI/project_util_3/prediction_result/expect_r_%4_smooth.npy'
+expect_z_file = 'D:/data_signal_MTI/project_util_3/prediction_result/expect_z_%4_smooth.npy'
 label_z_file = 'D:/data_signal_MTI/project_util_3/prediction_result/label_z_%4.npy'
 
 label_dir = 'D:/data_signal_MTI/project_util_3/label_all/'
@@ -24,11 +26,10 @@ rt_triangle_dir = 'D:/data_signal_MTI/project_util_3/label_triangle/rt_matrix.tx
 rt_dir = [rt_circle_dir, rt_square_dir, rt_triangle_dir]
 trajectories = 120
 
-def cam_config():
+def cam_config(file_vdo):
     global cap, fps, out
     # cap = cv2.VideoCapture(0+ cv2.CAP_DSHOW)
-    cap = cv2.VideoCapture('D:/data_signal_MTI/project_util_3/circle_counter_clockwise.mp4')
-    out = cv2.VideoWriter('D:/data_signal_MTI/project_util_3/prediction_result/prediction_vdo.mp4', cv2.VideoWriter_fourcc(*'MP4V'), 20.0, (1280,720))
+    cap = cv2.VideoCapture('D:/data_signal_MTI/project_util_3/' + file_vdo)
     # cap = cv2.VideoCapture('C:/Users/nakorn-vision/Videos/Logitech/LogiCapture/2020-06-09_21-25-24.mp4')
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
@@ -99,6 +100,8 @@ def prediction_all(rt_all, tr_all):
     expect_p = np.swapaxes(expect_p,0,2)
     expect_p = expect_p.reshape((len(test_idx), -1, 3, 1))
     # print(expect_p.shape)
+  
+    
     return expect_xyz, expect_p, np.array(rt_cut), np.array(tr_cut), test_idx
 
 def cal_back_to_uv(label_a, predict, rotation, translation, camera_matrix, predict_flag):
@@ -122,6 +125,8 @@ def cal_back_to_uv(label_a, predict, rotation, translation, camera_matrix, predi
 def cam_run(camera_matrix):
     
     global frame
+    out = cv2.VideoWriter('D:/data_signal_MTI/project_util_3/prediction_result/prediction_vdo_1_smooth.mp4', 
+            cv2.VideoWriter_fourcc(*'MP4V'), 20.0, (1280,720))
     location = collections.deque(maxlen=15)
     location_c = collections.deque(maxlen=15)
     location_p = collections.deque(maxlen=15)
@@ -151,65 +156,69 @@ def cam_run(camera_matrix):
    
     uv_c, uv_p = cal_back_to_uv(label_a, predict, rt_all, tr_all, camera_matrix, predict_flag)
     
-    cam_config()
-    ret, frame = cap.read()
+    file_vdo = ['circle_counter_clockwise.mp4', 'square_counter_clockwise.mp4', 'triangle_counter_clockwise.mp4']
     
-    while ret == True:
+    for n_vdo in file_vdo:
         
-        frame_trigger = frameTrigger()
-        if frame_trigger:
-            
-            if 340 > frame_count > 24+5 and (predict_flag == False):
-                point = uv_c[real_frame_count, trigger_frame_label, :, 0] // uv_c[real_frame_count, trigger_frame_label, 2, 0]
-                location.append((int(point[0]),int(point[1])))
-                for j in range(len(location)):
-                    cv2.circle(frame, location[j], 4, (255,0,255), -1)
-                cv2.imshow('org', frame)
-                cv2.waitKey(10)
-                real_frame_count += 1
-            
-            elif 340 > frame_count > 24+5 and (predict_flag == True):
-                if test_idx[s_f_com] == trigger_frame_label:
-                    point_c = uv_c[real_frame_count, s_f_com, :, 0] // uv_c[real_frame_count, s_f_com, 2, 0]
-                    point_p = uv_p[real_frame_count, s_f_com, :, 0] // uv_p[real_frame_count, s_f_com, 2, 0]
-                    location_c.append((int(point_c[0]),int(point_c[1])))
-                    location_p.append((int(point_p[0]),int(point_p[1])))
-                    for j in range(len(location_c)):
-                        cv2.circle(frame, location_c[j], 4, (255,0,255), -1)
-                        cv2.circle(frame, location_p[j], 4, (255,0,0), -1)
-                    out.write(frame)
-                    cv2.imshow('org', frame)
-                    # cv2.waitKey()
-                    real_frame_count += 1
-                    s_f_com_flag = True
-                else:
-                    cv2.imshow('org', frame)
-            
-            elif frame_count == 345 and s_f_com_flag:
-                trigger_frame_label += 1
-                s_f_com += 1
-                s_f_com_flag = False
-            
-            elif frame_count == 345 :
-                trigger_frame_label += 1
-            
-
-            frame_count += 1
-        
-        else:
-            frame_count = 0
-            real_frame_count = 0
-            location = collections.deque(maxlen=15)
-            location_c = collections.deque(maxlen=15)
-            location_p = collections.deque(maxlen=15)
-           
-        
+        cam_config(n_vdo)
         ret, frame = cap.read()
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            cap.release()
-            out.release()
-            cv2.destroyAllWindows()
-            break
+        
+        while ret == True:
+            
+            frame_trigger = frameTrigger()
+            if frame_trigger:
+                
+                if 340 > frame_count > 24+5 and (predict_flag == False):
+                    point = uv_c[real_frame_count, trigger_frame_label, :, 0] // uv_c[real_frame_count, trigger_frame_label, 2, 0]
+                    location.append((int(point[0]),int(point[1])))
+                    for j in range(len(location)):
+                        cv2.circle(frame, location[j], 4, (255,0,255), -1)
+                    cv2.imshow('org', frame)
+                    cv2.waitKey(10)
+                    real_frame_count += 1
+                
+                elif 340 > frame_count > 24+5 and (predict_flag == True):
+                    if test_idx[s_f_com] == trigger_frame_label:
+                        point_c = uv_c[real_frame_count, s_f_com, :, 0] // uv_c[real_frame_count, s_f_com, 2, 0]
+                        point_p = uv_p[real_frame_count, s_f_com, :, 0] // uv_p[real_frame_count, s_f_com, 2, 0]
+                        location_c.append((int(point_c[0]),int(point_c[1])))
+                        location_p.append((int(point_p[0]),int(point_p[1])))
+                        for j in range(len(location_c)):
+                            cv2.circle(frame, location_c[j], 4, (255,0,255), -1)
+                            cv2.circle(frame, location_p[j], 4, (255,0,0), -1)
+                        out.write(frame)
+                        cv2.imshow('org', frame)
+                        # cv2.waitKey()
+                        real_frame_count += 1
+                        s_f_com_flag = True
+                    else:
+                        cv2.imshow('org', frame)
+                
+                elif frame_count == 345 and s_f_com_flag:
+                    trigger_frame_label += 1
+                    s_f_com += 1
+                    s_f_com_flag = False
+                
+                elif frame_count == 345 :
+                    trigger_frame_label += 1
+                
+
+                frame_count += 1
+            
+            else:
+                frame_count = 0
+                real_frame_count = 0
+                location = collections.deque(maxlen=15)
+                location_c = collections.deque(maxlen=15)
+                location_p = collections.deque(maxlen=15)
+            
+            
+            ret, frame = cap.read()
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                cap.release()
+                out.release()
+                cv2.destroyAllWindows()
+                break
 
 def main():
     camera_matrix = np.load("./preprocess/camera_matrix.npy")
