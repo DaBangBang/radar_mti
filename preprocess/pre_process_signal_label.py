@@ -3,13 +3,18 @@ import glob
 import natsort
 
 dir_project = 'D:/data_signal_MTI/project_util_3/'
+
 sig_dir = 'D:/data_signal_MTI/project_util_3/signal_all_wo_mti'
 label_dir = 'D:/data_signal_MTI/project_util_3/label_all'
-
 signal_folder = [dir_project + 'signal_circle_preprocess/', dir_project + 'signal_square_preprocess/', 
                 dir_project + 'signal_triangle_preprocess/' ]
-
 label_folder = [dir_project + 'label_circle/', dir_project + 'label_square/', dir_project + 'label_triangle/']
+
+#for robot
+# sig_dir = 'D:/data_signal_MTI/project_util_3/signal_robot_all_wo_mti'
+# label_dir = 'D:/data_signal_MTI/project_util_3/label_all_robot'
+# signal_folder = [dir_project + 'signal_robot_preprocess/']
+# label_folder = [dir_project + 'label_robot/']
 
 # print(signal_folder, label_folder)
 count = 1

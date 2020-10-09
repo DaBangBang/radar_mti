@@ -18,12 +18,12 @@ from torch.autograd import Variable
 
 warnings.filterwarnings("ignore")
 
-signal_dir = '/data/data_signal_MTI/project_util_3/signal_all_w_mti_cutoff_12/'
-label_dir = '/data/data_signal_MTI/project_util_3/label_all/'
+signal_dir = '/data/data_signal_MTI/project_util_3/signal_robot_all_w_mti_cutoff_12/'
+label_dir = '/data/data_signal_MTI/project_util_3/label_all_robot/'
 
 model_path = '/home/nakorn/weight_bias/wandb/run-20200930_201418-1dzier7q/files/fir_6cov_1.pt'
 save_predict_path = '/data/data_signal_MTI/project_util_3/prediction_result/'
-all_trajectory = 120
+all_trajectory = 3
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-epochs', type=int, default=1001)
@@ -243,6 +243,7 @@ if __name__ == '__main__':
 
       
         if count%4 == 0:
+        # if True:
             test_data = Radar_test_Dataset(real_part= real_name,  label_file=label_name)
         else:
             train_data = Radar_train_Dataset(real_part= real_name, label_file=label_name)
@@ -253,7 +254,7 @@ if __name__ == '__main__':
     if args.test_only:
         test_loss, label, expect_r, op_w = test_function(test_loader)
         print(expect_r.shape)
-        np.save(save_predict_path + 'expect_r_%4', expect_r)
+        np.save(save_predict_path + 'expect_r_%4_robot', expect_r)
 
     else:
         for epoch in range(args.epochs):

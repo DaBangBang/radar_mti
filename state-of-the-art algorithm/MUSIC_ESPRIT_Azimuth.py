@@ -37,7 +37,9 @@ def music(CovMat,L,N,array,Angles):
     # array holds the positions of antenna elements
     # Angles are the grid of directions in the azimuth angular domain
     _,V = LA.eig(CovMat)
+    print(V.shape)
     Qn  = V[:,L:N]
+    print(Qn.shape)
     numAngles = Angles.size
     pspectrum = np.zeros(numAngles)
     for i in range(numAngles):

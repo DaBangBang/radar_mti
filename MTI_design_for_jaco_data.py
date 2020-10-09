@@ -11,8 +11,8 @@ from pylab import *
 import scipy.signal as signal
 
 
-signal_dir = 'D:/data_signal_MTI/project_util_3/signal_all_wo_mti/'
-save_dir = 'D:/data_signal_MTI/project_util_3/signal_all_w_mti_cutoff_12/'
+signal_dir = 'D:/data_signal_MTI/project_util_3/signal_robot_all_wo_mti/'
+save_dir = 'D:/data_signal_MTI/project_util_3/signal_robot_all_w_mti_cutoff_12/'
 all_trajectory = 120
 
 def animate(i):
@@ -241,7 +241,7 @@ def main():
         raw_iq = firMTI()
         raw_iq = np.complex64(raw_iq)
         print(raw_iq.shape, raw_iq[0,0,0,0])
-        # np.save(save_dir + 'raw_iq_w_mti_' + str(f_name+1) , raw_iq)
+        np.save(save_dir + 'raw_iq_w_mti_' + str(f_name+1) , raw_iq)
 
         # IIR M=12 cut-off 20 hz
         # raw_iq = np.reshape(raw_iq,(frame_number*chirp, adcSamples, TxRx))

@@ -197,7 +197,7 @@ def main():
     global IQall, range_fft, range_doppler, phase
 
     
-    folder_name = glob.glob('D:/data_signal_MTI/project_util_3/signal_triangle_raw')
+    folder_name = glob.glob('D:/data_signal_MTI/project_util_3/signal_robot_raw')
     # folder_name.sort(key=lambda f: int(re.sub('\D','',f)))
     # folder_name = natsort.natsorted(folder_name)
     # print(folder_name)
@@ -237,8 +237,8 @@ def main():
             # range_fft_mean_real.extend(IQreal)
             # range_fft_mean_imag.extend(IQimag)
             # runGraphInitial()
-            save_real = 'D:/data_signal_MTI/project_util_3/signal_triangle_preprocess/raw_signal_real_' + str(name_count)
-            save_imag = 'D:/data_signal_MTI/project_util_3/signal_triangle_preprocess/raw_signal_imag_' + str(name_count)
+            save_real = 'D:/data_signal_MTI/project_util_3/signal_robot_preprocess/raw_signal_real_' + str(name_count)
+            save_imag = 'D:/data_signal_MTI/project_util_3/signal_robot_preprocess/raw_signal_imag_' + str(name_count)
             np.save(save_real, IQreal)
             np.save(save_imag, IQimag)
         # range_fft_mean_real = np.array(range_fft_mean_real)

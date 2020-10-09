@@ -17,8 +17,8 @@ import argparse
 
 warnings.filterwarnings("ignore")
 
-signal_dir = '/data/data_signal_MTI/project_util_3/signal_all_w_mti_cutoff_12/'
-label_dir = '/data/data_signal_MTI/project_util_3/label_all/'
+signal_dir = '/data/data_signal_MTI/project_util_3/signal_robot_all_w_mti_cutoff_12/'
+label_dir = '/data/data_signal_MTI/project_util_3/label_all_robot/'
 
 model_path = '/home/nakorn/weight_bias/wandb/run-20200930_200650-c0cxja7k/files/aoa_fir_6cov_1.pt'
 save_predict_path = '/data/data_signal_MTI/project_util_3/prediction_result/'
@@ -231,6 +231,7 @@ if __name__ == '__main__':
         label_name = label_dir + 'label_' + str(count) + '.npy'
       
         if count%4 == 0:
+        # if True:
             test_data = Radar_test_Dataset(real_part= real_name,  label_file=label_name)
         else:
             train_data = Radar_train_Dataset(real_part= real_name, label_file=label_name)
@@ -241,8 +242,8 @@ if __name__ == '__main__':
 
     if args.test_only:
         test_loss, label, expect_z = test_function(test_loader)
-        np.save(save_predict_path + 'label_z_%4', label)
-        np.save(save_predict_path + 'expect_z_%4', expect_z)
+        np.save(save_predict_path + 'label_z_%4_robot', label)
+        np.save(save_predict_path + 'expect_z_%4_robot', expect_z)
         print(test_loss, expect_z.shape)
 
     else :
