@@ -15,6 +15,7 @@ snr = 10 # signal to noise ratio
 count = 0
 
 array = np.linspace(0,(N-1)/2,N)
+print(array)
 Angles = np.linspace(-np.pi/2,np.pi/2,360)
 numAngles = Angles.size
 
@@ -37,9 +38,9 @@ def music(CovMat,L,N,array,Angles):
     # array holds the positions of antenna elements
     # Angles are the grid of directions in the azimuth angular domain
     _,V = LA.eig(CovMat)
-    print(V.shape)
+    # print(V.shape)
     Qn  = V[:,L:N]
-    print(Qn.shape)
+    # print(Qn.shape)
     numAngles = Angles.size
     pspectrum = np.zeros(numAngles)
     for i in range(numAngles):

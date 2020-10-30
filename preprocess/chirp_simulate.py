@@ -81,6 +81,7 @@ def simulate(dis, sim_chirp, peak_position):
   # print("Plot of IF if object is at", obj_distance, "m")
   for i in range(ADCSamples):
     t = i / ADCSamples * ADCSamplingTime
+    print(t)
     ls.append(np.exp(2 * np.pi * t * 1j * fbeat(obj_distance)))
 
   n_pad = ((0,0))

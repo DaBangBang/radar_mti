@@ -23,7 +23,7 @@ label_dir = '/data/data_signal_MTI/project_util_3/label_all_robot/'
 
 model_path = '/home/nakorn/weight_bias/wandb/run-20200930_201418-1dzier7q/files/fir_6cov_1.pt'
 save_predict_path = '/data/data_signal_MTI/project_util_3/prediction_result/'
-all_trajectory = 3
+all_trajectory = 120
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-epochs', type=int, default=1001)
