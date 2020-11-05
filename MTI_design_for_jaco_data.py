@@ -11,8 +11,8 @@ from pylab import *
 import scipy.signal as signal
 
 
-signal_dir = 'D:/data_signal_MTI/project_util_3/signal_robot_all_wo_mti/'
-save_dir = 'D:/data_signal_MTI/project_util_3/signal_robot_all_w_mti_cutoff_12/'
+signal_dir = 'D:/data_signal_MTI/project_util_3/signal_robot_3_all_wo_mti/'
+save_dir = 'D:/data_signal_MTI/project_util_3/signal_robot_3_all_w_mti_cutoff_12/'
 all_trajectory = 120
 
 def animate(i):

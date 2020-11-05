@@ -142,7 +142,7 @@ def Line():
 def cam_config():
     global cap, fps
     # cap = cv2.VideoCapture(0+ cv2.CAP_DSHOW)
-    cap = cv2.VideoCapture('D:/data_signal_MTI/project_util_3/robot.mp4')
+    cap = cv2.VideoCapture('D:/data_signal_MTI/project_util_3/robot_3.mp4')
     # cap = cv2.VideoCapture('C:/Users/nakorn-vision/Videos/Logitech/LogiCapture/2020-06-09_21-25-24.mp4')
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
@@ -538,9 +538,9 @@ def cam_run():
     '''
         save stat
     '''
-    text_file = open('D:/data_signal_MTI/project_util_3/label_robot/frame_number.txt', 'w')
-    rt_text_file = open('D:/data_signal_MTI/project_util_3/label_robot/rt_matrix.txt', 'w')
-    all_frame_detect = open('D:/data_signal_MTI/project_util_3/label_robot/all_frame.txt', 'w')
+    # text_file = open('D:/data_signal_MTI/project_util_3/label_robot_3/frame_number.txt', 'w')
+    # rt_text_file = open('D:/data_signal_MTI/project_util_3/label_robot_3/rt_matrix.txt', 'w')
+    # all_frame_detect = open('D:/data_signal_MTI/project_util_3/label_robot_3/all_frame.txt', 'w')
     '''
         pygame and opengl function
     '''
@@ -688,16 +688,16 @@ def cam_run():
                 enable this function if you want to read from video
             '''
             ########################################################
-            if frame_count > 0 :
-                number_of_label += 1
-                print(frame_count)
-                text_file.write(str(frame_count) + '\n')
-                all_frame_detect.write(str(np.array(pos_label).shape[0]) + '\n')
-                rt_text_file.write(str(r_rad_matrix))
-                rt_text_file.write(str(t_rad_matrix) + '\n')
-                np.save("D:/data_signal_MTI/project_util_3/label_robot/radar_pos_label_" + str(number_of_label) ,np.array(pos_label))
-                print('wake text')
-                print(np.array(pos_label).shape)
+            # if frame_count > 0 :
+            #     number_of_label += 1
+            #     print(frame_count)
+            #     text_file.write(str(frame_count) + '\n')
+            #     all_frame_detect.write(str(np.array(pos_label).shape[0]) + '\n')
+            #     rt_text_file.write(str(r_rad_matrix))
+            #     rt_text_file.write(str(t_rad_matrix) + '\n')
+            #     np.save("D:/data_signal_MTI/project_util_3/label_robot_3/radar_pos_label_" + str(number_of_label) ,np.array(pos_label))
+            #     print('wake text')
+            #     print(np.array(pos_label).shape)
 
             ########################################################  
            

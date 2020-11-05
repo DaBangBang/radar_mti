@@ -15,20 +15,20 @@ import re
 from scipy.signal import savgol_filter
 import matplotlib.pyplot as plt
 
-expect_r_file = 'D:/data_signal_MTI/project_util_3/prediction_result/expect_r_%4_robot_smooth.npy'
-expect_z_file = 'D:/data_signal_MTI/project_util_3/prediction_result/expect_z_%4_robot_smooth.npy'
-label_z_file = 'D:/data_signal_MTI/project_util_3/prediction_result/label_z_%4_robot.npy'
+expect_r_file = 'D:/data_signal_MTI/project_util_3/prediction_result/expect_r_%4_music_pad.npy'
+expect_z_file = 'D:/data_signal_MTI/project_util_3/prediction_result/expect_z_%4_music_pad.npy'
+label_z_file = 'D:/data_signal_MTI/project_util_3/prediction_result/label_z_%4.npy'
 
-# label_dir = 'D:/data_signal_MTI/project_util_3/label_all/'
-# rt_circle_dir = 'D:/data_signal_MTI/project_util_3/label_circle/rt_matrix.txt'
-# rt_square_dir = 'D:/data_signal_MTI/project_util_3/label_square/rt_matrix.txt'
-# rt_triangle_dir = 'D:/data_signal_MTI/project_util_3/label_triangle/rt_matrix.txt'
-# rt_dir = [rt_circle_dir, rt_square_dir, rt_triangle_dir]
+label_dir = 'D:/data_signal_MTI/project_util_3/label_all/'
+rt_circle_dir = 'D:/data_signal_MTI/project_util_3/label_circle/rt_matrix.txt'
+rt_square_dir = 'D:/data_signal_MTI/project_util_3/label_square/rt_matrix.txt'
+rt_triangle_dir = 'D:/data_signal_MTI/project_util_3/label_triangle/rt_matrix.txt'
+rt_dir = [rt_circle_dir, rt_square_dir, rt_triangle_dir]
 #for robot
-label_dir = 'D:/data_signal_MTI/project_util_3/label_all_robot/'
-rt_robot_dir = 'D:/data_signal_MTI/project_util_3/label_robot/rt_matrix.txt'
-rt_dir = [rt_robot_dir]
-trajectories = 3
+# label_dir = 'D:/data_signal_MTI/project_util_3/label_all_robot/'
+# rt_robot_dir = 'D:/data_signal_MTI/project_util_3/label_robot/rt_matrix.txt'
+# rt_dir = [rt_robot_dir]
+trajectories = 120
 
 def cam_config(file_vdo):
     global cap, fps, out
@@ -79,14 +79,15 @@ def prediction_all(rt_all, tr_all):
     count = 0
     for i in range(trajectories):
         count += 1
-        # if count%4 == 0:
-        if True:
+        if count%4 == 0:
+        # if True:
             rt_cut.append(rt_all[i])
             tr_cut.append(tr_all[i])
             test_idx.append(i)
 
     expect_r = np.load(expect_r_file)
     expect_z = np.load(expect_z_file)
+    print(expect_r.shape, expect_z.shape)
     label_z = np.load(label_z_file)
 
     x = label_z[:,0] * np.cos(label_z[:,2]) * np.sin(label_z[:,1])
@@ -130,7 +131,7 @@ def cal_back_to_uv(label_a, predict, rotation, translation, camera_matrix, predi
 def cam_run(camera_matrix):
     
     global frame
-    out = cv2.VideoWriter('D:/data_signal_MTI/project_util_3/prediction_result/prediction_vdo_1_robot.mp4', 
+    out = cv2.VideoWriter('D:/data_signal_MTI/project_util_3/prediction_result/prediction_vdo_music_pad.mp4', 
             cv2.VideoWriter_fourcc(*'MP4V'), 20.0, (1280,720))
     location = collections.deque(maxlen=15)
     location_c = collections.deque(maxlen=15)
@@ -162,8 +163,8 @@ def cam_run(camera_matrix):
    
     uv_c, uv_p = cal_back_to_uv(label_a, predict, rt_all, tr_all, camera_matrix, predict_flag)
     
-    # file_vdo = ['circle_counter_clockwise.mp4', 'square_counter_clockwise.mp4', 'triangle_counter_clockwise.mp4']
-    file_vdo = ['robot_1.mp4']
+    file_vdo = ['circle_counter_clockwise.mp4', 'square_counter_clockwise.mp4', 'triangle_counter_clockwise.mp4']
+    # file_vdo = ['robot_1.mp4']
 
     for n_vdo in file_vdo:
         
@@ -191,8 +192,8 @@ def cam_run(camera_matrix):
                         location_c.append((int(point_c[0]),int(point_c[1])))
                         location_p.append((int(point_p[0]),int(point_p[1])))
                         for j in range(len(location_c)):
-                            # cv2.circle(frame, location_c[j], 4, (255,0,255), -1)
-                            cv2.circle(frame, location_p[j], 8, (255,0,0), -1)
+                            cv2.circle(frame, location_c[j], 4, (255,0,255), -1)
+                            cv2.circle(frame, location_p[j], 4, (255,0,0), -1)
                         out.write(frame)
                         cv2.imshow('org', frame)
                         # cv2.waitKey()

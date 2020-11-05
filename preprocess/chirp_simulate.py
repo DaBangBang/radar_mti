@@ -19,7 +19,7 @@ Bandwidth = 4 * GHz
 Frequency = 77 * GHz
 FrequencySlope = 80.00 * MHz / us
 ADCSamples = 512
-SamplingRate = 12500 * k
+SamplingRate = 13000 * k
 ADCStartTime = 6 * us
 
 ADCSamplingTime = ADCSamples / SamplingRate
