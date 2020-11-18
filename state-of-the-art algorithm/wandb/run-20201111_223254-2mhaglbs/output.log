@@ -1,0 +1,49 @@
+train_function torch.Size([10200]) torch.Size([10200]) torch.Size([10200, 3])
+loss 9226.60546875
+(10200,) (10200,) (2, 1)
+loss 6178.12548828125
+loss 4528.2998046875
+loss 3768.0087890625
+loss 3476.356689453125
+loss 3385.121337890625
+loss 3362.0830078125
+loss 3357.39794921875
+loss 3356.622314453125
+loss 3356.51025390625
+loss 3356.488037109375
+(10200,) (10200,) (2, 1)
+loss 3356.477783203125
+loss 3356.47021484375
+loss 3356.4638671875
+loss 3356.458984375
+loss 3356.455078125
+loss 3356.4521484375
+loss 3356.449951171875
+loss 3356.4482421875
+loss 3356.44677734375
+loss 3356.446044921875
+(10200,) (10200,) (2, 1)
+loss 3356.445556640625
+loss 3356.445068359375
+loss 3356.444580078125
+loss 3356.4443359375
+loss 3356.444580078125
+loss 3356.44482421875
+loss 3356.44482421875
+loss 3356.4443359375
+Traceback (most recent call last):
+  File ".\linear_transform_optimize.py", line 100, in <module>
+    training_loss, r_out, z_out, var = train_function(train_loader)
+  File ".\linear_transform_optimize.py", line 70, in train_function
+    for i, (train_range, train_zeta, train_label) in enumerate(train_loader, 0):
+  File "C:\Users\nakorn-vision\Anaconda3\envs\ice\lib\site-packages\torch\utils\data\dataloader.py", line 345, in __next__
+    data = self._next_data()
+  File "C:\Users\nakorn-vision\Anaconda3\envs\ice\lib\site-packages\torch\utils\data\dataloader.py", line 385, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "C:\Users\nakorn-vision\Anaconda3\envs\ice\lib\site-packages\torch\utils\data\_utils\fetch.py", line 44, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "C:\Users\nakorn-vision\Anaconda3\envs\ice\lib\site-packages\torch\utils\data\_utils\fetch.py", line 44, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File ".\linear_transform_optimize.py", line 61, in __getitem__
+    return self.train_range[idx], self.train_zeta[idx] ,self.train_label[idx]
+KeyboardInterrupt

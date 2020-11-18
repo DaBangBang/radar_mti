@@ -15,7 +15,7 @@ Rx = 8
 r_pad = ((0,0),(0, pad_multi_range*adc_range),(0,0))
 a_pad = ((0,0),(0,0),(0, pad_multi_angle*Rx))
 all_trajectory = 120
-range_res = 45.74 / (1+pad_multi_range)
+range_res = 47.6 / (1+pad_multi_range)
 angle_res = 3.1415 / (Rx*(pad_multi_angle+1)-1)
 # angle_res = 0.448
 
@@ -53,6 +53,7 @@ if __name__ == '__main__':
         count += 1
         real_name = signal_dir + 'raw_iq_w_mti_' + str(count) + '.npy'
         if count%4 == 0:
+        # if True:
             test_data = np.load(real_name)
             for i in range(test_data.shape[0]):
                 data_frame = test_data[i]

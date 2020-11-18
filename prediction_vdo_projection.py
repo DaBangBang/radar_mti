@@ -15,9 +15,10 @@ import re
 from scipy.signal import savgol_filter
 import matplotlib.pyplot as plt
 
-expect_r_file = 'D:/data_signal_MTI/project_util_3/prediction_result/expect_r_%4_music_pad.npy'
-expect_z_file = 'D:/data_signal_MTI/project_util_3/prediction_result/expect_z_%4_music_pad.npy'
+expect_r_file = 'D:/data_signal_MTI/project_util_3/prediction_result/expect_r_%4_esprit_pad.npy'
+expect_z_file = 'D:/data_signal_MTI/project_util_3/prediction_result/expect_z_%4_esprit_pad.npy'
 label_z_file = 'D:/data_signal_MTI/project_util_3/prediction_result/label_z_%4.npy'
+trans_file = 'D:/data_signal_MTI/project_util_3/prediction_result/2dfft_op_param_trans.npy'
 
 label_dir = 'D:/data_signal_MTI/project_util_3/label_all/'
 rt_circle_dir = 'D:/data_signal_MTI/project_util_3/label_circle/rt_matrix.txt'
@@ -25,8 +26,8 @@ rt_square_dir = 'D:/data_signal_MTI/project_util_3/label_square/rt_matrix.txt'
 rt_triangle_dir = 'D:/data_signal_MTI/project_util_3/label_triangle/rt_matrix.txt'
 rt_dir = [rt_circle_dir, rt_square_dir, rt_triangle_dir]
 #for robot
-# label_dir = 'D:/data_signal_MTI/project_util_3/label_all_robot/'
-# rt_robot_dir = 'D:/data_signal_MTI/project_util_3/label_robot/rt_matrix.txt'
+# label_dir = 'D:/data_signal_MTI/project_util_3/label_all_robot_3/'
+# rt_robot_dir = 'D:/data_signal_MTI/project_util_3/label_robot_3/rt_matrix.txt'
 # rt_dir = [rt_robot_dir]
 trajectories = 120
 
@@ -87,8 +88,9 @@ def prediction_all(rt_all, tr_all):
 
     expect_r = np.load(expect_r_file)
     expect_z = np.load(expect_z_file)
-    print(expect_r.shape, expect_z.shape)
+    # print(expect_r.shape, expect_z.shape)
     label_z = np.load(label_z_file)
+    trans = np.load(trans_file)
 
     x = label_z[:,0] * np.cos(label_z[:,2]) * np.sin(label_z[:,1])
     y = label_z[:,0] * np.sin(label_z[:,2]) + 100
@@ -98,14 +100,19 @@ def prediction_all(rt_all, tr_all):
     expect_xyz = np.swapaxes(expect_xyz,0,2)
     expect_xyz = expect_xyz.reshape((len(test_idx), -1, 3, 1))
 
-    xp = expect_r * np.cos(label_z[:,2]) * np.sin(expect_z)
-    yp = expect_r * np.sin(label_z[:,2]) + 100
-    zp = expect_r * np.cos(label_z[:,2]) * np.cos(expect_z)
+    xp = (expect_r + trans[0]) * np.cos(label_z[:,2]) * np.sin(expect_z + trans[1])
+    yp = (expect_r + trans[0]) * np.sin(label_z[:,2]) + 100
+    zp = (expect_r + trans[0]) * np.cos(label_z[:,2]) * np.cos(expect_z + trans[1]) 
 
     expect_p = np.array([[xp,yp,zp]])
     expect_p = np.swapaxes(expect_p,0,2)
+    # f_r = np.load('D:/data_signal_MTI/project_util_3/prediction_result/RT_2dfft/rotation_2dfft.npy')
+    # f_t = np.load('D:/data_signal_MTI/project_util_3/prediction_result/RT_2dfft/translation_2dfft.npy')
+    # expect_p = expect_p.reshape(-1,3)@f_r.T + f_t
+    
     expect_p = expect_p.reshape((len(test_idx), -1, 3, 1))
-    # print(expect_p.shape)
+    print(expect_p.shape)
+    
   
     
     return expect_xyz, expect_p, np.array(rt_cut), np.array(tr_cut), test_idx
@@ -131,11 +138,11 @@ def cal_back_to_uv(label_a, predict, rotation, translation, camera_matrix, predi
 def cam_run(camera_matrix):
     
     global frame
-    out = cv2.VideoWriter('D:/data_signal_MTI/project_util_3/prediction_result/prediction_vdo_music_pad.mp4', 
+    out = cv2.VideoWriter('D:/data_signal_MTI/project_util_3/prediction_result/prediction_esprit_trans.mp4', 
             cv2.VideoWriter_fourcc(*'MP4V'), 20.0, (1280,720))
-    location = collections.deque(maxlen=15)
-    location_c = collections.deque(maxlen=15)
-    location_p = collections.deque(maxlen=15)
+    location = collections.deque(maxlen=5)
+    location_c = collections.deque(maxlen=5)
+    location_p = collections.deque(maxlen=5)
     # location = []
     # location_c = []
     # location_p = []
@@ -164,7 +171,7 @@ def cam_run(camera_matrix):
     uv_c, uv_p = cal_back_to_uv(label_a, predict, rt_all, tr_all, camera_matrix, predict_flag)
     
     file_vdo = ['circle_counter_clockwise.mp4', 'square_counter_clockwise.mp4', 'triangle_counter_clockwise.mp4']
-    # file_vdo = ['robot_1.mp4']
+    # file_vdo = ['robot_3.mp4']
 
     for n_vdo in file_vdo:
         
@@ -216,9 +223,9 @@ def cam_run(camera_matrix):
             else:
                 frame_count = 0
                 real_frame_count = 0
-                location = collections.deque(maxlen=15)
-                location_c = collections.deque(maxlen=15)
-                location_p = collections.deque(maxlen=15)
+                location = collections.deque(maxlen=5)
+                location_c = collections.deque(maxlen=5)
+                location_p = collections.deque(maxlen=5)
             
             
             ret, frame = cap.read()

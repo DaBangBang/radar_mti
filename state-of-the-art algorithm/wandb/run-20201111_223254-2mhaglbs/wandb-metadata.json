@@ -1,0 +1,26 @@
+{
+    "root": "D:/signal_MTI",
+    "program": ".\\linear_transform_optimize.py",
+    "git": {
+        "remote": "https://github.com/shikuzen/radar_mti.git",
+        "commit": "305675871b2b776a19a77a04f90ecc7cb39baab4"
+    },
+    "email": "nakorn.vistec@gmail.com",
+    "codePath": "state-of-the-art algorithm\\linear_transform_optimize.py",
+    "startedAt": "2020-11-11T22:32:54.180583",
+    "host": "DESKTOP-D437ST7",
+    "username": "nakorn-vision",
+    "executable": "C:\\Users\\nakorn-vision\\Anaconda3\\envs\\ice\\python.exe",
+    "os": "Windows-10-10.0.18362-SP0",
+    "python": "3.6.10",
+    "gpu": "GeForce GTX 1080 Ti",
+    "gpu_count": 1,
+    "cpu_count": 12,
+    "args": [],
+    "state": "killed",
+    "jobType": null,
+    "mode": "run",
+    "project": "optimize_affine",
+    "heartbeatAt": "2020-11-11T22:38:32.707644",
+    "exitcode": 255
+}

@@ -142,7 +142,7 @@ def Line():
 def cam_config():
     global cap, fps
     # cap = cv2.VideoCapture(0+ cv2.CAP_DSHOW)
-    cap = cv2.VideoCapture('D:/data_signal_MTI/project_util_3/robot_3.mp4')
+    cap = cv2.VideoCapture('D:/data_signal_MTI/project_util_3/circle_counter_clockwise.mp4')
     # cap = cv2.VideoCapture('C:/Users/nakorn-vision/Videos/Logitech/LogiCapture/2020-06-09_21-25-24.mp4')
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
@@ -427,7 +427,7 @@ def ballRadPosition(rt, rt_rad_matrix_inv_1, rt_rad_matrix_inv_2, param_x, param
         # print(np.array([[0.0, 0.0, 0.0]]))
     else:
         pos_label.append(ball_rad_posi.T)
-        # print(ball_rad_posi.T)
+        print(ball_rad_posi.T)
         
 def findObject(image_point):
 
@@ -436,8 +436,8 @@ def findObject(image_point):
     '''
     param_x = 0.2
     param_y = 0.2
-    px = 540
-    py = 420
+    px = 570
+    py = 360
     # px = 0
     # py = 0
     
@@ -678,7 +678,7 @@ def cam_run():
         elif not ids.any():
             cv2.imshow('org', frame)
 
-        elif cv2.waitKey(1) & 0xFF == ord('q'):
+        elif cv2.waitKey(200) & 0xFF == ord('q'):
             cap.release()
             cv2.destroyAllWindows()
             break

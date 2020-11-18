@@ -1,0 +1,291 @@
+diff --git a/prediction_vdo_projection.py b/prediction_vdo_projection.py
+index cb472a1..8f37a4b 100644
+--- a/prediction_vdo_projection.py
++++ b/prediction_vdo_projection.py
+@@ -15,8 +15,8 @@ import re
+ from scipy.signal import savgol_filter
+ import matplotlib.pyplot as plt
+ 
+-expect_r_file = 'D:/data_signal_MTI/project_util_3/prediction_result/expect_r_%4_music_pad.npy'
+-expect_z_file = 'D:/data_signal_MTI/project_util_3/prediction_result/expect_z_%4_music_pad.npy'
++expect_r_file = 'D:/data_signal_MTI/project_util_3/prediction_result/expect_r_%4_2dfft_pad_op_linear.npy'
++expect_z_file = 'D:/data_signal_MTI/project_util_3/prediction_result/expect_z_%4_2dfft_pad_op_linear.npy'
+ label_z_file = 'D:/data_signal_MTI/project_util_3/prediction_result/label_z_%4.npy'
+ 
+ label_dir = 'D:/data_signal_MTI/project_util_3/label_all/'
+@@ -25,8 +25,8 @@ rt_square_dir = 'D:/data_signal_MTI/project_util_3/label_square/rt_matrix.txt'
+ rt_triangle_dir = 'D:/data_signal_MTI/project_util_3/label_triangle/rt_matrix.txt'
+ rt_dir = [rt_circle_dir, rt_square_dir, rt_triangle_dir]
+ #for robot
+-# label_dir = 'D:/data_signal_MTI/project_util_3/label_all_robot/'
+-# rt_robot_dir = 'D:/data_signal_MTI/project_util_3/label_robot/rt_matrix.txt'
++# label_dir = 'D:/data_signal_MTI/project_util_3/label_all_robot_3/'
++# rt_robot_dir = 'D:/data_signal_MTI/project_util_3/label_robot_3/rt_matrix.txt'
+ # rt_dir = [rt_robot_dir]
+ trajectories = 120
+ 
+@@ -87,7 +87,7 @@ def prediction_all(rt_all, tr_all):
+ 
+     expect_r = np.load(expect_r_file)
+     expect_z = np.load(expect_z_file)
+-    print(expect_r.shape, expect_z.shape)
++    # print(expect_r.shape, expect_z.shape)
+     label_z = np.load(label_z_file)
+ 
+     x = label_z[:,0] * np.cos(label_z[:,2]) * np.sin(label_z[:,1])
+@@ -104,8 +104,13 @@ def prediction_all(rt_all, tr_all):
+ 
+     expect_p = np.array([[xp,yp,zp]])
+     expect_p = np.swapaxes(expect_p,0,2)
++    # f_r = np.load('D:/data_signal_MTI/project_util_3/prediction_result/RT_2dfft/rotation_2dfft.npy')
++    # f_t = np.load('D:/data_signal_MTI/project_util_3/prediction_result/RT_2dfft/translation_2dfft.npy')
++    # expect_p = expect_p.reshape(-1,3)@f_r.T + f_t
++    
+     expect_p = expect_p.reshape((len(test_idx), -1, 3, 1))
+-    # print(expect_p.shape)
++    print(expect_p.shape)
++    
+   
+     
+     return expect_xyz, expect_p, np.array(rt_cut), np.array(tr_cut), test_idx
+@@ -131,11 +136,11 @@ def cal_back_to_uv(label_a, predict, rotation, translation, camera_matrix, predi
+ def cam_run(camera_matrix):
+     
+     global frame
+-    out = cv2.VideoWriter('D:/data_signal_MTI/project_util_3/prediction_result/prediction_vdo_music_pad.mp4', 
++    out = cv2.VideoWriter('D:/data_signal_MTI/project_util_3/prediction_result/prediction_xxx.mp4', 
+             cv2.VideoWriter_fourcc(*'MP4V'), 20.0, (1280,720))
+-    location = collections.deque(maxlen=15)
+-    location_c = collections.deque(maxlen=15)
+-    location_p = collections.deque(maxlen=15)
++    location = collections.deque(maxlen=5)
++    location_c = collections.deque(maxlen=5)
++    location_p = collections.deque(maxlen=5)
+     # location = []
+     # location_c = []
+     # location_p = []
+@@ -164,7 +169,7 @@ def cam_run(camera_matrix):
+     uv_c, uv_p = cal_back_to_uv(label_a, predict, rt_all, tr_all, camera_matrix, predict_flag)
+     
+     file_vdo = ['circle_counter_clockwise.mp4', 'square_counter_clockwise.mp4', 'triangle_counter_clockwise.mp4']
+-    # file_vdo = ['robot_1.mp4']
++    # file_vdo = ['robot_3.mp4']
+ 
+     for n_vdo in file_vdo:
+         
+@@ -194,7 +199,7 @@ def cam_run(camera_matrix):
+                         for j in range(len(location_c)):
+                             cv2.circle(frame, location_c[j], 4, (255,0,255), -1)
+                             cv2.circle(frame, location_p[j], 4, (255,0,0), -1)
+-                        out.write(frame)
++                        # out.write(frame)
+                         cv2.imshow('org', frame)
+                         # cv2.waitKey()
+                         real_frame_count += 1
+@@ -216,9 +221,9 @@ def cam_run(camera_matrix):
+             else:
+                 frame_count = 0
+                 real_frame_count = 0
+-                location = collections.deque(maxlen=15)
+-                location_c = collections.deque(maxlen=15)
+-                location_p = collections.deque(maxlen=15)
++                location = collections.deque(maxlen=5)
++                location_c = collections.deque(maxlen=5)
++                location_p = collections.deque(maxlen=5)
+             
+             
+             ret, frame = cap.read()
+diff --git a/preprocess/get_position.py b/preprocess/get_position.py
+index 70b6b39..6a8fe57 100644
+--- a/preprocess/get_position.py
++++ b/preprocess/get_position.py
+@@ -142,7 +142,7 @@ def Line():
+ def cam_config():
+     global cap, fps
+     # cap = cv2.VideoCapture(0+ cv2.CAP_DSHOW)
+-    cap = cv2.VideoCapture('D:/data_signal_MTI/project_util_3/robot_3.mp4')
++    cap = cv2.VideoCapture('D:/data_signal_MTI/project_util_3/circle_counter_clockwise.mp4')
+     # cap = cv2.VideoCapture('C:/Users/nakorn-vision/Videos/Logitech/LogiCapture/2020-06-09_21-25-24.mp4')
+     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+@@ -427,7 +427,7 @@ def ballRadPosition(rt, rt_rad_matrix_inv_1, rt_rad_matrix_inv_2, param_x, param
+         # print(np.array([[0.0, 0.0, 0.0]]))
+     else:
+         pos_label.append(ball_rad_posi.T)
+-        # print(ball_rad_posi.T)
++        print(ball_rad_posi.T)
+         
+ def findObject(image_point):
+ 
+@@ -436,8 +436,8 @@ def findObject(image_point):
+     '''
+     param_x = 0.2
+     param_y = 0.2
+-    px = 540
+-    py = 420
++    px = 570
++    py = 360
+     # px = 0
+     # py = 0
+     
+@@ -678,7 +678,7 @@ def cam_run():
+         elif not ids.any():
+             cv2.imshow('org', frame)
+ 
+-        elif cv2.waitKey(1) & 0xFF == ord('q'):
++        elif cv2.waitKey(200) & 0xFF == ord('q'):
+             cap.release()
+             cv2.destroyAllWindows()
+             break
+diff --git a/state-of-the-art algorithm/2d_fft_range_azimuth.py b/state-of-the-art algorithm/2d_fft_range_azimuth.py
+index 8e93aa6..7e50424 100644
+--- a/state-of-the-art algorithm/2d_fft_range_azimuth.py	
++++ b/state-of-the-art algorithm/2d_fft_range_azimuth.py	
+@@ -15,7 +15,7 @@ Rx = 8
+ r_pad = ((0,0),(0, pad_multi_range*adc_range),(0,0))
+ a_pad = ((0,0),(0,0),(0, pad_multi_angle*Rx))
+ all_trajectory = 120
+-range_res = 45.74 / (1+pad_multi_range)
++range_res = 47.6 / (1+pad_multi_range)
+ angle_res = 3.1415 / (Rx*(pad_multi_angle+1)-1)
+ # angle_res = 0.448
+ 
+@@ -53,6 +53,7 @@ if __name__ == '__main__':
+         count += 1
+         real_name = signal_dir + 'raw_iq_w_mti_' + str(count) + '.npy'
+         if count%4 == 0:
++        # if True:
+             test_data = np.load(real_name)
+             for i in range(test_data.shape[0]):
+                 data_frame = test_data[i]
+diff --git a/state-of-the-art algorithm/esprit_range_azimuth.py b/state-of-the-art algorithm/esprit_range_azimuth.py
+index 39c4998..95cb7a9 100644
+--- a/state-of-the-art algorithm/esprit_range_azimuth.py	
++++ b/state-of-the-art algorithm/esprit_range_azimuth.py	
+@@ -12,8 +12,9 @@ k = 1000
+ c = 299792458 * m
+ fs = 13*MHz
+ Bw = 3.1508 * GHz
+-pad_multi_range = 0
+-pad_multi_angle = 0
++
++pad_multi_range = 3
++pad_multi_angle = 20
+ 
+ all_trajectory = 120
+ 
+@@ -75,9 +76,9 @@ if __name__ == '__main__':
+                 actual_range = range_estimation(test_data[i,0,:,0])
+                 actual_doa = angle_estimation(test_data[i,0,:,:])
+                 expect_r.append(actual_range)
+-                expect_z.append(actual_doa)
++                expect_z.append(-1*actual_doa)
+             print("finish")
+     expect_r = np.array(expect_r)
+     expect_z = np.array(expect_z)
+-    np.save('D:/data_signal_MTI/project_util_3/prediction_result/expect_r_%4_esprit_nopad', np.array(expect_r))
+-    np.save('D:/data_signal_MTI/project_util_3/prediction_result/expect_z_%4_esprit_nopad', np.array(expect_z))
+\ No newline at end of file
++    np.save('D:/data_signal_MTI/project_util_3/prediction_result/expect_r_%4_esprit_pad', np.array(expect_r))
++    np.save('D:/data_signal_MTI/project_util_3/prediction_result/expect_z_%4_esprit_pad', np.array(expect_z))
+\ No newline at end of file
+diff --git a/state-of-the-art algorithm/music_range_azimuth.py b/state-of-the-art algorithm/music_range_azimuth.py
+index 1678e57..3223d7d 100644
+--- a/state-of-the-art algorithm/music_range_azimuth.py	
++++ b/state-of-the-art algorithm/music_range_azimuth.py	
+@@ -17,7 +17,7 @@ pad_multi_angle = 20
+ adc_range = 512
+ Rx = 8
+ antenna_array = np.linspace(0,((Rx+(pad_multi_angle*Rx))-1)/2, Rx+(pad_multi_angle*Rx))
+-aoa_search = np.linspace(-np.pi/2,np.pi/2,360)
++aoa_search = np.linspace(-np.pi/2,np.pi/2,3600)
+ 
+ r_pad = (0, pad_multi_range*adc_range)
+ a_pad = ((0,pad_multi_range*adc_range),(0, pad_multi_angle*Rx))
+@@ -96,5 +96,5 @@ if __name__ == '__main__':
+             print("finish")
+     expect_r = np.array(expect_r)
+     expect_z = np.array(expect_z)
+-    np.save('D:/data_signal_MTI/project_util_3/prediction_result/expect_r_%4_music_pad', np.array(expect_r))
+-    np.save('D:/data_signal_MTI/project_util_3/prediction_result/expect_z_%4_music_pad', np.array(expect_z))
+\ No newline at end of file
++    np.save('D:/data_signal_MTI/project_util_3/prediction_result/expect_r_%4_music_pad_nocut+3600', np.array(expect_r))
++    np.save('D:/data_signal_MTI/project_util_3/prediction_result/expect_z_%4_music_pad_nocut+3600', np.array(expect_z))
+\ No newline at end of file
+diff --git a/training_model_linux/model_r_fir_pad_0_linux_meshgrid_util_3.py b/training_model_linux/model_r_fir_pad_0_linux_meshgrid_util_3.py
+index 626fa41..001cd7d 100644
+--- a/training_model_linux/model_r_fir_pad_0_linux_meshgrid_util_3.py
++++ b/training_model_linux/model_r_fir_pad_0_linux_meshgrid_util_3.py
+@@ -18,12 +18,12 @@ from torch.autograd import Variable
+ 
+ warnings.filterwarnings("ignore")
+ 
+-signal_dir = '/data/data_signal_MTI/project_util_3/signal_robot_all_w_mti_cutoff_12/'
+-label_dir = '/data/data_signal_MTI/project_util_3/label_all_robot/'
++signal_dir = '/data/data_signal_MTI/project_util_3/signal_robot_3_all_w_mti_cutoff_12/'
++label_dir = '/data/data_signal_MTI/project_util_3/label_all_robot_3/'
+ 
+ model_path = '/home/nakorn/weight_bias/wandb/run-20200930_201418-1dzier7q/files/fir_6cov_1.pt'
+ save_predict_path = '/data/data_signal_MTI/project_util_3/prediction_result/'
+-all_trajectory = 120
++all_trajectory = 15
+ 
+ parser = argparse.ArgumentParser()
+ parser.add_argument('-epochs', type=int, default=1001)
+@@ -242,19 +242,19 @@ if __name__ == '__main__':
+         label_name = label_dir + 'label_' + str(count) + '.npy'
+ 
+       
+-        if count%4 == 0:
+-        # if True:
++        # if count%4 == 0:
++        if True:
+             test_data = Radar_test_Dataset(real_part= real_name,  label_file=label_name)
+-        else:
+-            train_data = Radar_train_Dataset(real_part= real_name, label_file=label_name)
++        # else:
++        #     train_data = Radar_train_Dataset(real_part= real_name, label_file=label_name)
+             
+-    train_loader = DataLoader(dataset=train_data, batch_size=args.batch_size, shuffle=True)
++    # train_loader = DataLoader(dataset=train_data, batch_size=args.batch_size, shuffle=True)
+     test_loader = DataLoader(dataset=test_data, batch_size=args.test_batch_size)
+ 
+     if args.test_only:
+         test_loss, label, expect_r, op_w = test_function(test_loader)
+         print(expect_r.shape)
+-        np.save(save_predict_path + 'expect_r_%4_robot', expect_r)
++        np.save(save_predict_path + 'expect_r_%4_robot_3', expect_r)
+ 
+     else:
+         for epoch in range(args.epochs):
+diff --git a/training_model_linux/model_z,f_fir_pad_0_linux_meshgrid_util_3.py b/training_model_linux/model_z,f_fir_pad_0_linux_meshgrid_util_3.py
+index 5722bde..1169e6f 100644
+--- a/training_model_linux/model_z,f_fir_pad_0_linux_meshgrid_util_3.py
++++ b/training_model_linux/model_z,f_fir_pad_0_linux_meshgrid_util_3.py
+@@ -17,12 +17,12 @@ import argparse
+ 
+ warnings.filterwarnings("ignore")
+ 
+-signal_dir = '/data/data_signal_MTI/project_util_3/signal_robot_all_w_mti_cutoff_12/'
+-label_dir = '/data/data_signal_MTI/project_util_3/label_all_robot/'
++signal_dir = '/data/data_signal_MTI/project_util_3/signal_robot_3_all_w_mti_cutoff_12/'
++label_dir = '/data/data_signal_MTI/project_util_3/label_all_robot_3/'
+ 
+ model_path = '/home/nakorn/weight_bias/wandb/run-20200930_200650-c0cxja7k/files/aoa_fir_6cov_1.pt'
+ save_predict_path = '/data/data_signal_MTI/project_util_3/prediction_result/'
+-all_trajectory = 120
++all_trajectory = 15
+ 
+ parser = argparse.ArgumentParser()
+ parser.add_argument('-epochs', type=int, default=1001)
+@@ -242,8 +242,8 @@ if __name__ == '__main__':
+ 
+     if args.test_only:
+         test_loss, label, expect_z = test_function(test_loader)
+-        np.save(save_predict_path + 'label_z_%4_robot', label)
+-        np.save(save_predict_path + 'expect_z_%4_robot', expect_z)
++        np.save(save_predict_path + 'label_z_%4_robot_3', label)
++        np.save(save_predict_path + 'expect_z_%4_robot_3', expect_z)
+         print(test_loss, expect_z.shape)
+ 
+     else :

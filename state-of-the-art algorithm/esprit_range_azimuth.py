@@ -12,8 +12,9 @@ k = 1000
 c = 299792458 * m
 fs = 13*MHz
 Bw = 3.1508 * GHz
-pad_multi_range = 0
-pad_multi_angle = 0
+
+pad_multi_range = 3
+pad_multi_angle = 20
 
 all_trajectory = 120
 
@@ -75,9 +76,9 @@ if __name__ == '__main__':
                 actual_range = range_estimation(test_data[i,0,:,0])
                 actual_doa = angle_estimation(test_data[i,0,:,:])
                 expect_r.append(actual_range)
-                expect_z.append(actual_doa)
+                expect_z.append(-1*actual_doa)
             print("finish")
     expect_r = np.array(expect_r)
     expect_z = np.array(expect_z)
-    np.save('D:/data_signal_MTI/project_util_3/prediction_result/expect_r_%4_esprit_nopad', np.array(expect_r))
-    np.save('D:/data_signal_MTI/project_util_3/prediction_result/expect_z_%4_esprit_nopad', np.array(expect_z))
+    np.save('D:/data_signal_MTI/project_util_3/prediction_result/expect_r_%4_esprit_pad', np.array(expect_r))
+    np.save('D:/data_signal_MTI/project_util_3/prediction_result/expect_z_%4_esprit_pad', np.array(expect_z))

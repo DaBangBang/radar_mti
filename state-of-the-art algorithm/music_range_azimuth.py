@@ -17,7 +17,7 @@ pad_multi_angle = 20
 adc_range = 512
 Rx = 8
 antenna_array = np.linspace(0,((Rx+(pad_multi_angle*Rx))-1)/2, Rx+(pad_multi_angle*Rx))
-aoa_search = np.linspace(-np.pi/2,np.pi/2,360)
+aoa_search = np.linspace(-np.pi/2,np.pi/2,3600)
 
 r_pad = (0, pad_multi_range*adc_range)
 a_pad = ((0,pad_multi_range*adc_range),(0, pad_multi_angle*Rx))
@@ -96,5 +96,5 @@ if __name__ == '__main__':
             print("finish")
     expect_r = np.array(expect_r)
     expect_z = np.array(expect_z)
-    np.save('D:/data_signal_MTI/project_util_3/prediction_result/expect_r_%4_music_pad', np.array(expect_r))
-    np.save('D:/data_signal_MTI/project_util_3/prediction_result/expect_z_%4_music_pad', np.array(expect_z))
+    np.save('D:/data_signal_MTI/project_util_3/prediction_result/expect_r_%4_music_pad_nocut+3600', np.array(expect_r))
+    np.save('D:/data_signal_MTI/project_util_3/prediction_result/expect_z_%4_music_pad_nocut+3600', np.array(expect_z))

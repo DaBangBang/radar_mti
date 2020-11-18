@@ -14,11 +14,13 @@ import glob
 import re
 import warnings
 import argparse
+from sklearn.model_selection import KFold
 
 warnings.filterwarnings("ignore")
 
-signal_dir = '/data/data_signal_MTI/project_util_3/signal_robot_all_w_mti_cutoff_12/'
-label_dir = '/data/data_signal_MTI/project_util_3/label_all_robot/'
+signal_dir = '/data/data_signal_MTI/project_util_3/signal_all_w_mti_cutoff_12/'
+label_dir = '/data/data_signal_MTI/project_util_3/label_all/'
+test_dir = '/data/data_signal_MTI/project_util_3/10_Fold/zone_4/test_data/'
 
 model_path = '/home/nakorn/weight_bias/wandb/run-20200930_200650-c0cxja7k/files/aoa_fir_6cov_1.pt'
 save_predict_path = '/data/data_signal_MTI/project_util_3/prediction_result/'
@@ -26,11 +28,11 @@ all_trajectory = 120
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-epochs', type=int, default=1001)
-parser.add_argument('-batch_size', type=int, default=2500)
+parser.add_argument('-batch_size', type=int, default=1000)
 parser.add_argument('-learning_rate', type=float, default=0.001)
 parser.add_argument('-zero_padding', type=int, default=0)
 parser.add_argument('-test_batch_size', type=int, default= 10200)
-parser.add_argument('-loss_weight', type=int, default=100)
+parser.add_argument('-loss_weight', type=int, default=10)
 parser.add_argument('-save_to_wandb', type=bool, default=False)
 parser.add_argument('-test_only', type=bool, default=False)
 parser.add_argument('-wmodel', default='cnn+fc+reg')
@@ -49,20 +51,25 @@ train_all = []
 test_all = []
 train_label_all = []
 test_label_all = []
+mae_each_fold = []
+sd_each_fold = []
+
 device = 'cuda:'+ str(args.cuda) if cuda.is_available() else 'cpu'
 
-if args.save_to_wandb:
-    wandb.init(project="training-120-trajactory-range", dir='/home/nakorn/weight_bias')
 
 def L2_loss(out_z, label):
 
     m_r = meshgrid()
+    m_r = -1*m_r
     expect_z = torch.matmul(out_z, m_r)
-    mse = mse_loss(expect_z, label[:,1])
-    mse = mse*args.loss_weight
-    
-    return mse, expect_z
+    # mse = mse_loss(expect_z, label[:,1])
+    # print(expect_z.size(), label.size())
+    mae = mae_loss(expect_z, label[:,1])
+    # mse = mse*args.loss_weight
+    mae = mae*args.loss_weight
 
+    return mae, expect_z
+     
 def cartesian_to_spherical(label):
     
     y_offset = 100
@@ -109,11 +116,11 @@ class Model(nn.Module):
         super(Model, self).__init__()
 
         # 2D-CNN Layer
-        self.encode_conv1 = nn.Conv1d(in_channels=64, out_channels=32, kernel_size=3, stride = 1, padding=1)
-        self.encode_conv2 = nn.Conv1d(in_channels=32, out_channels=16, kernel_size=3, stride = 1 , padding=1)
-        self.encode_conv3 = nn.Conv1d(in_channels=16, out_channels=8, kernel_size=3, stride = 1, padding=1)
-        self.encode_conv4 = nn.Conv1d(in_channels=8, out_channels=4, kernel_size=3, stride = 1, padding=1)
-        self.encode_conv5 = nn.Conv1d(in_channels=4, out_channels=1, kernel_size=3, stride = 1, padding=1)
+        self.encode_conv1 = nn.Conv1d(in_channels=64, out_channels=8, kernel_size=3, stride = 1, padding=1)
+        self.encode_conv2 = nn.Conv1d(in_channels=8, out_channels=8, kernel_size=3, stride = 1 , padding=1)
+        self.encode_conv3 = nn.Conv1d(in_channels=8, out_channels=16, kernel_size=3, stride = 1, padding=1)
+        self.encode_conv4 = nn.Conv1d(in_channels=16, out_channels=16, kernel_size=3, stride = 1, padding=1)
+        self.encode_conv5 = nn.Conv1d(in_channels=16, out_channels=1, kernel_size=3, stride = 1, padding=1)
 
 
     def forward(self, x):
@@ -132,52 +139,35 @@ class Model(nn.Module):
         return x_1
 
 class Radar_train_Dataset(Dataset):
-    def __init__(self, real_part, label_file):
+    def __init__(self, train_data, train_label):
  
-        data_real = np.load(real_part)
-        label = np.load(label_file)
-        
-        data_fft_modulus, label = data_preparation(data_real, label)
-        
-        train_all.extend(data_fft_modulus)
-        train_label_all.extend(label)
-                
-        self.train_data = torch.tensor(np.array(train_all))
-        self.train_label = torch.tensor(np.array(train_label_all))
-        self.len = np.array(train_all).shape[0]
+        self.sig_train = torch.tensor(np.array(train_data))
+        self.sig_label = torch.tensor(np.array(train_label))
+        self.len = np.array(train_data).shape[0]
 
-        print("train_function", self.train_data.size(), self.train_label.size())
+        print("train_function", self.sig_train.size(), self.sig_label.size())
 
     def __len__(self):
         return self.len
 
     def __getitem__(self, idx):
-        return self.train_data[idx], self.train_label[idx]
+        return self.sig_train[idx], self.sig_label[idx]
 
 class Radar_test_Dataset(Dataset):
 
-    def __init__(self, real_part, label_file):
+    def __init__(self, test_data, test_label):
         
-        data_real = np.load(real_part)
-        label = np.load(label_file)
+        self.sig_test = torch.tensor(np.array(test_data))
+        self.sig_label = torch.tensor(np.array(test_label))
+        self.len = np.array(test_data).shape[0]
 
-        data_fft_modulus, label = data_preparation(data_real, label)
-        
-        test_all.extend(data_fft_modulus)
-        test_label_all.extend(label)
-                
-        self.test_data = torch.tensor(np.array(test_all))
-        self.test_label = torch.tensor(np.array(test_label_all))
-        self.len = np.array(test_all).shape[0]
-
-        print("test_function", self.test_data.size(), self.test_label.size())
+        print("test_function", self.sig_test.size(), self.sig_label.size())
 
     def __len__(self):
         return self.len
 
     def __getitem__(self, idx):
-        return self.test_data[idx], self.test_label[idx]
-
+        return self.sig_test[idx], self.sig_label[idx]
 
 model = Model()
 # wandb.watch(model)
@@ -185,15 +175,21 @@ if args.test_only:
     model.load_state_dict(torch.load(model_path))
 model.to(device)
 
-mse_loss = nn.MSELoss()
+# mse_loss = nn.MSELoss()
+mae_loss = nn.L1Loss()
 optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
 
 def train_function(train_loader):
     model.train()
     avg_mini_train_loss = []
+    rand_i = torch.tensor([1, 4, 8, 16, 32, 64]).to(device)
     for i, (train_data, train_labels) in enumerate(train_loader, 0):
         train_data, train_labels = train_data.to(device), train_labels.to(device)
         train_data = train_data.float()
+
+        rand_div = torch.randint(low=0, high=5, size=(1,)).to(device)
+        train_data = train_data / rand_i[rand_div[0]]
+
         train_labels = train_labels.float()
 
         optimizer.zero_grad()
@@ -220,30 +216,80 @@ def test_function(test_loader):
         expect_z = expect_z.cpu().detach().numpy()
 
     return np.mean(np.array(avg_mini_test_loss)), test_labels, expect_z 
-    
+
+def evaluation(label, expect_r):
+    mat_mae = np.mean(np.abs(label[:,1]-expect_r))
+    mat_sd = np.sqrt(np.mean((label[:,1]-expect_r)**2))
+    mae_each_fold.append(mat_mae)
+    sd_each_fold.append(mat_sd)
+    np.save(test_dir + 'mae_aoa_each_fold', np.array(mae_each_fold))
+    np.save(test_dir + 'sd_aoa_each_fold', np.array(sd_each_fold))
+    print("all_mae = ", np.mean(mae_each_fold))
+    print("all_sd = ", np.mean(sd_each_fold))
+
 if __name__ == '__main__':
     
-    
+    fold = 0
     count = 0
+    data_iq = []
+    label_all = []
+    # reject_list = []
+    # reject_list = np.load(test_dir + 'reject_list.npy')
     for f_name in range(all_trajectory):
         count += 1
-        real_name = signal_dir + 'raw_iq_w_mti_' + str(count) + '.npy'
+        iq_name = signal_dir + 'raw_iq_w_mti_' + str(count) + '.npy'
         label_name = label_dir + 'label_' + str(count) + '.npy'
       
-        if count%4 == 0:
-        # if True:
-            test_data = Radar_test_Dataset(real_part= real_name,  label_file=label_name)
-        else:
-            train_data = Radar_train_Dataset(real_part= real_name, label_file=label_name)
-            
-    train_loader = DataLoader(dataset=train_data, batch_size=args.batch_size, shuffle=True)
-    test_loader = DataLoader(dataset=test_data, batch_size=args.test_batch_size)
+        data_post, label_post = data_preparation(np.load(iq_name), np.load(label_name))
+        
+        # if count not in reject_list: 
+        data_iq.append(data_post)
+        label_all.append(label_post)
+        print(np.array(data_iq).shape, np.array(label_all).shape)
 
+    data_iq = np.array(data_iq)
+    label_all = np.array(label_all)
+    # kf = KFold(n_splits=10, shuffle=True, random_state=42)
+    # for train_index, test_index in kf.split(data_iq):
+    train_index1 = np.arange(0,30)
+    # train_index11 = np.arange(30,40)
+    train_index2 = np.arange(40,70)
+    # train_index22 = np.arange(70,80)
+    train_index3 = np.arange(80,110)
+    # train_index33 = np.arange(110,120)
+    # train_index = np.concatenate([train_index1, train_index11, train_index2, train_index22, train_index3, train_index33])
+    train_index = np.concatenate([train_index1, train_index2, train_index3])
+
+    test_index1 = np.arange(30,40)
+    test_index2 = np.arange(70,80)
+    test_index3 = np.arange(110,120)
+    test_index = np.concatenate([test_index1, test_index2, test_index3])
+    fold += 1
+    model = Model()
+    model.to(device)
+    optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
+
+    if args.save_to_wandb:
+        run = wandb.init(project="training-120-trajactory-range", name="test_aoa_zone4_weight1-64_peak_mae_3n"+str(fold), dir='/home/nakorn/weight_bias', reinit=True)
+    
+    train_data, train_label, test_data, test_label = data_iq[train_index], label_all[train_index] \
+                                                        ,data_iq[test_index], label_all[test_index]
+    train_data = np.reshape(train_data, (-1, *train_data.shape[-2:]))
+    train_label = np.reshape(train_label, (-1, *train_label.shape[-1:]))
+    test_data = np.reshape(test_data, (-1, *test_data.shape[-2:]))
+    test_label = np.reshape(test_label, (-1, *test_label.shape[-1:]))
+    print(train_data.shape, train_label.shape, test_data.shape, test_label.shape)
+
+    train_set = Radar_train_Dataset(train_data=train_data, train_label=train_label)
+    test_set = Radar_test_Dataset(test_data=test_data, test_label=test_label)
+
+    train_loader = DataLoader(dataset=train_set, batch_size=args.batch_size, shuffle=True)
+    test_loader = DataLoader(dataset=test_set, batch_size=args.test_batch_size)
 
     if args.test_only:
         test_loss, label, expect_z = test_function(test_loader)
-        np.save(save_predict_path + 'label_z_%4_robot', label)
-        np.save(save_predict_path + 'expect_z_%4_robot', expect_z)
+        np.save(save_predict_path + 'label_z_%4_robot_3', label)
+        np.save(save_predict_path + 'expect_z_%4_robot_3', expect_z)
         print(test_loss, expect_z.shape)
 
     else :
@@ -268,9 +314,13 @@ if __name__ == '__main__':
                     plt.xlabel('number of test point')
                     wandb.log({'distance_z': plt}, step=epoch)
                     wandb.log({'Test_loss': test_loss}, step=epoch)
+            
+            
+            if args.save_to_wandb and (epoch%500 == 0):  
+                torch.save(model.state_dict(), os.path.join(wandb.run.dir, 'aoa_10_fold_rd_'+str(fold)+'_ep_'+str(epoch)+'.pt'))
+        run.finish()
+        evaluation(label, expect_z)
     
-    if args.save_to_wandb:
-        torch.save(model.state_dict(), os.path.join(wandb.run.dir, 'aoa_fir_6cov_1.pt'))
 
 
     
