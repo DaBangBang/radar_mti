@@ -29,6 +29,7 @@ r_pad = (0, pad_multi_range*adc_range)
 a_pad = ((0,pad_multi_range*adc_range),(0, pad_multi_angle*Rx))
 
 signal_dir = 'D:/data_signal_MTI/project_util_3/signal_all_w_mti_cutoff_12/'
+fold_dir = 'D:/data_signal_MTI/project_util_3/10_fold_validation/leave_circle/test_data/test_index_fold_'
 
 def range_estimation(data_frame):
     data_frame = np.pad(data_frame, pad_width=r_pad, mode='constant', constant_values=0)
@@ -67,18 +68,21 @@ if __name__ == '__main__':
     count = 0
     expect_r = []
     expect_z = []
-    for f_name in range(all_trajectory):
-        count += 1
-        real_name = signal_dir + 'raw_iq_w_mti_' + str(count) + '.npy'
-        if count%4 == 0:
+    for i in range(1):
+        test_dir = fold_dir + str(i+1) +'.npy'
+        print(test_dir)
+        fold_num = np.load(test_dir)
+        print(fold_num)
+        for j in fold_num[0]:
+            real_name = signal_dir + 'raw_iq_w_mti_' + str(j+1) + '.npy'
             test_data = np.load(real_name)
-            for i in range(test_data.shape[0]):
-                actual_range = range_estimation(test_data[i,0,:,0])
-                actual_doa = angle_estimation(test_data[i,0,:,:])
+            for k in range(test_data.shape[0]):
+                actual_range = range_estimation(test_data[k,0,:,0])
+                actual_doa = angle_estimation(test_data[k,0,:,:])
                 expect_r.append(actual_range)
                 expect_z.append(-1*actual_doa)
             print("finish")
     expect_r = np.array(expect_r)
     expect_z = np.array(expect_z)
-    np.save('D:/data_signal_MTI/project_util_3/prediction_result/expect_r_%4_esprit_pad', np.array(expect_r))
-    np.save('D:/data_signal_MTI/project_util_3/prediction_result/expect_z_%4_esprit_pad', np.array(expect_z))
+    np.save('D:/data_signal_MTI/project_util_3/prediction_result/expect_r_%4_esprit_pad_circle', np.array(expect_r))
+    np.save('D:/data_signal_MTI/project_util_3/prediction_result/expect_z_%4_esprit_pad_circle', np.array(expect_z))

@@ -20,7 +20,7 @@ warnings.filterwarnings("ignore")
 
 signal_dir = '/data/data_signal_MTI/project_util_3/signal_all_w_mti_cutoff_12/'
 label_dir = '/data/data_signal_MTI/project_util_3/label_all/'
-test_dir = '/data/data_signal_MTI/project_util_3/10_Fold/zone_4/test_data/'
+test_dir = '/data/data_signal_MTI/project_util_3/10_Fold/30%_data/test_data_2/'
 
 model_path = '/home/nakorn/weight_bias/wandb/run-20200930_200650-c0cxja7k/files/aoa_fir_6cov_1.pt'
 save_predict_path = '/data/data_signal_MTI/project_util_3/prediction_result/'
@@ -31,7 +31,7 @@ parser.add_argument('-epochs', type=int, default=1001)
 parser.add_argument('-batch_size', type=int, default=1000)
 parser.add_argument('-learning_rate', type=float, default=0.001)
 parser.add_argument('-zero_padding', type=int, default=0)
-parser.add_argument('-test_batch_size', type=int, default= 10200)
+parser.add_argument('-test_batch_size', type=int, default= 4080)
 parser.add_argument('-loss_weight', type=int, default=10)
 parser.add_argument('-save_to_wandb', type=bool, default=False)
 parser.add_argument('-test_only', type=bool, default=False)
@@ -233,8 +233,10 @@ if __name__ == '__main__':
     count = 0
     data_iq = []
     label_all = []
-    # reject_list = []
+    reject_list = []
     # reject_list = np.load(test_dir + 'reject_list.npy')
+    
+    # print(ff, yy)
     for f_name in range(all_trajectory):
         count += 1
         iq_name = signal_dir + 'raw_iq_w_mti_' + str(count) + '.npy'
@@ -247,80 +249,87 @@ if __name__ == '__main__':
         label_all.append(label_post)
         print(np.array(data_iq).shape, np.array(label_all).shape)
 
+
+
     data_iq = np.array(data_iq)
     label_all = np.array(label_all)
-    # kf = KFold(n_splits=10, shuffle=True, random_state=42)
-    # for train_index, test_index in kf.split(data_iq):
-    train_index1 = np.arange(0,30)
-    # train_index11 = np.arange(30,40)
-    train_index2 = np.arange(40,70)
-    # train_index22 = np.arange(70,80)
-    train_index3 = np.arange(80,110)
-    # train_index33 = np.arange(110,120)
-    # train_index = np.concatenate([train_index1, train_index11, train_index2, train_index22, train_index3, train_index33])
-    train_index = np.concatenate([train_index1, train_index2, train_index3])
+    kf = KFold(n_splits=10, shuffle=True, random_state=42)
+    for train_index, test_index in kf.split(data_iq):
+    # train_index1 = np.arange(0,30)
+    # # train_index11 = np.arange(30,40)
+    # train_index2 = np.arange(40,70)
+    # # train_index22 = np.arange(70,80)
+    # train_index3 = np.arange(80,110)
+    # # train_index33 = np.arange(110,120)
+    # # train_index = np.concatenate([train_index1, train_index11, train_index2, train_index22, train_index3, train_index33])
+    # train_index = np.concatenate([train_index1, train_index2, train_index3])
 
-    test_index1 = np.arange(30,40)
-    test_index2 = np.arange(70,80)
-    test_index3 = np.arange(110,120)
-    test_index = np.concatenate([test_index1, test_index2, test_index3])
-    fold += 1
-    model = Model()
-    model.to(device)
-    optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
+    # test_index1 = np.arange(30,40)
+    # test_index2 = np.arange(70,80)
+    # test_index3 = np.arange(110,120)
+    # test_index = np.concatenate([test_index1, test_index2, test_index3])
+        fold += 1
+        model = Model()
+        model.to(device)
+        optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
 
-    if args.save_to_wandb:
-        run = wandb.init(project="training-120-trajactory-range", name="test_aoa_zone4_weight1-64_peak_mae_3n"+str(fold), dir='/home/nakorn/weight_bias', reinit=True)
-    
-    train_data, train_label, test_data, test_label = data_iq[train_index], label_all[train_index] \
-                                                        ,data_iq[test_index], label_all[test_index]
-    train_data = np.reshape(train_data, (-1, *train_data.shape[-2:]))
-    train_label = np.reshape(train_label, (-1, *train_label.shape[-1:]))
-    test_data = np.reshape(test_data, (-1, *test_data.shape[-2:]))
-    test_label = np.reshape(test_label, (-1, *test_label.shape[-1:]))
-    print(train_data.shape, train_label.shape, test_data.shape, test_label.shape)
+        if args.save_to_wandb:
+            run = wandb.init(project="training-120-trajactory-range", name="test_aoa_10_fold_weight1-64,30%_peak_mae_3n_"+str(fold), dir='/home/nakorn/weight_bias', reinit=True)
+        
+        reject_list = np.random.choice(np.arange(1,108), size=76 , replace= False)
+        train_index = np.delete(train_index, reject_list)
+        print(train_index)
+        train_data, train_label, test_data, test_label = data_iq[train_index], label_all[train_index] \
+                                                            ,data_iq[test_index], label_all[test_index]
+        train_data = np.reshape(train_data, (-1, *train_data.shape[-2:]))
+        train_label = np.reshape(train_label, (-1, *train_label.shape[-1:]))
+        test_data = np.reshape(test_data, (-1, *test_data.shape[-2:]))
+        test_label = np.reshape(test_label, (-1, *test_label.shape[-1:]))
+        print(train_data.shape, train_label.shape, test_data.shape, test_label.shape)
+        np.save(test_dir + 'train_aoa_index_fold_' + str(fold), np.array(train_index))
+        np.save(test_dir + 'test_aoa_index_fold_' + str(fold), np.array(test_index))
 
-    train_set = Radar_train_Dataset(train_data=train_data, train_label=train_label)
-    test_set = Radar_test_Dataset(test_data=test_data, test_label=test_label)
+        train_set = Radar_train_Dataset(train_data=train_data, train_label=train_label)
+        test_set = Radar_test_Dataset(test_data=test_data, test_label=test_label)
 
-    train_loader = DataLoader(dataset=train_set, batch_size=args.batch_size, shuffle=True)
-    test_loader = DataLoader(dataset=test_set, batch_size=args.test_batch_size)
+        train_loader = DataLoader(dataset=train_set, batch_size=args.batch_size, shuffle=True)
+        test_loader = DataLoader(dataset=test_set, batch_size=args.test_batch_size)
 
-    if args.test_only:
-        test_loss, label, expect_z = test_function(test_loader)
-        np.save(save_predict_path + 'label_z_%4_robot_3', label)
-        np.save(save_predict_path + 'expect_z_%4_robot_3', expect_z)
-        print(test_loss, expect_z.shape)
+        if args.test_only:
+            test_loss, label, expect_z = test_function(test_loader)
+            np.save(save_predict_path + 'label_z_%4_robot_3', label)
+            np.save(save_predict_path + 'expect_z_%4_robot_3', expect_z)
+            print(test_loss, expect_z.shape)
 
-    else :
-        for epoch in range(args.epochs):
-            # print("======> epoch =", epoch)
-            train_loss = train_function(train_loader)
-            
-            if args.save_to_wandb:
-                wandb.log({'Train_loss': train_loss}, step=epoch)
-            
-            # print(">>>>>> train_loss <<<<<<", train_loss)
-            if epoch%10 == 0:
-                test_loss, label, expect_z = test_function(test_loader)
-                
-                print(">>> test_loss, epoch   <<<<<", epoch , test_loss)
+        else :
+            for epoch in range(args.epochs):
+                # print("======> epoch =", epoch)
+                train_loss = train_function(train_loader)
                 
                 if args.save_to_wandb:
-                    plt.figure(1)
-                    plt.plot(label[:, 1])
-                    plt.plot(expect_z[:])
-                    plt.ylabel('rmse zeta')
-                    plt.xlabel('number of test point')
-                    wandb.log({'distance_z': plt}, step=epoch)
-                    wandb.log({'Test_loss': test_loss}, step=epoch)
-            
-            
-            if args.save_to_wandb and (epoch%500 == 0):  
-                torch.save(model.state_dict(), os.path.join(wandb.run.dir, 'aoa_10_fold_rd_'+str(fold)+'_ep_'+str(epoch)+'.pt'))
-        run.finish()
-        evaluation(label, expect_z)
-    
+                    wandb.log({'Train_loss': train_loss}, step=epoch)
+                
+                # print(">>>>>> train_loss <<<<<<", train_loss)
+                if epoch%10 == 0:
+                    test_loss, label, expect_z = test_function(test_loader)
+                    
+                    print(">>> test_loss, epoch   <<<<<", epoch , test_loss)
+                    
+                    if args.save_to_wandb:
+                        plt.figure(1)
+                        plt.plot(label[:, 1])
+                        plt.plot(expect_z[:])
+                        plt.ylabel('rmse zeta')
+                        plt.xlabel('number of test point')
+                        wandb.log({'distance_z': plt}, step=epoch)
+                        wandb.log({'Test_loss': test_loss}, step=epoch)
+                
+                
+                if args.save_to_wandb and (epoch%500 == 0):  
+                    torch.save(model.state_dict(), os.path.join(wandb.run.dir, 'aoa_10_fold_rd_'+str(fold)+'_ep_'+str(epoch)+'.pt'))
+            run.finish()
+            evaluation(label, expect_z)
+        
 
 
     
