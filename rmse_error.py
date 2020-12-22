@@ -17,8 +17,8 @@ import matplotlib.pyplot as plt
 
 label_z = []
 fold_dir = 'D:/data_signal_MTI/project_util_3/10_fold_validation/100%_data/test_data/test_index_fold_'
-expect_r_file = 'D:/data_signal_MTI/project_util_3/prediction_result/expect_r_%4_esprit_pad_fold.npy'
-expect_z_file = 'D:/data_signal_MTI/project_util_3/prediction_result/expect_z_%4_esprit_pad_fold.npy'
+expect_r_file = 'D:/data_signal_MTI/project_util_3/prediction_result/expect_r_%4_music_pad_nocut+3600_fold.npy'
+expect_z_file = 'D:/data_signal_MTI/project_util_3/prediction_result/expect_z_%4_music_pad_nocut+3600_fold.npy'
 label_z_file = 'D:/data_signal_MTI/project_util_3/label_all/label_'
 trans_file = 'D:/data_signal_MTI/project_util_3/prediction_result/2dfft_op_param_trans.npy'
 
@@ -48,7 +48,16 @@ label_z = np.array(label_z)
 print(label_z.shape)
 expect_r = np.load(expect_r_file)
 expect_z = np.load(expect_z_file)
-print(expect_r.shape)
+
+for i in range(expect_r.shape[0]):
+    actual_range = expect_r[i]
+    if actual_range > 2380 or actual_range <= 0:
+        expect_r[i] = np.nan
+        expect_z[i] = np.nan
+# k = ~np.isnan(expect_r)
+# print(expect_r[k].shape)
+# print(expect_r[900:1000])
+# print('sssssssssssssssssssssss')
 # label_z = np.load(label_z_file)
 
 # xp = expect_r * np.cos(label_z[:,2]) * np.sin(expect_z)
@@ -66,13 +75,18 @@ print(expect_r.shape)
 # zeta = np.arctan2(expect_p[:,0], expect_p[:,2])
 # # print(expec.shape)
 expect_r = expect_r + trans[0]
+print(expect_r.shape)
 expect_z = expect_z + trans[1]
 label_r = label_z[:,0]
 label_zeta = label_z[:,1]
+# np.save('D:/data_signal_MTI/project_util_3/prediction_result/label_z_2dfft_fold', np.array(label_z))
 
-r_rmse = np.sqrt(np.mean((label_r - expect_r)**2))
-z_rmse = np.sqrt(np.mean((label_zeta - expect_z)**2))
-r_abs = np.mean(abs(label_r - expect_r))
-z_abs = np.mean(abs(label_zeta - expect_z))
+print('sssssssssssssssssssssss')
+# print(np.nanmean((label_r[900:1000] - expect_r[900:1000])**2))
+
+r_rmse = np.sqrt(np.nanmean((label_r - expect_r)**2))
+z_rmse = np.sqrt(np.nanmean((label_zeta - expect_z)**2))
+r_abs = np.nanmean(abs(label_r - expect_r))
+z_abs = np.nanmean(abs(label_zeta - expect_z))
 
 print(r_abs, r_rmse, z_abs, z_rmse)

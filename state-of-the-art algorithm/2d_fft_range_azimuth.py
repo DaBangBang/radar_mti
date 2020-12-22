@@ -7,8 +7,8 @@ import operator
 
 signal_dir = 'D:/data_signal_MTI/project_util_3/signal_all_w_mti_cutoff_12/'
 fold_dir = 'D:/data_signal_MTI/project_util_3/10_fold_validation/leave_circle/test_data/test_index_fold_'
-pad_multi_range = 3
-pad_multi_angle = 20
+pad_multi_range = 0
+pad_multi_angle = 0
 
 
 adc_range = 512
@@ -68,9 +68,11 @@ if __name__ == '__main__':
                 doppler_fft_pad = np.pad(doppler_fft, pad_width= a_pad, mode='constant', constant_values=0)
                 doa_fft = np.fft.fftshift(np.fft.fft(doppler_fft_pad, axis=2), axes=2)
                 
+
                 range_max = range_estimate(abs(range_fft))
                 angle_max = angle_estimation(abs(doppler_fft),abs(doa_fft))
-            
+                
+              
                 actual_range = range_res*range_max
                 actual_doa = m_r[angle_max]
                 expect_r.append(actual_range)

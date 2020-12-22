@@ -7,6 +7,7 @@ import numpy as np
 from torch import nn, optim, cuda
 from torch.utils.data import Dataset, DataLoader
 import matplotlib.pyplot as plt
+import random
 import natsort
 import wandb
 import os
@@ -20,14 +21,14 @@ warnings.filterwarnings("ignore")
 
 signal_dir = '/data/data_signal_MTI/project_util_3/signal_all_w_mti_cutoff_12/'
 label_dir = '/data/data_signal_MTI/project_util_3/label_all/'
-test_dir = '/data/data_signal_MTI/project_util_3/10_Fold/30%_data/test_data_2/'
+test_dir = '/data/data_signal_MTI/project_util_3/10_Fold/30%_data/test_data_3/'
 
 model_path = '/home/nakorn/weight_bias/wandb/run-20200930_200650-c0cxja7k/files/aoa_fir_6cov_1.pt'
 save_predict_path = '/data/data_signal_MTI/project_util_3/prediction_result/'
 all_trajectory = 120
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-epochs', type=int, default=1001)
+parser.add_argument('-epochs', type=int, default=2001)
 parser.add_argument('-batch_size', type=int, default=1000)
 parser.add_argument('-learning_rate', type=float, default=0.001)
 parser.add_argument('-zero_padding', type=int, default=0)
@@ -53,6 +54,8 @@ train_label_all = []
 test_label_all = []
 mae_each_fold = []
 sd_each_fold = []
+max_num = 8
+min_num = 1
 
 device = 'cuda:'+ str(args.cuda) if cuda.is_available() else 'cpu'
 
@@ -182,13 +185,17 @@ optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
 def train_function(train_loader):
     model.train()
     avg_mini_train_loss = []
-    rand_i = torch.tensor([1, 4, 8, 16, 32, 64]).to(device)
+   
     for i, (train_data, train_labels) in enumerate(train_loader, 0):
         train_data, train_labels = train_data.to(device), train_labels.to(device)
         train_data = train_data.float()
 
-        rand_div = torch.randint(low=0, high=5, size=(1,)).to(device)
-        train_data = train_data / rand_i[rand_div[0]]
+        rand_num = ((max_num - min_num)*torch.rand(1) + min_num).to(device)
+
+        if random.getrandbits(1):
+            train_data = train_data * rand_num
+        else:
+            train_data = train_data / rand_num
 
         train_labels = train_labels.float()
 
@@ -274,9 +281,9 @@ if __name__ == '__main__':
         optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
 
         if args.save_to_wandb:
-            run = wandb.init(project="training-120-trajactory-range", name="test_aoa_10_fold_weight1-64,30%_peak_mae_3n_"+str(fold), dir='/home/nakorn/weight_bias', reinit=True)
+            run = wandb.init(project="training-120-trajactory-range", name="test_aoa_10_fold_weight_1-7,30%_peak_mae_3n_"+str(fold), dir='/home/nakorn/weight_bias', reinit=True)
         
-        reject_list = np.random.choice(np.arange(1,108), size=76 , replace= False)
+        reject_list = np.random.choice(np.arange(1,108), size=75 , replace= False)
         train_index = np.delete(train_index, reject_list)
         print(train_index)
         train_data, train_label, test_data, test_label = data_iq[train_index], label_all[train_index] \
@@ -314,7 +321,8 @@ if __name__ == '__main__':
                     test_loss, label, expect_z = test_function(test_loader)
                     
                     print(">>> test_loss, epoch   <<<<<", epoch , test_loss)
-                    
+                    np.save(test_dir + 'expec_z_fold_' + str(fold), np.array(expect_z))
+
                     if args.save_to_wandb:
                         plt.figure(1)
                         plt.plot(label[:, 1])
@@ -323,7 +331,7 @@ if __name__ == '__main__':
                         plt.xlabel('number of test point')
                         wandb.log({'distance_z': plt}, step=epoch)
                         wandb.log({'Test_loss': test_loss}, step=epoch)
-                
+
                 
                 if args.save_to_wandb and (epoch%500 == 0):  
                     torch.save(model.state_dict(), os.path.join(wandb.run.dir, 'aoa_10_fold_rd_'+str(fold)+'_ep_'+str(epoch)+'.pt'))
