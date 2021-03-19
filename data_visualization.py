@@ -93,6 +93,14 @@ w.addItem(sp2)
 # time.timeout.connect(update)
 # time.start(5)
 
+fig.add_trace(go.Scatter(x=x[15040:15140], y=z[15040:15140], mode= 'markers', marker=dict(size=10), name="Ground Truth"))
+fig.add_trace(go.Scatter(x=xp[15040:15140], y=zp[15040:15140], mode= 'markers', marker=dict(size=10), name="Esprit"))
+fig.update_layout(xaxis_title = "X (mm)", yaxis_title="Y (mm)", xaxis_range =[-150,150], yaxis_range =[0,250]
+)
+if not os.path.exists("images"):
+    os.mkdir("images")
+fig.write_image("images/triangle_Esprit.jpg")
+fig.show()
 
 if __name__ == '__main__':
     import sys
