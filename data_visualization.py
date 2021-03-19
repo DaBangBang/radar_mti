@@ -5,104 +5,98 @@ import natsort
 from pyqtgraph.Qt import QtCore, QtGui
 import pyqtgraph.opengl as gl
 from time import sleep
+import matplotlib.pyplot as plt
+import plotly.graph_objects as go
+import os
 
-expect_r_file = 'D:/data_signal_MTI/project_util_3/test_data/expect_r_%4.npy'
-expect_z_file = 'D:/data_signal_MTI/project_util_3/test_data/expect_z_%4.npy'
-label_r_file = 'D:/data_signal_MTI/project_util_3/test_data/label_r_%4.npy'
-label_z_file = 'D:/data_signal_MTI/project_util_3/test_data/label_z_%4.npy'
-
-dbf_r_file = 'D:/data_signal_MTI/project_util/test_data/dbf_r%4.npy'
-dbf_z_file = 'D:/data_signal_MTI/project_util/test_data/dbf_z%4.npy'
-
-music_z_file = 'D:/data_signal_MTI/project_util/test_data/music_z%4.npy'
-esprit_z_file = 'D:/data_signal_MTI/project_util/test_data/esprit_z%4.npy'
-
-colors_1 = [1.0,0,0,0.5]
-colors_2 = [0,1.0,0,0.5]
-
-# test_label_all = []
-# train_label_all = []
-app = QtGui.QApplication([])
-w = gl.GLViewWidget()
-w.show()
-g = gl.GLGridItem()
-w.addItem(g)
-
-expect_r = np.load(expect_r_file)
-expect_z = np.load(expect_z_file)
-label_r = np.load(label_r_file)
-label_z = np.load(label_z_file)
-dbf_r = np.load(dbf_r_file)
-dbf_z = np.load(dbf_z_file)
-music_z = np.load(music_z_file)
-esprit_z = np.load(esprit_z_file)
-# label_z = label_z[:,1].reshape(-1)
-# print(expect_r.shape, label_r[0], label_z[0,0])
-print(expect_z.shape)
-## ====== prediction ======
+expect_r_2dfft ='D:/data_signal_MTI/project_util_3/result_for_paper/expect_r_2dfft_pad_100%_fold.npy'
+expect_z_2dfft ='D:/data_signal_MTI/project_util_3/result_for_paper/expect_z_2dfft_pad_100%_fold.npy'
+expect_r_music ='D:/data_signal_MTI/project_util_3/result_for_paper/expect_r_music_pad_100%_fold.npy'
+expect_z_music ='D:/data_signal_MTI/project_util_3/result_for_paper/expect_z_music_pad_100%_fold.npy'
+expect_r_esprit ='D:/data_signal_MTI/project_util_3/result_for_paper/expect_r_esprit_pad_100%_fold_cut.npy'
+expect_z_esprit ='D:/data_signal_MTI/project_util_3/result_for_paper/expect_z_esprit_pad_100%_fold_cut.npy'
+expect_r_model = 'D:/data_signal_MTI/project_util_3/result_for_paper/expec_r_fold_'
+expect_z_model = 'D:/data_signal_MTI/project_util_3/result_for_paper/expec_z_fold_'
+expect_r_remove = 'D:/data_signal_MTI/project_util_3/result_for_paper/expect_r_remove_outlier.npy'
+expect_z_remove = 'D:/data_signal_MTI/project_util_3/result_for_paper/expect_z_remove_outlier.npy'
 
 
-# expect_r = np.load(expect_folder + 'expect_r_2.npy')
-# expect_z = np.load(expect_folder + 'expect_z_2.npy')
-# expect_phi = np.load(expect_folder + 'expect_phi_2.npy')
+expect_r = []
+expect_z = []
 
-x = label_z[:,0] * np.cos(label_z[:,2]) * np.sin(label_z[:,1])
-y = label_z[:,0] * np.sin(label_z[:,2]) + 105
-z = label_z[:,0] * np.cos(label_z[:,2]) * np.cos(label_z[:,1])
+for i in range(10):
+    name_r = expect_r_model + str(i+1) + '.npy'
+    name_z = expect_z_model + str(i+1) + '.npy'
+    print(np.load(name_r).shape)
+    expect_r.extend(np.load(name_r))
+    expect_z.extend(np.load(name_z))
+predict = np.array(expect_r)
+predict_zeta = np.array(expect_z)
 
-expect_xyz = np.array([[x, y, z]])
-expect_xyz = np.swapaxes(np.swapaxes(expect_xyz,0,2),1,2)
-expect_xyz = expect_xyz/10
+ground_truth = 'D:/data_signal_MTI/project_util_3/result_for_paper/label_z_2dfft_fold.npy'
 
-xl = dbf_r * np.cos(label_z[:,2]) * np.sin(dbf_z)
-yl = dbf_r * np.sin(label_z[:,2]) + 105
-zl = dbf_r * np.cos(label_z[:,2]) * np.cos(dbf_z)
+T_r_2dfft = 'D:/data_signal_MTI/project_util_3/result_for_paper/optimize_r_2dfft.npy'
+T_z_2dfft = 'D:/data_signal_MTI/project_util_3/result_for_paper/optimize_z_2dfft.npy'
+T_r_music = 'D:/data_signal_MTI/project_util_3/result_for_paper/optimize_r_music.npy'
+T_z_music = 'D:/data_signal_MTI/project_util_3/result_for_paper/optimize_z_music.npy'
+T_r_esprit = 'D:/data_signal_MTI/project_util_3/result_for_paper/optimize_r_esprit.npy'
+T_z_esprit = 'D:/data_signal_MTI/project_util_3/result_for_paper/optimize_z_esprit.npy'
+T_r_2dfft = np.load(T_r_2dfft)
+T_z_2dfft = np.load(T_z_2dfft)
+T_r_music = np.load(T_r_music)
+T_z_music = np.load(T_z_music)
+T_r_esprit = np.load(T_r_esprit)
+T_z_esprit = np.load(T_z_esprit)
 
-test_label_all = np.array([[xl,yl,zl]])
-test_label_all = np.swapaxes(np.swapaxes(test_label_all,0,2),1,2)
-test_label_all = test_label_all/10
 
 
-xp = expect_r * np.cos(label_z[:,2]) * np.sin(expect_z)
-yp = expect_r * np.sin(label_z[:,2]) + 105
-zp = expect_r * np.cos(label_z[:,2]) * np.cos(expect_z)
+# # print(T_r_2dfft, T_z_2dfft)
+predict = np.load(expect_r_music)
+predict_zeta = np.load(expect_z_music)
+print(predict.shape, predict_zeta.shape)
+g_t = np.load(ground_truth)
+print(max(g_t[:,0]), min(g_t[:,0]))
+outlier_ = np.max(g_t[:,0])
 
-expect_p = np.array([[xp,yp,zp]])
-expect_p = np.swapaxes(np.swapaxes(expect_p,0,2),1,2)
-expect_p = expect_p/10
+# for i in range(predict.shape[0]):
+#     actual_zeta = predict_zeta[i]
+#     if actual_zeta > 0.40 or actual_zeta < -0.80:
+#         predict[i] = np.nan
+#         predict_zeta[i] = np.nan
+        
+# k = ~np.isnan(predict)
+# predict = predict[k]
+# predict_zeta = predict_zeta[k]
 
-sp0 = gl.GLScatterPlotItem(pos=test_label_all[1000:2000], color=colors_2)
-w.addItem(sp0)
-sp1 = gl.GLScatterPlotItem(pos=expect_p[1000:2000][::5])
-w.addItem(sp1)
-sp2 = gl.GLLinePlotItem(pos=expect_xyz[1000:2000], color = colors_1)
-w.addItem(sp2)
 
-# print(x.shape, y.shape, z.shape, expect_xyz.shape)
+# g_t = g_t[k]
 
-# i = 0
-# def update():
-#     global i
-#     sp0 = gl.GLScatterPlotItem(pos=test_label_all[i], color=colors_1)
-#     w.addItem(sp0)
-#     sp2 = gl.GLScatterPlotItem(pos=expect_xyz[i])
-#     w.addItem(sp2)
-#     i += 2
+print(predict.shape, predict_zeta.shape, g_t.shape)
 
-# time = QtCore.QTimer()
-# time.timeout.connect(update)
-# time.start(5)
+predict += T_r_music[0] 
+predict_zeta += T_z_music[0]
 
-fig.add_trace(go.Scatter(x=x[15040:15140], y=z[15040:15140], mode= 'markers', marker=dict(size=10), name="Ground Truth"))
-fig.add_trace(go.Scatter(x=xp[15040:15140], y=zp[15040:15140], mode= 'markers', marker=dict(size=10), name="Esprit"))
-fig.update_layout(xaxis_title = "X (mm)", yaxis_title="Y (mm)", xaxis_range =[-150,150], yaxis_range =[0,250]
-)
-if not os.path.exists("images"):
-    os.mkdir("images")
-fig.write_image("images/triangle_Esprit.jpg")
-fig.show()
+r_mse = np.sqrt(np.mean((predict - g_t[:,0])**2))
+z_mse = np.sqrt(np.mean((predict_zeta - g_t[:,1])**2))
+print(r_mse, z_mse)
 
-if __name__ == '__main__':
-    import sys
-    if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
-        QtGui.QApplication.instance().exec_()
+# xp = predict * np.cos(g_t[:,2]) * np.sin(predict_zeta)
+# yp = predict * np.sin(g_t[:,2]) + 100
+# zp = predict * np.cos(g_t[:,2]) * np.cos(predict_zeta)
+
+# x = g_t[:,0] * np.cos(g_t[:,2]) * np.sin(g_t[:,1])
+# y = g_t[:,0] * np.sin(g_t[:,2]) + 100
+# z = g_t[:,0] * np.cos(g_t[:,2]) * np.cos(g_t[:,1])
+
+# fig = go.Figure()
+
+# fig.add_trace(go.Scatter(x=x[37220:37340], y=z[37220:37340], mode= 'markers', marker=dict(size=10), name="Ground Truth"))
+# fig.add_trace(go.Scatter(x=xp[37220:37340], y=zp[37220:37340], mode= 'markers', marker=dict(size=10), name="Esprit"))
+# fig.update_layout(xaxis_title = "X (mm)", yaxis_title="Y (mm)", xaxis_range =[-150,150], yaxis_range =[0,250]
+# )
+# if not os.path.exists("images"):
+#     os.mkdir("images")
+# fig.write_image("images/triangle_Esprit.jpg")
+# fig.show()
+
+# print(predict.shape, g_t.shape,np.max(x),np.max(z), np.max(predict), np.max(zp))

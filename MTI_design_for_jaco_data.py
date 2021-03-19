@@ -16,7 +16,7 @@ save_dir = 'D:/data_signal_MTI/project_util_3/signal_robot_3_all_w_mti_cutoff_12
 all_trajectory = 120
 
 def animate(i):
-    line1.set_ydata(abs(range_fft[i,0,:100,0]))
+    line1.set_ydata(10*np.log10(abs(range_fft[i,0,:100,0]))/10)
     ax2.set_array(velocity_fft[i,:,:100,0])
     print(i)
     return line1, ax2
@@ -26,8 +26,8 @@ def runGraphInitial():
 
     fig = plt.figure(1)
     ax1 = fig.add_subplot(121)
-    ax1.set_ylim([-1,10])
-    line1, = ax1.plot(abs(range_fft[0,0,:100,0]))
+    ax1.set_ylim([-10,10])
+    line1, = ax1.plot(10*np.log10(abs(range_fft[0,0,:100,0]))/10)
     
     ax2 = fig.add_subplot(122)
     ax2 = plt.imshow(velocity_fft[0,:,:100,0], aspect= 'auto', origin='lower' , cmap='jet', 
@@ -194,9 +194,9 @@ def main():
     
     for f_name in range(all_trajectory):
         print(f_name)
-        real_name = signal_dir + 'raw_signal_real_' + str(f_name+1) + '.npy'
+        real_name = signal_dir + 'raw_signal_real_' + str(f_name+15) + '.npy'
         # real_name = glob.glob(real_name)
-        imag_name = signal_dir + 'raw_signal_imag_' + str(f_name+1) + '.npy'
+        imag_name = signal_dir + 'raw_signal_imag_' + str(f_name+15) + '.npy'
         # imag_name = glob.glob(imag_name)
         print(f_name)
         print(real_name)
@@ -213,7 +213,7 @@ def main():
         chirp = raw_iq.shape[1]
         adc = raw_iq.shape[2]
         TxRx = raw_iq.shape[3] 
-        padding = 0
+        padding = 500
 
         ## ---------------- no need to adjust ---------------
         adcSamples = padding + adc 
@@ -240,8 +240,8 @@ def main():
         raw_iq = np.reshape(raw_iq,(frame_number*chirp, adcSamples, TxRx))
         raw_iq = firMTI()
         raw_iq = np.complex64(raw_iq)
-        print(raw_iq.shape, raw_iq[0,0,0,0])
-        np.save(save_dir + 'raw_iq_w_mti_' + str(f_name+1) , raw_iq)
+        # print(raw_iq.shape, raw_iq[0,0,0,0])
+        # np.save(save_dir + 'raw_iq_w_mti_' + str(f_name+1) , raw_iq)
 
         # IIR M=12 cut-off 20 hz
         # raw_iq = np.reshape(raw_iq,(frame_number*chirp, adcSamples, TxRx))
@@ -250,7 +250,7 @@ def main():
         #### --------------------------------------------------------------------
 
         # print(raw_iq.shape)
-        # range_fft = rangeFFT(f_name)
+        range_fft = rangeFFT(f_name)
         
         # plot_range_fft()
         # plot_micro_doppler()
@@ -261,13 +261,13 @@ def main():
         # plt.plot(freq, abs(range_fft[0,0,:,0])) 
         # plt.show()
 
-        # velocity_fft = dopplerFFT(f_name)
+        velocity_fft = dopplerFFT(f_name)
 
         # velocity_fft = velocity_fft[:,44:84,:,:]
         # print(velocity_fft.shape)
         # print(range_fft.shape, velocity_fft.shape)mwa
 
-        # runGraphInitial()
+        runGraphInitial()
 
 
     

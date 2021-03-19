@@ -22,26 +22,31 @@ warnings.filterwarnings("ignore")
 
 signal_dir = '/data/data_signal_MTI/project_util_3/signal_all_w_mti_cutoff_12/'
 label_dir = '/data/data_signal_MTI/project_util_3/label_all/'
-test_dir = '/data/data_signal_MTI/project_util_3/10_Fold/leave_triangle/test_data_zone/'
+test_dir = '/data/data_signal_MTI/project_util_3/result_paper/'
+expect_r_remove = '/data/data_signal_MTI/project_util_3/expect_r_remove_outlier.npy'
 
 model_path = '/home/nakorn/weight_bias/wandb/run-20200930_201418-1dzier7q/files/fir_6cov_1.pt'
 save_predict_path = '/data/data_signal_MTI/project_util_3/prediction_result/'
+
+data_save_path = '/data/data_signal_MTI/project_util_3'
 all_trajectory = 120
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-epochs', type=int, default=3001)
+parser.add_argument('-epochs', type=int, default=1501)
 parser.add_argument('-batch_size', type=int, default=1000)
 parser.add_argument('-learning_rate', type=float, default= 0.001)
 parser.add_argument('-zero_padding', type=int, default=0)
-parser.add_argument('-test_batch_size', type=int, default = 4080)
+parser.add_argument('-test_batch_size', type=int, default = 5000)
 parser.add_argument('-loss_weight', type=int, default=3)
 parser.add_argument('-save_to_wandb', type=bool, default=False)
 parser.add_argument('-test_only', type=bool, default=False)
-parser.add_argument('-range_resolution', type=float, default= 45.74) #41.59
-parser.add_argument('-mesh_w', type=float, default=0.4)
+parser.add_argument('-mesh_w', type=float, default=0.1)
 parser.add_argument('-use_mesh', type=bool, default=False)
 parser.add_argument('-cuda', type=int, default=0)
 args = parser.parse_args()
+adc_range = 512
+r_pad = ((0,0),(0,0),(0, args.zero_padding*adc_range),(0,0))
+range_res = 45.74 / (1+args.zero_padding)
 
 train_all = []
 test_all = []
@@ -73,7 +78,7 @@ def cartesian_to_spherical(label):
     return r
 
 def meshgrid():
-    m_r = torch.arange(0, args.range_resolution*64, args.range_resolution).to(device)
+    m_r = torch.arange(0, range_res*40, range_res).to(device)
     # print("m_r", m_r.shape)
     # print(m_r)
     return m_r
@@ -87,8 +92,10 @@ def augmented(data_fft_modulus, label):
     return power_spectral_all, label_all
 
 def data_preparation(data_iq, label):
-
-    data_fft = np.fft.fft(data_iq, axis=2)
+    print(data_iq.shape)
+    data_iq_pad = np.pad(data_iq, pad_width= r_pad, mode='constant', constant_values=0)
+    print(data_iq_pad.shape)
+    data_fft = np.fft.fft(data_iq_pad, axis=2)
 
     #test_angle_fft to predict zeta
     # data_fft_v = np.fft.fftshift(np.fft.fft(data_fft, axis=1), axes=1)
@@ -100,8 +107,9 @@ def data_preparation(data_iq, label):
     # data_fft_modulus = data_fft_modulus[:,:int(data_fft_modulus.shape[1]/8),:]    
 
     data_fft_modulus = np.swapaxes(data_fft_modulus, 1,2)
-    data_fft_modulus = data_fft_modulus[:,:,:int(data_fft_modulus.shape[2]/8)]
-
+    data_fft_modulus = data_fft_modulus[:,:,:40]
+    # data_fft_modulus = np.expand_dims(data_fft_modulus, axis=1)
+    
     data_fft_modulus = np.float64(data_fft_modulus)
     
     # plt.plot(data_fft_modulus[0,0,:])
@@ -112,8 +120,8 @@ def data_preparation(data_iq, label):
 
     # data_fft_modulus_aug, label_aug = augmented(data_fft_modulus, label)
 
-    # return data_fft_modulus_aug, label_aug
-    return 10*np.log10(data_fft_modulus), label
+    return data_fft_modulus, label
+    # return 10*np.log10(data_fft_modulus), label
 
 # def plot_function():
 
@@ -129,6 +137,7 @@ class Model(nn.Module):
         self.encode_conv4 = nn.Conv1d(in_channels=16, out_channels=16, kernel_size=3, stride = 1, padding=1)
         self.encode_conv5 = nn.Conv1d(in_channels=16, out_channels=1, kernel_size=3, stride = 1, padding=1)
 
+        self.max_pool = nn.MaxPool1d(kernel_size=3, stride=1, padding=1)
         self.op_w = nn.Parameter(torch.randn(1), requires_grad=args.use_mesh)
      
 
@@ -138,7 +147,8 @@ class Model(nn.Module):
         x = F.leaky_relu(self.encode_conv2(x))
         x = F.leaky_relu(self.encode_conv3(x))
         x = F.leaky_relu(self.encode_conv4(x))
-        
+
+
         x_1 = self.encode_conv5(x)
         x_1 = x_1.view(x_1.size(0), -1)
         x_1 = F.softmax(x_1, dim=1)
@@ -236,13 +246,13 @@ def test_function(test_loader):
 
 def evaluation(label, expect_r):
     mat_mae = np.mean(np.abs(label-expect_r))
-    mat_sd = np.sqrt(np.mean((label-expect_r)**2))
+    mat_rmse = np.sqrt(np.mean((label-expect_r)**2))
     mae_each_fold.append(mat_mae)
-    sd_each_fold.append(mat_sd)
-    np.save(test_dir + 'mae_each_fold', np.array(mae_each_fold))
-    np.save(test_dir + 'sd_each_fold', np.array(sd_each_fold))
+    sd_each_fold.append(mat_rmse)
+    np.save(test_dir + 'mae_each_10foil_30%', np.array(mae_each_fold))
+    np.save(test_dir + 'rmse_each_10foil_30%', np.array(sd_each_fold))
     print("all_mae = ", np.mean(mae_each_fold))
-    print("all_sd = ", np.mean(sd_each_fold))
+    print("all_rmse = ", np.mean(sd_each_fold))
 
 if __name__ == '__main__':
     
@@ -254,102 +264,119 @@ if __name__ == '__main__':
     # reject_list = [np.arange(81,121)]
     # np.save(test_dir + 'reject_list', reject_list)
 
-    for f_name in range(all_trajectory):
-        count += 1
-        iq_name = signal_dir + 'raw_iq_w_mti_' + str(count) + '.npy' 
-        label_name = label_dir + 'label_' + str(count) + '.npy'
+    ## preprocess can skip if save
+    # for f_name in range(all_trajectory):
+    #     count += 1
+    #     iq_name = signal_dir + 'raw_iq_w_mti_' + str(count) + '.npy' 
+    #     label_name = label_dir + 'label_' + str(count) + '.npy'
 
-        data_post, label_post = data_preparation(np.load(iq_name), np.load(label_name))
+    #     data_post, label_post = data_preparation(np.load(iq_name), np.load(label_name))
         
-        # if count not in reject_list: 
-        data_iq.append(data_post)
-        label_all.append(label_post)
+    #     # if count not in reject_list: 
+    #     data_iq.append(data_post)
+    #     label_all.append(label_post)
 
-        print(np.array(data_iq).shape, np.array(label_all).shape)
+    #     print(np.array(data_iq).shape, np.array(label_all).shape)
 
+    data_iq = np.load(data_save_path + '/signal_range_8c_3p.npy')
+    label_all = np.load(data_save_path + '/label_range_8c_3p.npy')
     data_iq = np.array(data_iq)
     label_all = np.array(label_all)
-
-    # kf = KFold(n_splits=10, shuffle=True, random_state=42)
-    # for train_index, test_index in kf.split(data_iq):
-    train_index = np.arange(0,80)
-    # train_index11 = np.arange(30,40)
-    # train_index2 = np.arange(80,120)
-    # train_index22 = np.arange(70,80)
-    # train_index3 = np.arange(80,110)
-    # train_index33 = np.arange(110,120)
-    # train_index = np.concatenate([train_index1, train_index11, train_index2, train_index22, train_index3, train_index33])
-    # train_index = np.concatenate([train_index1, train_index2])
-
-    test_index = np.arange(80,120)
-    # test_index2 = np.arange(70,80)
-    # test_index3 = np.arange(110,120)
-    # test_index = np.concatenate([test_index1, test_index2, test_index3])
-    # print(test_index)
-
-    fold += 1
-    model = Model()
-    model.to(device)
-    optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
-
-    if args.save_to_wandb:
-        run = wandb.init(project="training-120-trajactory-range", name="test_leave_triangle_weight_1-7_peak_mae_3n_"+str(fold), dir='/home/nakorn/weight_bias', reinit=True)
     
-    # reject_list = np.random.choice(np.arange(1,108), size=75 , replace= False)
-    # train_index = np.delete(train_index, reject_list)
-    print(train_index, test_index)
+    # print(data_iq[0,10,0,:], label_all[0,10])
+    # print(np.min(label_all), np.max(label_all))
+    # print(label_all.shape[0], label_all.shape)
 
-    train_data, train_label, test_data, test_label = data_iq[train_index], label_all[train_index] \
-                                                        ,data_iq[test_index], label_all[test_index]
-    
-    
-    
-    train_data = np.reshape(train_data, (-1, *train_data.shape[-2:]))
-    train_label = np.reshape(train_label, (-1))
-    test_data = np.reshape(test_data, (-1, *test_data.shape[-2:]))
-    test_label = np.reshape(test_label, (-1))
-    print(train_data.shape, train_label.shape, test_data.shape, test_label.shape)
-    np.save(test_dir + 'train_index_fold_' + str(fold), np.array(train_index))
-    np.save(test_dir + 'test_index_fold_' + str(fold), np.array(test_index))
+    # data_iq = np.reshape(data_iq, (-1, *data_iq.shape[-2:]))
+    # label_all = np.reshape(label_all, (-1))
+    # predict_r_remove = np.load(expect_r_remove)
+    # print(predict_r_remove.shape, predict_r_remove[10])
 
-    train_set = Radar_train_Dataset(train_data=train_data, train_label=train_label)
-    test_set = Radar_test_Dataset(test_data=test_data, test_label=test_label)
+    # np.save(data_save_path + '/signal_range_8c_3p', data_iq)
+    # np.save(data_save_path + '/label_range_8c_3p', label_all)
 
-    train_loader = DataLoader(dataset=train_set, batch_size=args.batch_size, shuffle=True)
-    test_loader = DataLoader(dataset=test_set, batch_size=args.test_batch_size)
-
-    print(train_loader)
-    if args.test_only:
-        test_loss, label, expect_r, op_w = test_function(test_loader)
-        print(expect_r.shape)
-        np.save(save_predict_path + 'expect_r_%4_robot_3', expect_r)
-
-    else:
-        for epoch in range(args.epochs):
-            # print("======> epoch =", epoch)
-            train_loss = train_function(train_loader)
+    # for i in range(predict_r_remove.shape[0]):
+    #     actual_range = predict_r_remove[i]
+    #     # print(actual_range)
+    #     if actual_range < 92 or actual_range > 350:
+    #         predict_r_remove[i] = np.nan
             
-            if args.save_to_wandb:
-                wandb.log({'Train_loss': train_loss}, step=epoch)
             
-            # print(">>>>>> train_loss <<<<<<", train_loss)
-            if epoch%10 == 0:
-                test_loss, label, expect_r, op_w = test_function(test_loader)
-                print(">>>>>> test_loss <<<<<< epoch", epoch , test_loss)
-                np.save(test_dir + 'expec_r_fold_' + str(fold), np.array(expect_r))
+    # k = ~np.isnan(predict_r_remove)
+    # data_iq = data_iq[k]
+    # label_all = label_all[k]
+
+    print(data_iq.shape, label_all.shape)
+    
+    # print(data_iq[10,0,:], label_all[10])
+
+    train_index = []
+    test_index = []
+    
+    kf = KFold(n_splits=10, shuffle=True, random_state=42)
+
+    for train_index, test_index in kf.split(data_iq):
+        
+        fold += 1
+        model = Model()
+        model.to(device)
+        optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
+
+        if args.save_to_wandb:
+            run = wandb.init(project="localization_net_experiment", name="10_foil_range_pad3_30%"+str(fold), dir='/home/nakorn/weight_bias', reinit=True)
+        
+        reject_list = np.random.choice(np.arange(0,108), size=75 , replace= False) ## random drop 30% of data (30% training)
+        train_index = np.delete(train_index, reject_list)
+        train_data, train_label, test_data, test_label = data_iq[train_index], label_all[train_index] \
+                                                            ,data_iq[test_index], label_all[test_index]
+        
+        train_data = np.reshape(train_data, (-1, *train_data.shape[-2:]))
+        train_label = np.reshape(train_label, (-1))
+        test_data = np.reshape(test_data, (-1, *test_data.shape[-2:]))
+        test_label = np.reshape(test_label, (-1))
+        print(train_data.shape, train_label.shape, test_data.shape, test_label.shape)
+
+        np.save(test_dir + 'train_index_30%_fold_' + str(fold), np.array(train_index))
+        np.save(test_dir + 'test_index_30%_fold_' + str(fold), np.array(test_index))
+
+        train_set = Radar_train_Dataset(train_data=train_data, train_label=train_label)
+        test_set = Radar_test_Dataset(test_data=test_data, test_label=test_label)
+
+        train_loader = DataLoader(dataset=train_set, batch_size=args.batch_size, shuffle=True)
+        test_loader = DataLoader(dataset=test_set, batch_size=args.test_batch_size)
+
+        print(train_loader)
+        if args.test_only:
+            test_loss, label, expect_r, op_w = test_function(test_loader)
+            print(expect_r.shape)
+            np.save(save_predict_path + 'expect_r_10foil_30%', expect_r)
+
+        else:
+            for epoch in range(args.epochs):
+                # print("======> epoch =", epoch)
+                train_loss = train_function(train_loader)
                 
                 if args.save_to_wandb:
-                    plt.plot(label[:])
-                    plt.plot(expect_r[:])
-                    plt.ylabel('r distance')
-                    plt.xlabel('number of test point')
-                    wandb.log({'distance': plt}, step=epoch)
-                    wandb.log({'Test_loss': test_loss}, step=epoch)
-                    wandb.log({'Meshgrid_weight' : op_w}, step=epoch)
-    
-            if args.save_to_wandb and (epoch%500 == 0):
-                torch.save(model.state_dict(), os.path.join(wandb.run.dir, 'model_10_fold_rd_'+str(fold)+'_ep_'+str(epoch)+'.pt'))
-        run.finish()
-        evaluation(label, expect_r)
+                    wandb.log({'Train_loss': train_loss}, step=epoch)
+                
+                # print(">>>>>> train_loss <<<<<<", train_loss)
+                if epoch%10 == 0:
+                    test_loss, label, expect_r, op_w = test_function(test_loader)
+                    print(">>>>>> test_loss <<<<<< epoch", epoch , test_loss)
+                    np.save(test_dir + 'expec_r_30%_fold_' + str(fold), np.array(expect_r))
+                    
+                    if args.save_to_wandb:
+                        plt.plot(label[:])
+                        plt.plot(expect_r[:])
+                        plt.ylabel('r distance')
+                        plt.xlabel('number of test point')
+                        wandb.log({'distance': plt}, step=epoch)
+                        wandb.log({'Test_loss': test_loss}, step=epoch)
+                        wandb.log({'Meshgrid_weight' : op_w}, step=epoch)
+        
+                if args.save_to_wandb and (epoch%500 == 0):
+                    torch.save(model.state_dict(), os.path.join(wandb.run.dir, 'model_r_10fold_30%_'+str(fold)+'_ep_'+str(epoch)+'.pt'))
+            run.finish()
+            evaluation(label, expect_r)
 
     

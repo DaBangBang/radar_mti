@@ -16,8 +16,8 @@ import re
 import warnings
 import argparse
 
-predict_dir = 'D:/data_signal_MTI/project_util_3/prediction_result/'
-save_dir =  'D:/data_signal_MTI/project_util_3/prediction_result/'
+predict_dir = 'D:/data_signal_MTI/project_util_3/result_for_paper/'
+save_dir =  'D:/data_signal_MTI/project_util_3/result_for_paper/'
 epochs = 100001
 learning_rate = 0.001
 
@@ -26,7 +26,7 @@ device = 'cuda:0' if cuda.is_available() else 'cpu'
 
 def l2_loss(r_out, train_label):
     # w = 10
-    loss = torch.mean(torch.abs(train_label[:,1] - r_out))
+    loss = torch.mean(torch.abs(train_label[:,0] - r_out))
     # z_loss = torch.mean(torch.abs(train_label[:,1] - z_out))
     # print(r_loss, z_loss)
     # loss = r_loss + w*z_loss
@@ -91,9 +91,10 @@ def train_function(train_loader):
 
 if __name__ == '__main__':
     
-    predict = np.load(predict_dir + 'expect_r_%4_esprit_pad_fold.npy')
-    predict_zeta = np.load(predict_dir + 'expect_z_%4_esprit_pad_fold.npy')
+    predict = np.load(predict_dir + 'expect_r_music_pad_100%_fold.npy')
+    predict_zeta = np.load(predict_dir + 'expect_z_music_pad_100%_fold.npy')
     g_t = np.load(predict_dir + 'label_z_2dfft_fold.npy')
+    print(g_t.shape)
     for i in range(predict.shape[0]):
         actual_range = predict[i]
         if actual_range > 2380 or actual_range <= 0:
@@ -107,7 +108,7 @@ if __name__ == '__main__':
     g_t = g_t[k]
 
     print(predict.shape, g_t.shape)
-    train_data = Op_Data(train_range= predict_zeta, label_set= g_t)
+    train_data = Op_Data(train_range= predict, label_set= g_t)
     train_loader = DataLoader(dataset=train_data, batch_size=10000, shuffle=False)
 
     for epoch in range(epochs):
@@ -118,6 +119,6 @@ if __name__ == '__main__':
         if epoch%1000 == 0:
             print(np.array(r_out).shape, np.array(var).shape)
             # torch.save(model.state_dict(), os.path.join(wandb.run.dir, 'scaling.pt'))
-            np.save(save_dir + 'expect_z_%4_esprit_pad_op_trans', np.array(r_out))
+            np.save(save_dir + 'expect_r_music_pad_100%_fold_optimize', np.array(r_out))
             # np.save(save_dir + 'expect_z_%4_esprit_pad_op_trans', np.array(z_out))
-            np.save(save_dir + 'esprit_op_param_trans_zeta', np.array(var))
+            np.save(save_dir + 'optimize_r_music', np.array(var))

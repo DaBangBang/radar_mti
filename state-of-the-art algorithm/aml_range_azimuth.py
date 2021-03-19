@@ -73,11 +73,11 @@ if __name__ == '__main__':
         print(test_dir)
         fold_num = np.load(test_dir)
         print(fold_num)
-        for j in fold_num:
+        for j in fold_num[:1]:
             print(j+1)
             real_name = signal_dir + 'raw_iq_w_mti_' + str(j+1) + '.npy'
             test_data = np.load(real_name)
-            for k in range(test_data.shape[0]):
+            for k in range(test_data.shape[0])[:1]:
                 actual_range = range_estimation(test_data[k,0,:,0])
                 actual_doa = angle_estimation(test_data[k,0,:,:])
                 
@@ -91,5 +91,3 @@ if __name__ == '__main__':
             print("finish")
     expect_r = np.array(expect_r)
     expect_z = np.array(expect_z)
-    np.save('D:/data_signal_MTI/project_util_3/result_for_paper/expect_r_esprit_pad_100%_fold_cut', np.array(expect_r))
-    np.save('D:/data_signal_MTI/project_util_3/result_for_paper/expect_z_esprit_pad_100%_fold_cut', np.array(expect_z))

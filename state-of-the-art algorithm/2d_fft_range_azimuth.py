@@ -6,9 +6,9 @@ from scipy import stats
 import operator
 
 signal_dir = 'D:/data_signal_MTI/project_util_3/signal_all_w_mti_cutoff_12/'
-fold_dir = 'D:/data_signal_MTI/project_util_3/10_fold_validation/leave_circle/test_data/test_index_fold_'
+fold_dir = 'D:/data_signal_MTI/project_util_3/10_fold_validation/100%_data/test_data/test_index_fold_'
 pad_multi_range = 0
-pad_multi_angle = 0
+pad_multi_angle = 4
 
 
 adc_range = 512
@@ -50,12 +50,12 @@ if __name__ == '__main__':
     count = 0
     expect_r = []
     expect_z = []
-    for i in range(1):
+    for i in range(10):
         test_dir = fold_dir + str(i+1) +'.npy'
         print(test_dir)
         fold_num = np.load(test_dir)
         print(fold_num)
-        for j in fold_num[0]:
+        for j in fold_num[5:]:
             real_name = signal_dir + 'raw_iq_w_mti_' + str(j+1) + '.npy'
             print(real_name)
             test_data = np.load(real_name)
@@ -71,16 +71,19 @@ if __name__ == '__main__':
 
                 range_max = range_estimate(abs(range_fft))
                 angle_max = angle_estimation(abs(doppler_fft),abs(doa_fft))
-                
-              
+            
                 actual_range = range_res*range_max
                 actual_doa = m_r[angle_max]
                 expect_r.append(actual_range)
                 expect_z.append(actual_doa)
+
+                # if range_max >= 45:
+                #     print(i, j, k, range_max, actual_range)
+            
             print("finish")
     expect_r = np.array(expect_r)
     expect_z = np.array(expect_z)
-    np.save('D:/data_signal_MTI/project_util_3/prediction_result/expect_r_%4_2dfft_pad_circle', np.array(expect_r))
-    np.save('D:/data_signal_MTI/project_util_3/prediction_result/expect_z_%4_2dfft_pad_circle', np.array(expect_z))
+    # np.save('D:/data_signal_MTI/project_util_3/result_for_paper/expect_r_%4_2dfft_pad_100%_fold', np.array(expect_r))
+    # np.save('D:/data_signal_MTI/project_util_3/result_for_paper/expect_z_%4_2dfft_pad_100%_fold', np.array(expect_z))
                 
             
