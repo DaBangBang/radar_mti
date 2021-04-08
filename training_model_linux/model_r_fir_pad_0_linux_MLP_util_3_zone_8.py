@@ -62,14 +62,13 @@ def L2_loss(output, label, op_w):
     
     m_r = meshgrid()
     
-    if args.use_mesh :
-        adj = 1 + args.mesh_w*torch.tanh(op_w)
-        m_r = adj*m_r
-    expect = torch.matmul(output, m_r)
-    
+    # if args.use_mesh :
+    #     adj = 1 + args.mesh_w*torch.tanh(op_w)
+    #     m_r = adj*m_r
+    # expect = torch.matmul(output, m_r)
     # mse = mse_loss(expect, label)
-    mae = mae_loss(expect, label)
-    return mae, expect
+    mae = mae_loss(output, label)
+    return mae, output
 
 def cartesian_to_spherical(label):
     y_offset = 100
@@ -135,6 +134,8 @@ class Model(nn.Module):
         self.encode_conv3 = nn.Conv1d(in_channels=8, out_channels=16, kernel_size=3, stride = 1, padding=1)
         self.encode_conv4 = nn.Conv1d(in_channels=16, out_channels=16, kernel_size=3, stride = 1, padding=1)
         self.encode_conv5 = nn.Conv1d(in_channels=16, out_channels=1, kernel_size=3, stride = 1, padding=1)
+        self.fc1 = nn.Linear(in_features=40, out_features=128)
+        self.fc2 = nn.Linear(in_features=128, out_features=1)
 
         self.max_pool = nn.MaxPool1d(kernel_size=3, stride=1, padding=1)
         self.op_w = nn.Parameter(torch.randn(1), requires_grad=args.use_mesh)
@@ -146,14 +147,14 @@ class Model(nn.Module):
         x = F.leaky_relu(self.encode_conv2(x))
         x = F.leaky_relu(self.encode_conv3(x))
         x = F.leaky_relu(self.encode_conv4(x))
-
-
-        x_1 = self.encode_conv5(x)
-        x_1 = x_1.view(x_1.size(0), -1)
-        x_1 = F.softmax(x_1, dim=1)
+        x = F.leaky_relu(self.encode_conv5(x))
+        x = x.view(x.size(0), -1)
+        x = F.leaky_relu(self.fc1(x))
+        x = self.fc2(x)
+        
 
         
-        return x_1, self.op_w
+        return x, self.op_w
 
 class Radar_train_Dataset(Dataset):
     def __init__(self, train_data, train_label):
@@ -248,8 +249,8 @@ def evaluation(label, expect_r):
     mat_rmse = np.sqrt(np.mean((label-expect_r)**2))
     mae_each_fold.append(mat_mae)
     sd_each_fold.append(mat_rmse)
-    np.save(test_dir + 'mae_each_fold_zone_3', np.array(mae_each_fold))
-    np.save(test_dir + 'rmse_each_fold_zone_3', np.array(sd_each_fold))
+    np.save(test_dir + 'mae_each_fold_zone_8_MLP', np.array(mae_each_fold))
+    np.save(test_dir + 'rmse_each_fold_zone_8_MLP', np.array(sd_each_fold))
     print("all_mae = ", np.mean(mae_each_fold))
     print("all_rmse = ", np.mean(sd_each_fold))
 
@@ -278,6 +279,9 @@ if __name__ == '__main__':
 
     data_iq = np.load(data_save_path + '/signal_range_8c_3p.npy')
     label_all = np.load(data_save_path + '/label_range_8c_3p.npy')
+    label_zone = np.load(data_save_path + '/label_aoa_16c_10p.npy')
+    label_azimuth = label_zone[:,1]
+    
     data_iq = np.array(data_iq)
     label_all = np.array(label_all)
     # print(data_iq[0,10,0,:], label_all[0,10])
@@ -300,6 +304,7 @@ if __name__ == '__main__':
     k = ~np.isnan(predict_r_remove)
     data_iq = data_iq[k]
     label_all = label_all[k]
+    label_azimuth = label_azimuth[k]
 
     print(data_iq.shape, label_all.shape)
     
@@ -309,10 +314,11 @@ if __name__ == '__main__':
     test_index = []
 
     for ii in range(label_all.shape[0]):
-        if  158 < label_all[ii] <= 190:
+        if  -0.27706 <= label_azimuth[ii] < -0.07034:
             test_index.append(ii)
         else:
             train_index.append(ii)
+
     test_index = np.array(test_index)
     train_index = np.array(train_index)
     print(np.array(test_index).shape, np.array(train_index).shape)
@@ -323,27 +329,29 @@ if __name__ == '__main__':
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
 
     if args.save_to_wandb:
-        run = wandb.init(project="model_zone_generalization", name="test_range_zone_3_"+str(fold), dir='/home/nakorn/weight_bias', reinit=True)
+        run = wandb.init(project="model_zone_generalization", name="test_range_zone_8_MLP_"+str(fold), dir='/home/nakorn/weight_bias', reinit=True)
     
     train_data, train_label, test_data, test_label = data_iq[train_index], label_all[train_index] \
                                                         ,data_iq[test_index], label_all[test_index]
     
     #  Select with norm dis
-    select_train = np.random.choice(train_data.shape[0], 8500, replace=False)
-    select_test = np.random.choice(test_data.shape[0], 1700, replace=False)
+    # select_train = np.random.choice(train_data.shape[0], 8500, replace=False)
+    # select_test = np.random.choice(test_data.shape[0], 1700, replace=False)
     
+    select_train = np.load(data_save_path+ '/select_train_zone_8.npy')
+    select_test = np.load(data_save_path+ '/select_test_zone_8.npy')
     train_data = train_data[select_train]
     train_label = train_label[select_train]
     test_data = test_data[select_test]
     test_label = test_label[select_test]
-    np.save(data_save_path + '/select_train_zone_3', select_train)
-    np.save(data_save_path + '/select_test_zone_3', select_test)
+    # np.save(data_save_path, '/select_train_zone_8_MLP', select_train)
+    # np.save(data_save_path, '/select_test_zone_8_MLP', select_test)
     # ============================================ 
 
     print(train_data.shape, train_label.shape, test_data.shape, test_label.shape)
 
-    np.save(test_dir + 'train_index_fold_zone_3' + str(fold), np.array(train_index))
-    np.save(test_dir + 'test_index_fold_zone_3' + str(fold), np.array(test_index))
+    np.save(test_dir + 'train_index_fold_zone_8_MLP' + str(fold), np.array(train_index))
+    np.save(test_dir + 'test_index_fold_zone_8_MLP' + str(fold), np.array(test_index))
 
     train_set = Radar_train_Dataset(train_data=train_data, train_label=train_label)
     test_set = Radar_test_Dataset(test_data=test_data, test_label=test_label)
@@ -355,7 +363,7 @@ if __name__ == '__main__':
     if args.test_only:
         test_loss, label, expect_r, op_w = test_function(test_loader)
         print(expect_r.shape)
-        np.save(save_predict_path + 'expect_r_zone_3', expect_r)
+        np.save(save_predict_path + 'expect_r_zone_8_MLP', expect_r)
 
     else:
         for epoch in range(args.epochs):
@@ -370,7 +378,7 @@ if __name__ == '__main__':
                 test_loss, label, expect_r, op_w = test_function(test_loader)
                 rmse = np.sqrt(np.mean((label-expect_r)**2))
                 print(">>>>>> test_loss <<<<<< epoch", epoch , test_loss, rmse)
-                np.save(test_dir + 'expec_r_fold_zone_3' + str(fold), np.array(expect_r))
+                np.save(test_dir + 'expec_r_fold_zone_8_MLP' + str(fold), np.array(expect_r))
                 
                 if args.save_to_wandb:
                     plt.plot(label[:])
@@ -382,7 +390,7 @@ if __name__ == '__main__':
                     wandb.log({'Meshgrid_weight' : op_w}, step=epoch)
     
             if args.save_to_wandb and (epoch%500 == 0):
-                torch.save(model.state_dict(), os.path.join(wandb.run.dir, 'model_test_zone_3'+str(fold)+'_ep_'+str(epoch)+'.pt'))
+                torch.save(model.state_dict(), os.path.join(wandb.run.dir, 'model_test_zone_8_MLP'+str(fold)+'_ep_'+str(epoch)+'.pt'))
         run.finish()
         evaluation(label, expect_r)
 

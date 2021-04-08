@@ -323,11 +323,21 @@ if __name__ == '__main__':
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
 
     if args.save_to_wandb:
-        run = wandb.init(project="localization_net_experiment", name="test_range_zone_4_"+str(fold), dir='/home/nakorn/weight_bias', reinit=True)
+        run = wandb.init(project="model_zone_generalization", name="test_range_zone_4_"+str(fold), dir='/home/nakorn/weight_bias', reinit=True)
     
     train_data, train_label, test_data, test_label = data_iq[train_index], label_all[train_index] \
                                                         ,data_iq[test_index], label_all[test_index]
+    #   Select with norm dis
+    select_train = np.random.choice(train_data.shape[0], 8500, replace=False)
+    select_test = np.random.choice(test_data.shape[0], 1700, replace=False)
     
+    train_data = train_data[select_train]
+    train_label = train_label[select_train]
+    test_data = test_data[select_test]
+    test_label = test_label[select_test]
+    np.save(data_save_path+ '/select_train_zone_4', select_train)
+    np.save(data_save_path+ '/select_test_zone_4', select_test)
+    # ============================================ 
     
     print(train_data.shape, train_label.shape, test_data.shape, test_label.shape)
 
@@ -357,7 +367,8 @@ if __name__ == '__main__':
             # print(">>>>>> train_loss <<<<<<", train_loss)
             if epoch%10 == 0:
                 test_loss, label, expect_r, op_w = test_function(test_loader)
-                print(">>>>>> test_loss <<<<<< epoch", epoch , test_loss)
+                rmse = np.sqrt(np.mean((label-expect_r)**2))
+                print(">>>>>> test_loss <<<<<< epoch", epoch , test_loss, rmse)
                 np.save(test_dir + 'expec_r_fold_zone_4' + str(fold), np.array(expect_r))
                 
                 if args.save_to_wandb:
