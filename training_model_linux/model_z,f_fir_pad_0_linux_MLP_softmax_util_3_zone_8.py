@@ -133,6 +133,8 @@ class Model(nn.Module):
         self.encode_conv4 = nn.Conv1d(in_channels=32, out_channels=32, kernel_size=3, stride = 1, padding=1)
         self.encode_conv5 = nn.Conv1d(in_channels=32, out_channels=1, kernel_size=3, stride = 1, padding=1)
         # self.max_pool = nn.MaxPool1d(kernel_size=3, stride=1, padding=1)
+        self.fc1 = nn.Linear(in_features=168, out_features=256)
+        self.fc2 = nn.Linear(in_features=256, out_features=168)
         self.op_w = nn.Parameter(torch.randn(1), requires_grad=args.use_mesh)
 
     def forward(self, x):
@@ -141,14 +143,15 @@ class Model(nn.Module):
         x = F.leaky_relu(self.encode_conv2(x))
         x = F.leaky_relu(self.encode_conv3(x))
         x = F.leaky_relu(self.encode_conv4(x))
-        # x = F.leaky_relu(self.encode_conv5(x))
+        x = F.leaky_relu(self.encode_conv5(x))
         # x = F.leaky_relu(self.encode_conv6(x))
 
-        x_1 = self.encode_conv5(x)
-        x_1 = x_1.view(x_1.size(0), -1)
-        x_1 = F.softmax(x_1, dim=1)
         
-        return x_1, self.op_w
+        x = x.view(x.size(0), -1)
+        x = F.leaky_relu(self.fc1(x))
+        x = F.softmax(self.fc2(x),dim=1)
+        
+        return x, self.op_w
 
 class Radar_train_Dataset(Dataset):
     def __init__(self, train_data, train_label):
@@ -239,8 +242,8 @@ def evaluation(label, expect_z):
     mat_rmse = np.sqrt(np.mean((label[:,1]-expect_z)**2))
     mae_each_fold.append(mat_mae)
     sd_each_fold.append(mat_rmse)
-    np.save(test_dir + 'mae_aoa_each_fold_zone_1', np.array(mae_each_fold))
-    np.save(test_dir + 'rmse_aoa_each_fold_zone_1', np.array(sd_each_fold))
+    np.save(test_dir + 'mae_aoa_each_fold_zone_8_softmax', np.array(mae_each_fold))
+    np.save(test_dir + 'rmse_aoa_each_fold_zone_8_softmax', np.array(sd_each_fold))
     print("all_mae = ", np.mean(mae_each_fold))
     print("all_rmse = ", np.mean(sd_each_fold))
 
@@ -273,16 +276,14 @@ if __name__ == '__main__':
     label_all_1 = np.load(data_save_path + '/label_aoa_16c_20p_1.npy')
     data_iq_2 = np.load(data_save_path + '/signal_aoa_16c_20p_2.npy')
     label_all_2 = np.load(data_save_path + '/label_aoa_16c_20p_2.npy')
-    label_range = np.load(data_save_path + '/label_range_8c_3p.npy')
     data_iq = np.concatenate((data_iq_1, data_iq_2), axis=0)
     label_all = np.concatenate((label_all_1, label_all_2), axis=0)
     
 
     data_iq = np.array(data_iq)
     label_all = np.array(label_all)
-    label_range = np.array(label_range)
-    label_range = np.reshape(label_range, (-1))
-    print(data_iq.shape, label_all.shape, label_range.shape)
+    label_azimuth = label_all[:,1]
+    print(data_iq.shape, label_all.shape, label_azimuth.shape)
 
     data_iq = np.reshape(data_iq, (-1, *data_iq.shape[-2:]))
     label_all = np.reshape(label_all, (-1, *label_all.shape[-1:]))
@@ -313,15 +314,15 @@ if __name__ == '__main__':
     k = ~np.isnan(predict_r_remove)
     data_iq = data_iq[k]
     label_all = label_all[k]
-    label_range = label_range[k]
+    label_azimuth = label_azimuth[k]
 
     print(data_iq.shape, label_all.shape)
 
     train_index = []
     test_index = []
 
-    for ii in range(label_range.shape[0]):
-        if  126 > label_range[ii] :
+    for ii in range(label_azimuth.shape[0]):
+        if   -0.27706 <= label_azimuth[ii] < -0.07034:
             test_index.append(ii)
         else:
             train_index.append(ii)
@@ -337,7 +338,7 @@ if __name__ == '__main__':
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
 
     if args.save_to_wandb:
-        run = wandb.init(project="model_zone_generalization", name="test_aoa_zone_1"+str(fold), dir='/home/nakorn/weight_bias', reinit=True)
+        run = wandb.init(project="localization_net_experiment", name="test_aoa_zone_8_softmax"+str(fold), dir='/home/nakorn/weight_bias', reinit=True)
     
     train_data, train_label, test_data, test_label = data_iq[train_index], label_all[train_index] \
                                                         ,data_iq[test_index], label_all[test_index]
@@ -345,19 +346,19 @@ if __name__ == '__main__':
     #   Select with norm dis
     # select_train = np.random.choice(train_data.shape[0], 8500, replace=False)
     # select_test = np.random.choice(test_data.shape[0], 1700, replace=False)
-    select_train = np.load(data_save_path+ '/select_aoa_train_zone_1.npy')
-    select_test = np.load(data_save_path+ '/select_aoa_test_zone_1.npy')
+    select_train = np.load(data_save_path+ '/select_aoa_train_zone_8.npy')
+    select_test = np.load(data_save_path+ '/select_aoa_test_zone_8.npy')
     train_data = train_data[select_train]
     train_label = train_label[select_train]
     test_data = test_data[select_test]
     test_label = test_label[select_test]
-    # np.save(data_save_path+ '/select_aoa_train_zone_1', select_train)
-    # np.save(data_save_path+ '/select_aoa_test_zone_1', select_test)
+    # np.save(data_save_path+ '/select_aoa_train_zone_8_softmax', select_train)
+    # np.save(data_save_path+ '/select_aoa_test_zone_8_softmax', select_test)
     # ============================================ 
 
     print(train_data.shape, train_label.shape, test_data.shape, test_label.shape)
-    np.save(test_dir + 'train_aoa_index_zone_1' + str(fold), np.array(train_index))
-    np.save(test_dir + 'test_aoa_index_zone_1' + str(fold), np.array(test_index))
+    np.save(test_dir + 'train_aoa_index_zone_8_softmax' + str(fold), np.array(train_index))
+    np.save(test_dir + 'test_aoa_index_zone_8_softmax' + str(fold), np.array(test_index))
 
     train_set = Radar_train_Dataset(train_data=train_data, train_label=train_label)
     test_set = Radar_test_Dataset(test_data=test_data, test_label=test_label)
@@ -384,7 +385,7 @@ if __name__ == '__main__':
                 test_loss, label, expect_z, op_w = test_function(test_loader)
                 rmse = np.sqrt(np.mean((label[:,1]-expect_z)**2))
                 print(">>> test_loss, epoch   <<<<<", epoch , test_loss, rmse)
-                np.save(test_dir + 'expect_z_aoa_zone_1' + str(fold), np.array(expect_z))
+                np.save(test_dir + 'expect_z_aoa_zone_8_softmax' + str(fold), np.array(expect_z))
 
                 if args.save_to_wandb:
                     plt.figure(1)
@@ -398,7 +399,7 @@ if __name__ == '__main__':
 
             
             if args.save_to_wandb and (epoch%500 == 0):  
-                torch.save(model.state_dict(), os.path.join(wandb.run.dir, 'aoa_zone_1_'+str(fold)+'_ep_'+str(epoch)+'.pt'))
+                torch.save(model.state_dict(), os.path.join(wandb.run.dir, 'aoa_zone_8_softmax_'+str(fold)+'_ep_'+str(epoch)+'.pt'))
         run.finish()
         evaluation(label, expect_z)
         

@@ -33,11 +33,11 @@ all_trajectory = 120
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-epochs', type=int, default=1001)
-parser.add_argument('-batch_size', type=int, default=2000)
+parser.add_argument('-batch_size', type=int, default=2500)
 parser.add_argument('-learning_rate', type=float, default=0.001)
 parser.add_argument('-zero_padding', type=int, default=0)
 parser.add_argument('-test_batch_size', type=int, default= 15000)
-parser.add_argument('-loss_weight', type=int, default=10)
+parser.add_argument('-loss_weight', type=int, default=100)
 parser.add_argument('-save_to_wandb', type=bool, default=False)
 parser.add_argument('-test_only', type=bool, default=False)
 parser.add_argument('-wmodel', default='cnn+fc+reg')
@@ -239,8 +239,8 @@ def evaluation(label, expect_z):
     mat_rmse = np.sqrt(np.mean((label[:,1]-expect_z)**2))
     mae_each_fold.append(mat_mae)
     sd_each_fold.append(mat_rmse)
-    np.save(test_dir + 'mae_aoa_each_fold_zone_1', np.array(mae_each_fold))
-    np.save(test_dir + 'rmse_aoa_each_fold_zone_1', np.array(sd_each_fold))
+    np.save(test_dir + 'mae_aoa_each_fold_zone_5', np.array(mae_each_fold))
+    np.save(test_dir + 'rmse_aoa_each_fold_zone_5', np.array(sd_each_fold))
     print("all_mae = ", np.mean(mae_each_fold))
     print("all_rmse = ", np.mean(sd_each_fold))
 
@@ -321,7 +321,7 @@ if __name__ == '__main__':
     test_index = []
 
     for ii in range(label_range.shape[0]):
-        if  126 > label_range[ii] :
+        if  label_range[ii] > 222:
             test_index.append(ii)
         else:
             train_index.append(ii)
@@ -337,27 +337,26 @@ if __name__ == '__main__':
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
 
     if args.save_to_wandb:
-        run = wandb.init(project="model_zone_generalization", name="test_aoa_zone_1"+str(fold), dir='/home/nakorn/weight_bias', reinit=True)
+        run = wandb.init(project="model_zone_generalization", name="test_aoa_zone_5"+str(fold), dir='/home/nakorn/weight_bias', reinit=True)
     
     train_data, train_label, test_data, test_label = data_iq[train_index], label_all[train_index] \
                                                         ,data_iq[test_index], label_all[test_index]
-  
     #   Select with norm dis
-    # select_train = np.random.choice(train_data.shape[0], 8500, replace=False)
-    # select_test = np.random.choice(test_data.shape[0], 1700, replace=False)
-    select_train = np.load(data_save_path+ '/select_aoa_train_zone_1.npy')
-    select_test = np.load(data_save_path+ '/select_aoa_test_zone_1.npy')
+    select_train = np.random.choice(train_data.shape[0], 8500, replace=False)
+    select_test = np.random.choice(test_data.shape[0], 1700, replace=False)
+    # select_train = np.load(data_save_path+ '/select_aoa_train_zone_1.npy')
+    # select_test = np.load(data_save_path+ '/select_aoa_test_zone_1.npy')
     train_data = train_data[select_train]
     train_label = train_label[select_train]
     test_data = test_data[select_test]
     test_label = test_label[select_test]
-    # np.save(data_save_path+ '/select_aoa_train_zone_1', select_train)
-    # np.save(data_save_path+ '/select_aoa_test_zone_1', select_test)
-    # ============================================ 
+    # np.save(data_save_path+ '/select_aoa_train_zone_5', select_train)
+    # np.save(data_save_path+ '/select_aoa_test_zone_5', select_test)
+     # ============================================ 
 
     print(train_data.shape, train_label.shape, test_data.shape, test_label.shape)
-    np.save(test_dir + 'train_aoa_index_zone_1' + str(fold), np.array(train_index))
-    np.save(test_dir + 'test_aoa_index_zone_1' + str(fold), np.array(test_index))
+    np.save(test_dir + 'train_aoa_index_zone_5' + str(fold), np.array(train_index))
+    np.save(test_dir + 'test_aoa_index_zone_5' + str(fold), np.array(test_index))
 
     train_set = Radar_train_Dataset(train_data=train_data, train_label=train_label)
     test_set = Radar_test_Dataset(test_data=test_data, test_label=test_label)
@@ -384,7 +383,7 @@ if __name__ == '__main__':
                 test_loss, label, expect_z, op_w = test_function(test_loader)
                 rmse = np.sqrt(np.mean((label[:,1]-expect_z)**2))
                 print(">>> test_loss, epoch   <<<<<", epoch , test_loss, rmse)
-                np.save(test_dir + 'expect_z_aoa_zone_1' + str(fold), np.array(expect_z))
+                np.save(test_dir + 'expect_z_aoa_zone_5' + str(fold), np.array(expect_z))
 
                 if args.save_to_wandb:
                     plt.figure(1)
@@ -398,7 +397,7 @@ if __name__ == '__main__':
 
             
             if args.save_to_wandb and (epoch%500 == 0):  
-                torch.save(model.state_dict(), os.path.join(wandb.run.dir, 'aoa_zone_1_'+str(fold)+'_ep_'+str(epoch)+'.pt'))
+                torch.save(model.state_dict(), os.path.join(wandb.run.dir, 'aoa_zone_5_'+str(fold)+'_ep_'+str(epoch)+'.pt'))
         run.finish()
         evaluation(label, expect_z)
         

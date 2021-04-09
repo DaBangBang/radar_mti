@@ -137,10 +137,10 @@ class Model(nn.Module):
 
     def forward(self, x):
         # x = self.max_pool(x)
-        x = F.relu(self.encode_conv1(x))
-        x = F.relu(self.encode_conv2(x))
-        x = F.relu(self.encode_conv3(x))
-        x = F.relu(self.encode_conv4(x))
+        x = F.leaky_relu(self.encode_conv1(x))
+        x = F.leaky_relu(self.encode_conv2(x))
+        x = F.leaky_relu(self.encode_conv3(x))
+        x = F.leaky_relu(self.encode_conv4(x))
         # x = F.leaky_relu(self.encode_conv5(x))
         # x = F.leaky_relu(self.encode_conv6(x))
 
@@ -335,11 +335,24 @@ if __name__ == '__main__':
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
 
     if args.save_to_wandb:
-        run = wandb.init(project="localization_net_experiment", name="test_aoa_zone_6"+str(fold), dir='/home/nakorn/weight_bias', reinit=True)
+        run = wandb.init(project="model_zone_generalization", name="test_aoa_zone_6"+str(fold), dir='/home/nakorn/weight_bias', reinit=True)
     
     train_data, train_label, test_data, test_label = data_iq[train_index], label_all[train_index] \
                                                         ,data_iq[test_index], label_all[test_index]
   
+    #   Select with norm dis
+    # select_train = np.random.choice(train_data.shape[0], 8500, replace=False)
+    # select_test = np.random.choice(test_data.shape[0], 1700, replace=False)
+    select_train = np.load(data_save_path+ '/select_aoa_train_zone_6.npy')
+    select_test = np.load(data_save_path+ '/select_aoa_test_zone_6.npy')
+    train_data = train_data[select_train]
+    train_label = train_label[select_train]
+    test_data = test_data[select_test]
+    test_label = test_label[select_test]
+    # np.save(data_save_path+ '/select_aoa_train_zone_6', select_train)
+    # np.save(data_save_path+ '/select_aoa_test_zone_6', select_test)
+    # ============================================ 
+
     print(train_data.shape, train_label.shape, test_data.shape, test_label.shape)
     np.save(test_dir + 'train_aoa_index_zone_6' + str(fold), np.array(train_index))
     np.save(test_dir + 'test_aoa_index_zone_6' + str(fold), np.array(test_index))

@@ -127,20 +127,20 @@ class Model(nn.Module):
         super(Model, self).__init__()
 
         # 2D-CNN Layer
-        self.encode_conv1 = nn.Conv1d(in_channels=16, out_channels=8, kernel_size=3, stride = 1, padding=1)
-        self.encode_conv2 = nn.Conv1d(in_channels=8, out_channels=8, kernel_size=3, stride = 1 , padding=1)
-        self.encode_conv3 = nn.Conv1d(in_channels=8, out_channels=16, kernel_size=3, stride = 1, padding=1)
-        self.encode_conv4 = nn.Conv1d(in_channels=16, out_channels=16, kernel_size=3, stride = 1, padding=1)
-        self.encode_conv5 = nn.Conv1d(in_channels=16, out_channels=1, kernel_size=3, stride = 1, padding=1)
+        self.encode_conv1 = nn.Conv1d(in_channels=16, out_channels=16, kernel_size=3, stride = 1, padding=1)
+        self.encode_conv2 = nn.Conv1d(in_channels=16, out_channels=16, kernel_size=3, stride = 1 , padding=1)
+        self.encode_conv3 = nn.Conv1d(in_channels=16, out_channels=32, kernel_size=3, stride = 1, padding=1)
+        self.encode_conv4 = nn.Conv1d(in_channels=32, out_channels=32, kernel_size=3, stride = 1, padding=1)
+        self.encode_conv5 = nn.Conv1d(in_channels=32, out_channels=1, kernel_size=3, stride = 1, padding=1)
         # self.max_pool = nn.MaxPool1d(kernel_size=3, stride=1, padding=1)
         self.op_w = nn.Parameter(torch.randn(1), requires_grad=args.use_mesh)
 
     def forward(self, x):
         # x = self.max_pool(x)
-        x = F.relu(self.encode_conv1(x))
-        x = F.relu(self.encode_conv2(x))
-        x = F.relu(self.encode_conv3(x))
-        x = F.relu(self.encode_conv4(x))
+        x = F.leaky_relu(self.encode_conv1(x))
+        x = F.leaky_relu(self.encode_conv2(x))
+        x = F.leaky_relu(self.encode_conv3(x))
+        x = F.leaky_relu(self.encode_conv4(x))
         # x = F.leaky_relu(self.encode_conv5(x))
         # x = F.leaky_relu(self.encode_conv6(x))
 
@@ -340,6 +340,19 @@ if __name__ == '__main__':
     train_data, train_label, test_data, test_label = data_iq[train_index], label_all[train_index] \
                                                         ,data_iq[test_index], label_all[test_index]
   
+    #   Select with norm dis
+    # select_train = np.random.choice(train_data.shape[0], 8500, replace=False)
+    # select_test = np.random.choice(test_data.shape[0], 1700, replace=False)
+    select_train = np.load(data_save_path+ '/select_aoa_train_zone_8.npy')
+    select_test = np.load(data_save_path+ '/select_aoa_test_zone_8.npy')
+    train_data = train_data[select_train]
+    train_label = train_label[select_train]
+    test_data = test_data[select_test]
+    test_label = test_label[select_test]
+    # np.save(data_save_path+ '/select_aoa_train_zone_8', select_train)
+    # np.save(data_save_path+ '/select_aoa_test_zone_8', select_test)
+    # ============================================ 
+
     print(train_data.shape, train_label.shape, test_data.shape, test_label.shape)
     np.save(test_dir + 'train_aoa_index_zone_8' + str(fold), np.array(train_index))
     np.save(test_dir + 'test_aoa_index_zone_8' + str(fold), np.array(test_index))
