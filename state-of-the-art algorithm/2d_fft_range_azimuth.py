@@ -55,7 +55,7 @@ if __name__ == '__main__':
         print(test_dir)
         fold_num = np.load(test_dir)
         print(fold_num)
-        for j in fold_num[5:]:
+        for j in fold_num[3:]:
             real_name = signal_dir + 'raw_iq_w_mti_' + str(j+1) + '.npy'
             print(real_name)
             test_data = np.load(real_name)
@@ -67,11 +67,27 @@ if __name__ == '__main__':
                 doppler_fft = np.fft.fftshift(np.fft.fft(range_fft, axis=0), axes=0)
                 doppler_fft_pad = np.pad(doppler_fft, pad_width= a_pad, mode='constant', constant_values=0)
                 doa_fft = np.fft.fftshift(np.fft.fft(doppler_fft_pad, axis=2), axes=2)
+
                 
+                # test
+                doppler_fft_pad_wo = np.pad(range_fft, pad_width= a_pad, mode='constant', constant_values=0)
+                doa_fft_wo = np.fft.fftshift(np.fft.fft(doppler_fft_pad_wo, axis=2), axes=2)
+                # ====
+                
+
 
                 range_max = range_estimate(abs(range_fft))
                 angle_max = angle_estimation(abs(doppler_fft),abs(doa_fft))
-            
+                # print(doa_fft.shape)
+                # doa_fft_m = np.mean(abs(doa_fft), axis=0)
+                # doa_fft_m_after = np.mean(doa_fft_wo, axis=0)
+                # doa_fft_wo_m = np.mean(abs(doa_fft_wo), axis=0)
+                
+                plt.plot(abs(doa_fft[range_max,:]))
+                # plt.plot(abs(doa_fft_m_after[range_max, :]))
+                plt.plot(abs(doa_fft_wo[range_max,:]))
+                plt.show()
+
                 actual_range = range_res*range_max
                 actual_doa = m_r[angle_max]
                 expect_r.append(actual_range)

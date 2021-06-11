@@ -255,27 +255,27 @@ if __name__ == '__main__':
     
     # print(ff, yy)
     ## can skip
-    # for f_name in range(all_trajectory)[:60]:
-    #     count += 1
-    #     iq_name = signal_dir + 'raw_iq_w_mti_' + str(count) + '.npy'
-    #     label_name = label_dir + 'label_' + str(count) + '.npy'
+    for f_name in range(all_trajectory)[:60]:
+        count += 1
+        iq_name = signal_dir + 'raw_iq_w_mti_' + str(count) + '.npy'
+        label_name = label_dir + 'label_' + str(count) + '.npy'
 
-    #     print(iq_name, label_name)
-    #     data_post, label_post = data_preparation(np.load(iq_name), np.load(label_name))
+        print(iq_name, label_name)
+        data_post, label_post = data_preparation(np.load(iq_name), np.load(label_name))
         
-    #     # if count not in reject_list: 
-    #     data_iq.append(data_post)
-    #     label_all.append(label_post)
-    #     print(np.array(data_iq).shape, np.array(label_all).shape)
+        # if count not in reject_list: 
+        data_iq.append(data_post)
+        label_all.append(label_post)
+        print(np.array(data_iq).shape, np.array(label_all).shape)
 
 
-    data_iq_1 = np.load(data_save_path + '/signal_aoa_16c_20p_1.npy')
-    label_all_1 = np.load(data_save_path + '/label_aoa_16c_20p_1.npy')
-    data_iq_2 = np.load(data_save_path + '/signal_aoa_16c_20p_2.npy')
-    label_all_2 = np.load(data_save_path + '/label_aoa_16c_20p_2.npy')
-    label_range = np.load(data_save_path + '/label_range_8c_3p.npy')
-    data_iq = np.concatenate((data_iq_1, data_iq_2), axis=0)
-    label_all = np.concatenate((label_all_1, label_all_2), axis=0)
+    # data_iq_1 = np.load(data_save_path + '/signal_aoa_16c_20p_1.npy')
+    # label_all_1 = np.load(data_save_path + '/label_aoa_16c_20p_1.npy')
+    # data_iq_2 = np.load(data_save_path + '/signal_aoa_16c_20p_2.npy')
+    # label_all_2 = np.load(data_save_path + '/label_aoa_16c_20p_2.npy')
+    # label_range = np.load(data_save_path + '/label_range_8c_3p.npy')
+    # data_iq = np.concatenate((data_iq_1, data_iq_2), axis=0)
+    # label_all = np.concatenate((label_all_1, label_all_2), axis=0)
     
 
     data_iq = np.array(data_iq)
@@ -287,8 +287,8 @@ if __name__ == '__main__':
     data_iq = np.reshape(data_iq, (-1, *data_iq.shape[-2:]))
     label_all = np.reshape(label_all, (-1, *label_all.shape[-1:]))
 
-    # np.save(data_save_path + '/signal_aoa_16c_20p_2', data_iq)
-    # np.save(data_save_path + '/label_aoa_16c_20p_2', label_all)
+    np.save(data_save_path + '/signal_aoa_16c_20p_2', data_iq)
+    np.save(data_save_path + '/label_aoa_16c_20p_2', label_all)
 
     print("min_max", np.min(label_all[:,1]), np.max(label_all[:,1]))
     print("data_iq", data_iq.shape, label_all.shape)

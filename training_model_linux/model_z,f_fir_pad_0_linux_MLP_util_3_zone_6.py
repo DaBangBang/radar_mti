@@ -66,18 +66,18 @@ device = 'cuda:'+ str(args.cuda) if cuda.is_available() else 'cpu'
 def L2_loss(out_z, label, op_w):
 
     m_r = meshgrid()
-    m_r = -1*m_r
-    if args.use_mesh:
-        adj = 1 + args.mesh_w*torch.tanh(op_w)
-        m_r = adj*m_r
-    expect_z = torch.matmul(out_z, m_r)
+    # m_r = -1*m_r
+    # if args.use_mesh:
+    #     adj = 1 + args.mesh_w*torch.tanh(op_w)
+    #     m_r = adj*m_r
+    # expect_z = torch.matmul(out_z, m_r)
     # mse = mse_loss(expect_z, label[:,1])
     # print(expect_z.size(), label.size())
-    mae = mae_loss(expect_z, label[:,1])
+    mae = mae_loss(out_z, label[:,1])
     # mse = mse*args.loss_weight
-    mae = mae*args.loss_weight
+    # mae = mae*args.loss_weight
 
-    return mae, expect_z
+    return mae, out_z
      
 def cartesian_to_spherical(label):
     
@@ -135,7 +135,7 @@ class Model(nn.Module):
         # self.max_pool = nn.MaxPool1d(kernel_size=3, stride=1, padding=1)
         self.fc1 = nn.Linear(in_features=168, out_features=128)
         self.fc2 = nn.Linear(in_features=128, out_features=128)
-        self.fc3 = nn.Linear(in_features=128, out_features=168)
+        self.fc3 = nn.Linear(in_features=128, out_features=1)
         self.op_w = nn.Parameter(torch.randn(1), requires_grad=args.use_mesh)
 
     def forward(self, x):
@@ -152,7 +152,7 @@ class Model(nn.Module):
         x = x.view(x.size(0), -1)
         x = F.leaky_relu(self.fc1(x))
         x = F.leaky_relu(self.fc2(x))
-        x = F.softmax(self.fc3(x),dim=1)
+        x = self.fc3(x)
         
         return x, self.op_w
 
@@ -245,8 +245,8 @@ def evaluation(label, expect_z):
     mat_rmse = np.sqrt(np.mean((label[:,1]-expect_z)**2))
     mae_each_fold.append(mat_mae)
     sd_each_fold.append(mat_rmse)
-    np.save(test_dir + 'mae_aoa_each_fold_zone_6_softmax', np.array(mae_each_fold))
-    np.save(test_dir + 'rmse_aoa_each_fold_zone_6_softmax', np.array(sd_each_fold))
+    np.save(test_dir + 'mae_aoa_each_fold_zone_6_reg', np.array(mae_each_fold))
+    np.save(test_dir + 'rmse_aoa_each_fold_zone_6_reg', np.array(sd_each_fold))
     print("all_mae = ", np.mean(mae_each_fold))
     print("all_rmse = ", np.mean(sd_each_fold))
 
@@ -341,7 +341,7 @@ if __name__ == '__main__':
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
 
     if args.save_to_wandb:
-        run = wandb.init(project="model_zone_generalization", name="test_aoa_zone_6_softmax"+str(fold), dir='/home/nakorn/weight_bias', reinit=True)
+        run = wandb.init(project="model_zone_generalization", name="test_aoa_zone_6_reg"+str(fold), dir='/home/nakorn/weight_bias', reinit=True)
     
     train_data, train_label, test_data, test_label = data_iq[train_index], label_all[train_index] \
                                                         ,data_iq[test_index], label_all[test_index]
@@ -355,13 +355,13 @@ if __name__ == '__main__':
     train_label = train_label[select_train]
     test_data = test_data[select_test]
     test_label = test_label[select_test]
-    # np.save(data_save_path+ '/select_aoa_train_zone_6_softmax', select_train)
-    # np.save(data_save_path+ '/select_aoa_test_zone_6_softmax', select_test)
+    # np.save(data_save_path+ '/select_aoa_train_zone_6_reg', select_train)
+    # np.save(data_save_path+ '/select_aoa_test_zone_6_reg', select_test)
     # ============================================ 
 
     print(train_data.shape, train_label.shape, test_data.shape, test_label.shape)
-    np.save(test_dir + 'train_aoa_index_zone_6_softmax' + str(fold), np.array(train_index))
-    np.save(test_dir + 'test_aoa_index_zone_6_softmax' + str(fold), np.array(test_index))
+    np.save(test_dir + 'train_aoa_index_zone_6_reg' + str(fold), np.array(train_index))
+    np.save(test_dir + 'test_aoa_index_zone_6_reg' + str(fold), np.array(test_index))
 
     train_set = Radar_train_Dataset(train_data=train_data, train_label=train_label)
     test_set = Radar_test_Dataset(test_data=test_data, test_label=test_label)
@@ -388,7 +388,7 @@ if __name__ == '__main__':
                 test_loss, label, expect_z, op_w = test_function(test_loader)
                 rmse = np.sqrt(np.mean((label[:,1]-expect_z)**2))
                 print(">>> test_loss, epoch   <<<<<", epoch , test_loss, rmse)
-                np.save(test_dir + 'expect_z_aoa_zone_6_softmax' + str(fold), np.array(expect_z))
+                np.save(test_dir + 'expect_z_aoa_zone_6_reg' + str(fold), np.array(expect_z))
 
                 if args.save_to_wandb:
                     plt.figure(1)
@@ -402,7 +402,7 @@ if __name__ == '__main__':
 
             
             if args.save_to_wandb and (epoch%500 == 0):  
-                torch.save(model.state_dict(), os.path.join(wandb.run.dir, 'aoa_zone_6_softmax_'+str(fold)+'_ep_'+str(epoch)+'.pt'))
+                torch.save(model.state_dict(), os.path.join(wandb.run.dir, 'aoa_zone_6_reg_'+str(fold)+'_ep_'+str(epoch)+'.pt'))
         run.finish()
         evaluation(label, expect_z)
         

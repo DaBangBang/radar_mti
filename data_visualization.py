@@ -35,8 +35,8 @@ predict_zeta = np.array(expect_z)
 
 ground_truth = 'D:/data_signal_MTI/project_util_3/result_for_paper/label_z_2dfft_fold.npy'
 
-T_r_2dfft = 'D:/data_signal_MTI/project_util_3/result_for_paper/optimize_r_2dfft.npy'
-T_z_2dfft = 'D:/data_signal_MTI/project_util_3/result_for_paper/optimize_z_2dfft.npy'
+T_r_2dfft = 'D:/data_signal_MTI/project_util_3/result_for_paper/optimize_r_2dfft_m+c.npy'
+T_z_2dfft = 'D:/data_signal_MTI/project_util_3/result_for_paper/optimize_z_2dfft_m+c.npy'
 T_r_music = 'D:/data_signal_MTI/project_util_3/result_for_paper/optimize_r_music.npy'
 T_z_music = 'D:/data_signal_MTI/project_util_3/result_for_paper/optimize_z_music.npy'
 T_r_esprit = 'D:/data_signal_MTI/project_util_3/result_for_paper/optimize_r_esprit.npy'
@@ -60,43 +60,53 @@ outlier_ = np.max(g_t[:,0])
 
 # for i in range(predict.shape[0]):
 #     actual_zeta = predict_zeta[i]
-#     if actual_zeta > 0.40 or actual_zeta < -0.80:
+#     actual_range = predict[i]
+#     if actual_zeta > 0.40 or actual_zeta < -0.80 or actual_range < 92 or actual_range > 350:
+#     # if actual_range > outlier_:
 #         predict[i] = np.nan
 #         predict_zeta[i] = np.nan
-        
-# k = ~np.isnan(predict)
-# predict = predict[k]
-# predict_zeta = predict_zeta[k]
 
 
-# g_t = g_t[k]
+k = ~np.isnan(predict)
+predict = predict[k]
+predict_zeta = predict_zeta[k]
+
+
+g_t = g_t[k]
 
 print(predict.shape, predict_zeta.shape, g_t.shape)
 
-predict += T_r_music[0] 
-predict_zeta += T_z_music[0]
+predict += T_r_2dfft[0] 
+predict_zeta += T_z_2dfft[0]
+
+predict *= T_r_2dfft[1]
+predict_zeta *= T_z_2dfft[1]
+
+print("factor", T_z_2dfft)
 
 r_mse = np.sqrt(np.mean((predict - g_t[:,0])**2))
 z_mse = np.sqrt(np.mean((predict_zeta - g_t[:,1])**2))
 print(r_mse, z_mse)
 
-# xp = predict * np.cos(g_t[:,2]) * np.sin(predict_zeta)
-# yp = predict * np.sin(g_t[:,2]) + 100
-# zp = predict * np.cos(g_t[:,2]) * np.cos(predict_zeta)
+xp = predict * np.cos(g_t[:,2]) * np.sin(predict_zeta)
+yp = predict * np.sin(g_t[:,2]) + 100
+zp = predict * np.cos(g_t[:,2]) * np.cos(predict_zeta)
 
-# x = g_t[:,0] * np.cos(g_t[:,2]) * np.sin(g_t[:,1])
-# y = g_t[:,0] * np.sin(g_t[:,2]) + 100
-# z = g_t[:,0] * np.cos(g_t[:,2]) * np.cos(g_t[:,1])
+x = g_t[:,0] * np.cos(g_t[:,2]) * np.sin(g_t[:,1])
+y = g_t[:,0] * np.sin(g_t[:,2]) + 100
+z = g_t[:,0] * np.cos(g_t[:,2]) * np.cos(g_t[:,1])
 
-# fig = go.Figure()
+fig = go.Figure()
 
-# fig.add_trace(go.Scatter(x=x[37220:37340], y=z[37220:37340], mode= 'markers', marker=dict(size=10), name="Ground Truth"))
-# fig.add_trace(go.Scatter(x=xp[37220:37340], y=zp[37220:37340], mode= 'markers', marker=dict(size=10), name="Esprit"))
-# fig.update_layout(xaxis_title = "X (mm)", yaxis_title="Y (mm)", xaxis_range =[-150,150], yaxis_range =[0,250]
-# )
+# fig.add_trace(go.Scatter(x=x[5500:5700], y=z[5500:5700], mode= 'markers', marker=dict(size=10), name="Ground Truth"))
+fig.add_trace(go.Scatter(x=x[12000:12200], y=z[12000:12200], mode= 'markers', marker=dict(size=10), name="Ground Truth"))
+# fig.add_trace(go.Scatter(x=xp[5500:5700], y=zp[5500:5700], mode= 'markers', marker=dict(size=10), name="FFT"))
+fig.add_trace(go.Scatter(x=xp[12000:12200], y=zp[12000:12200], mode= 'markers', marker=dict(size=10), name="FFT"))
+fig.update_layout(xaxis_title = "X (mm)", yaxis_title="Y (mm)", xaxis_range =[-200,50], yaxis_range =[100,350]
+)
 # if not os.path.exists("images"):
 #     os.mkdir("images")
-# fig.write_image("images/triangle_Esprit.jpg")
-# fig.show()
+# fig.write_image("images/SOTA.jpg")
+fig.show()
 
 # print(predict.shape, g_t.shape,np.max(x),np.max(z), np.max(predict), np.max(zp))

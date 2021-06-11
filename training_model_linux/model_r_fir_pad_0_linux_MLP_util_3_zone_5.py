@@ -135,7 +135,8 @@ class Model(nn.Module):
         self.encode_conv4 = nn.Conv1d(in_channels=16, out_channels=16, kernel_size=3, stride = 1, padding=1)
         self.encode_conv5 = nn.Conv1d(in_channels=16, out_channels=1, kernel_size=3, stride = 1, padding=1)
         self.fc1 = nn.Linear(in_features=40, out_features=128)
-        self.fc2 = nn.Linear(in_features=128, out_features=1)
+        self.fc2 = nn.Linear(in_features=128, out_features=128)
+        self.fc3 = nn.Linear(in_features=128, out_features=1)
 
         self.max_pool = nn.MaxPool1d(kernel_size=3, stride=1, padding=1)
         self.op_w = nn.Parameter(torch.randn(1), requires_grad=args.use_mesh)
@@ -150,7 +151,8 @@ class Model(nn.Module):
         x = F.leaky_relu(self.encode_conv5(x))
         x = x.view(x.size(0), -1)
         x = F.leaky_relu(self.fc1(x))
-        x = self.fc2(x)
+        x = F.leaky_relu(self.fc2(x))
+        x = self.fc3(x)
         
 
         

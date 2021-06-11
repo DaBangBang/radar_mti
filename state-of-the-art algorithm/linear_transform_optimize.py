@@ -35,15 +35,15 @@ def l2_loss(r_out, train_label):
 class Affine(nn.Module):
     def __init__(self):
         super(Affine, self).__init__()
-        # self.w1 = nn.Parameter(torch.randn(1), requires_grad=True)
+        self.w1 = nn.Parameter(torch.randn(1), requires_grad=True)
         # self.w2 = nn.Parameter(torch.randn(1), requires_grad=True)
         self.t1 = nn.Parameter(torch.randn(1), requires_grad=True)
         # self.t2 = nn.Parameter(torch.randn(1), requires_grad=True)
         
     def forward(self, t_r):
-        r_out = t_r + self.t1 
+        r_out = self.w1*t_r + self.t1 
         # z_out = t_z + self.t2
-        return r_out, self.t1
+        return r_out, self.t1, self.w1
 
 class Op_Data(Dataset):
     def __init__(self, train_range, label_set):
@@ -73,19 +73,19 @@ def train_function(train_loader):
         # train_zeta = train_zeta.float().to(device)
         train_label = train_label.float().to(device)
         optimizer.zero_grad()
-        r_out, t1 = model(train_range)
+        r_out, t1, w1 = model(train_range)
         loss = l2_loss(r_out, train_label)
         loss.backward()
         optimizer.step()
         loss_all.append(loss.item())
         r_out = r_out.cpu().detach().numpy()
         # z_out = z_out.cpu().detach().numpy()
-        # w1 = w1.cpu().detach().numpy()
+        w1 = w1.cpu().detach().numpy()
         # w2 = w2.cpu().detach().numpy()
         t1 = t1.cpu().detach().numpy()
         # t2 = t2.cpu().detach().numpy()
         # var = np.array([w1, w2])
-        var = np.array([t1])
+        var = np.array([t1, w1])
 
     return np.mean(np.array(loss_all)), r_out, var
 
@@ -119,6 +119,6 @@ if __name__ == '__main__':
         if epoch%1000 == 0:
             print(np.array(r_out).shape, np.array(var).shape)
             # torch.save(model.state_dict(), os.path.join(wandb.run.dir, 'scaling.pt'))
-            np.save(save_dir + 'expect_r_music_pad_100%_fold_optimize', np.array(r_out))
-            # np.save(save_dir + 'expect_z_%4_esprit_pad_op_trans', np.array(z_out))
-            np.save(save_dir + 'optimize_r_music', np.array(var))
+            np.save(save_dir + 'expect_r_music_pad_100%_fold_optimize_m+c', np.array(r_out))
+            # np.save(save_dir + 'expect_z_%4_music_pad_op_trans', np.array(z_out))
+            np.save(save_dir + 'optimize_r_music_m+c', np.array(var))

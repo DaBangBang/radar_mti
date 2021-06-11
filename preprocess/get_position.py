@@ -678,7 +678,7 @@ def cam_run():
         elif not ids.any():
             cv2.imshow('org', frame)
 
-        elif cv2.waitKey(200) & 0xFF == ord('q'):
+        elif cv2.waitKey(1) & 0xFF == ord('q'):
             cap.release()
             cv2.destroyAllWindows()
             break
